@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Define your models below. Example:
+// model User {
+//   id        Int      @id @default(autoincrement())
+//   email     String   @unique
+//   createdAt DateTime @default(now())
+// }
+
+model QuestionEntity {
+  id             Int    @id @default(autoincrement())
+  type           String
+  prompt         String
+  categoryColumn Int
+  points         Int
+  config         Json
+
+  @@unique([categoryColumn, points])
+}
+
+model CategoryEntity {
+  id     Int    @id @default(autoincrement())
+  name   String
+  column Int
+
+  @@unique([column])
+}
