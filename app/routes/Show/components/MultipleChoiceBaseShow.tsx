@@ -1,11 +1,44 @@
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "~/components/ui/button";
 
-const MultipleChoiceBaseShow = () => {
-  const data = {
-    answers: ["lol", "test"],
-    trueOrFalse: "off",
-    showLetters: "off",
+interface Props {
+  data: {
+    options: {
+      name: string;
+      value: any;
+    }[];
+    showLetters: "on" | "off";
+    trueOrFalse: "on" | "off";
   };
+}
+
+const MultipleChoiceBaseShow = ({ data }: Props) => {
+  const [fontSize, setFontSize] = useState("3rem");
+  const optionRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    let smallestScale = 1;
+
+    optionRefs.current = optionRefs.current.slice(0, data.options.length);
+
+    optionRefs.current.forEach((div) => {
+      if (div) {
+        const { clientHeight, scrollHeight } = div;
+        if (scrollHeight > clientHeight) {
+          const currentScale = clientHeight / scrollHeight;
+          if (currentScale < smallestScale) {
+            smallestScale = currentScale;
+          }
+        }
+      }
+    });
+
+    if (smallestScale < 1) {
+      setFontSize(`${smallestScale * 3}rem`);
+    } else {
+      setFontSize("4rem");
+    }
+  }, [data.options]);
 
   return (
     <div className={"flex flex-1 p-4 gap-4"}>
@@ -21,27 +54,30 @@ const MultipleChoiceBaseShow = () => {
         />
       </div>
       <div className={"w-full flex flex-1 flex-col gap-4"}>
-        {data.answers.map((choice, index) => (
+        {data.options.map((choice, index) => (
           <Button
+            key={index}
             type={"submit"}
             className={`flex w-full flex-1 text-5xl rounded-2xl p-3 outline-4 outline-solid -outline-offset-12 outline-gray-200 ${data.trueOrFalse === "on" && (index % 2 === 0 ? "bg-green-600" : "bg-red-600")}`}
           >
-            <input hidden name={"answer"} value={choice} readOnly />
+            <input hidden name={"answer"} value={choice.name} readOnly />
             {data.showLetters === "on" && (
               <div
                 className={
-                  "bg-purple-600 px-5 self-center content-center rounded-3xl aspect-square h-min"
+                  "bg-purple-600 px-5 ms-4 self-center content-center rounded-3xl aspect-square h-min"
                 }
               >
                 {String.fromCharCode("A".charCodeAt(0) + index)}
               </div>
             )}
             <div
-              className={
-                "w-full content-center px-5 whitespace-break-spaces overflow-hidden"
-              }
+              ref={(el) => {
+                optionRefs.current[index] = el;
+              }}
+              style={{ fontSize }}
+              className={`w-full content-center px-5 whitespace-break-spaces overflow-hidden h-full ${data.showLetters === "on" ? "text-start" : "text-center"}`}
             >
-              {choice}
+              {choice.name}
             </div>
           </Button>
         ))}

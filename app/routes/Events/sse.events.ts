@@ -3,6 +3,7 @@ import { eventStream } from "remix-utils/sse/server";
 import { getUserNameFromRequest } from "~/utils/session.server";
 import { addTeam } from "~/utils/playData.server";
 import { eventSwitch } from "~/routes/Events/eventSwitch";
+import dot from "dot-object";
 
 type Client = {
   id: string;
@@ -54,4 +55,11 @@ export async function loader({ request }: Route.LoaderArgs) {
       broadcast("left", { name: userName });
     };
   });
+}
+
+export async function action({ request }: Route.LoaderArgs) {
+  const formData = await request.formData();
+  const plainForm = Object.fromEntries(formData.entries());
+  const requestValues = dot.object(plainForm) as any;
+  broadcast(requestValues.event, { data: requestValues.data });
 }

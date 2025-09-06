@@ -9,6 +9,9 @@ export async function action({ request }: Route.ActionArgs) {
   const requestValues = dot.object(plainForm) as any;
   sendToAdmin("answer", {
     from: getUserNameFromRequest(request),
-    data: requestValues,
+    data: {
+      ...requestValues,
+      time: new Date(),
+    },
   });
 }

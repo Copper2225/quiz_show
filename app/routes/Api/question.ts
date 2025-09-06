@@ -49,7 +49,7 @@ function answerData(question: any) {
     case "multipleChoice":
       const mcQuestion = question as MultipleChoiceQuestion;
       return {
-        answers: mcQuestion.config.options.map((option) => option.name),
+        options: mcQuestion.config.options.map((option) => option.name),
         showLetters: mcQuestion.config.showLetters,
         trueOrFalse: mcQuestion.config.trueOrFalse,
         type: "multipleChoice",

@@ -21,14 +21,21 @@ export async function loader() {
 export default function Admin() {
   const data = useLoaderData<typeof loader>();
   const answerEvent = useEventSource("/sse/events/admin", { event: "answer" });
-  const [answers, setAnswers] = useState<Map<string, string>>(new Map());
+  const [answers, setAnswers] = useState<
+    Map<string, { answer: string; time: string }>
+  >(new Map());
+
+  const lockAnswersFetcher = useFetcher();
 
   useEffect(() => {
     if (answerEvent !== null) {
       try {
         const payload = JSON.parse(answerEvent);
         const newAnswers = new Map(answers);
-        newAnswers.set(payload.from, payload.data.answer);
+        newAnswers.set(payload.from, {
+          answer: payload.data.answer,
+          time: payload.data.time,
+        });
         setAnswers(newAnswers);
       } catch {}
     }
@@ -43,13 +50,17 @@ export default function Admin() {
           questions={data.config.questionDepth}
           activeMatrix={data.activeMatrix}
         />
-        <ul>
+        <ul className={"h-1/8"}>
           {Array.from(answers.entries()).map(([key, value]) => (
             <li key={key}>
-              {key}: {value}
+              {key}: {value.answer} ({value.time})
             </li>
           ))}
         </ul>
+        <lockAnswersFetcher.Form method={"post"} action={"/sse/events"}>
+          <input hidden readOnly value={"lockAnswers"} name={"event"} />
+          <Button>Lock Answers</Button>
+        </lockAnswersFetcher.Form>
       </div>
     </main>
   );

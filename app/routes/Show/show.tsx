@@ -53,6 +53,8 @@ export default function Show() {
       ? fetcher.data?.activeMatrix
       : data.activeMatrix;
 
+  console.log(question);
+
   return (
     <main className="h-dvh w-dvw box-border px-4 pt-4 flex flex-col">
       {question ? (

@@ -23,28 +23,49 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function User() {
-  const event = useEventSource("/sse/events", { event: "answerType" });
+  const answerTypeEvent = useEventSource("/sse/events", {
+    event: "answerType",
+  });
+  const lockAnswersEvent = useEventSource("/sse/events", {
+    event: "lockAnswers",
+  });
   const data = useLoaderData<typeof loader>();
   const [questionData, setQuestionData] = useState<any>(data.answerType);
 
+  console.log(lockAnswersEvent);
+
   useEffect(() => {
-    if (event !== null) {
+    if (answerTypeEvent !== null) {
       try {
-        const payload = JSON.parse(event) as { data: any };
+        const payload = JSON.parse(answerTypeEvent) as { data: any };
 
         if (payload?.data) {
           setQuestionData(payload.data);
         }
       } catch {}
     }
-  }, [event]);
+  }, [answerTypeEvent]);
+
+  const [answersLocked, setAnswersLocked] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log(lockAnswersEvent);
+    if (lockAnswersEvent !== null) {
+      try {
+        console.log("TRIGGER");
+        setAnswersLocked((prevState) => !prevState);
+      } catch {}
+    }
+  }, [lockAnswersEvent, setAnswersLocked]);
 
   const renderAnswerComponents = useMemo(() => {
     switch (questionData?.type ?? "none") {
       case "buzzer":
         return <BuzzerField />;
       case "multipleChoice":
-        return <MultipleChoiceField data={questionData} />;
+        return (
+          <MultipleChoiceField locked={answersLocked} data={questionData} />
+        );
       default:
         return <Waiting />;
     }

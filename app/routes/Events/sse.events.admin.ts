@@ -1,8 +1,7 @@
 import type { Route } from "./+types/sse.events";
 import { eventStream } from "remix-utils/sse/server";
-import { getUserNameFromRequest } from "~/utils/session.server";
-import { addTeam } from "~/utils/playData.server";
-import { eventSwitch } from "~/routes/Events/eventSwitch";
+import { broadcast } from "~/routes/Events/sse.events";
+import dot from "dot-object";
 
 type Client = {
   id: string;
@@ -31,11 +30,10 @@ export function sendToAdmin(event: string, payload: unknown) {
 export async function loader({ request }: Route.LoaderArgs) {
   return eventStream(request.signal, function setup(send) {
     const clientId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
-    const newClient: Client = {
+    client = {
       id: clientId,
       send,
     };
-    client = newClient;
 
     return () => {
       client = undefined;

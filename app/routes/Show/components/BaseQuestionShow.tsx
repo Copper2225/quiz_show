@@ -1,6 +1,7 @@
 import type { QuestionEntity } from "@prisma/client";
 import MultipleChoiceBaseShow from "~/routes/Show/components/MultipleChoiceBaseShow";
 import { useMemo } from "react";
+import type { MultipleChoiceQuestion } from "~/types/userTypes";
 
 interface Props {
   question: QuestionEntity;
@@ -9,8 +10,12 @@ interface Props {
 
 const BaseQuestionShow = ({ question, withHeader }: Props) => {
   const detailed = useMemo(() => {
-    return <MultipleChoiceBaseShow />;
-  }, []);
+    return (
+      <MultipleChoiceBaseShow
+        data={(question as MultipleChoiceQuestion).config}
+      />
+    );
+  }, [question]);
 
   return (
     <div
