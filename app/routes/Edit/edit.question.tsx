@@ -1,16 +1,16 @@
-import type { Route } from "./+types/editQuestion";
+import type { Route } from "./+types/edit.question";
 import { Form, redirect, useLoaderData } from "react-router";
 import { getConfig } from "~/utils/config.server";
 import BaseTypeSelect from "~/routes/Edit/components/BaseTypeSelect";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Button } from "~/components/ui/button";
 import { prisma } from "~/utils/db.server";
+import dot from "dot-object";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
-  const prompt = formData.get("prompt")?.toString() ?? "";
-  const type = formData.get("baseType") as string;
+
+  const plainForm = Object.fromEntries(formData.entries());
+
+  const values = dot.object(plainForm) as any;
 
   const c = Number(params.c);
   const q = (Number(params.q) + 1) * 100;
@@ -19,19 +19,20 @@ export async function action({ request, params }: Route.ActionArgs) {
     return new Response("Invalid parameters", { status: 400 });
   }
 
-  await prisma.questionEntity.upsert({
+  const data = await prisma.questionEntity.upsert({
     where: {
       categoryColumn_points: { categoryColumn: c, points: q }, // composite unique key
     },
     update: {
-      prompt,
+      prompt: values.prompt,
+      config: values.config,
     },
     create: {
-      type: type,
+      type: values.baseType,
       categoryColumn: c,
       points: q,
-      prompt,
-      config: {},
+      prompt: values.prompt,
+      config: values.config ?? {},
     },
   });
 
@@ -50,7 +51,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 
   const question = await prisma.questionEntity.findUnique({
     where: {
-      categoryColumn_points: { categoryColumn: c, points: q },
+      categoryColumn_points: { categoryColumn: c, points: (q + 1) * 100 },
     },
   });
 
@@ -66,14 +67,11 @@ export default function EditQuestion() {
         Edit question {(data.q + 1) * 100} of {data.categoryName ?? data.c}
       </h1>
       <Form method={"post"} className={"p-4 gap-2 flex flex-col"}>
-        <BaseTypeSelect defaultValue={data.question?.type} />
-        <Label htmlFor={"prompt"}>Prompt</Label>
-        <Input
-          name={"prompt"}
-          id={"prompt"}
-          defaultValue={data.question?.prompt}
+        <BaseTypeSelect
+          defaultValue={data.question?.type}
+          defaultPrompt={data.question?.prompt}
+          defaultConfig={data.question?.config}
         />
-        <Button type="submit">Save</Button>
       </Form>
     </main>
   );

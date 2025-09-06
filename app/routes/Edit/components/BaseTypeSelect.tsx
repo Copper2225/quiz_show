@@ -3,9 +3,15 @@
 import * as React from "react";
 import Select from "~/components/Select";
 import { Label } from "~/components/ui/label";
+import { useCallback, useMemo, useState } from "react";
+import MultipleChoiceBaseEdit from "~/routes/Edit/components/MultipleChoice/MultipleChoiceBaseEdit";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
 
 interface Props {
   defaultValue?: string;
+  defaultPrompt?: string;
+  defaultConfig?: any;
 }
 
 const types = [
@@ -35,17 +41,48 @@ const types = [
   },
 ];
 
-const BaseTypeSelect = ({ defaultValue }: Props) => {
+const BaseTypeSelect = ({
+  defaultValue,
+  defaultPrompt,
+  defaultConfig,
+}: Props) => {
+  const [type, setType] = useState<string>(defaultValue ?? "");
+  const detailedForm = useMemo(() => {
+    switch (type) {
+      case "multipleChoice":
+        return <MultipleChoiceBaseEdit defaultConfig={defaultConfig} />;
+    }
+  }, [type]);
+
+  const handleChange = useCallback((val: string) => {
+    setType(val);
+  }, []);
+
   return (
-    <>
-      <Label htmlFor={"baseType"}>Base Type</Label>
-      <Select
-        options={types}
-        name={"baseType"}
-        label={"Type"}
-        defaultValue={defaultValue}
-      />
-    </>
+    <div className={"flex flex-col gap-4"}>
+      <div>
+        <Label className={"mb-2"} htmlFor={"baseType"}>
+          Base Type
+        </Label>
+        <Select
+          options={types}
+          name={"baseType"}
+          label={"Type"}
+          defaultValue={defaultValue}
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+        <Label className={"mb-2"} htmlFor={"prompt"}>
+          Prompt
+        </Label>
+        <Input name={"prompt"} id={"prompt"} defaultValue={defaultPrompt} />
+      </div>
+      {detailedForm}
+      <Button className={"mt-5"} type="submit">
+        Save
+      </Button>
+    </div>
   );
 };
 

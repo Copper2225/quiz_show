@@ -1,4 +1,5 @@
 import { prisma } from "~/utils/db.server";
+import { initActiveMatrix } from "~/utils/playData.server";
 
 export interface Config {
   categories: string[];
@@ -30,6 +31,8 @@ export async function initConfig(): Promise<void> {
     return question.points > max ? question.points : max;
   }, 0);
   config.questionDepth = maxPoints > 0 ? Math.floor(maxPoints / 100) : 0;
+
+  initActiveMatrix(config.categories.length, config.questionDepth);
 }
 
 export function addCategory(): void {

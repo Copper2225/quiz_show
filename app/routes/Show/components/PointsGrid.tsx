@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 import { Button } from "~/components/ui/button";
-import { Form } from "react-router";
+import React from "react";
 
 interface Props {
   categories: string[];
@@ -24,7 +24,7 @@ const PointsGrid = ({
     >
       {categories.map((_cate, colIndex) => {
         return (
-          <>
+          <React.Fragment key={colIndex}>
             <Button
               variant={"outline"}
               className={`w-full overflow-hidden whitespace-break-spaces text-4xl h-full flex items-center justify-center border-2 !border-primary`}
@@ -32,22 +32,15 @@ const PointsGrid = ({
               {categories[colIndex]}
             </Button>
             {Array.from({ length: questions }, (_, rowIndex) => (
-              <Form method={"post"}>
-                <input
-                  hidden
-                  name={"data"}
-                  value={JSON.stringify({ row: rowIndex, col: colIndex })}
-                  readOnly
-                />
-                <Button
-                  className={`w-full text-5xl h-full flex items-center justify-center ${activeMatrix[colIndex][rowIndex] && "bg-teal-950 hover:bg-teal-950"}`}
-                  type={"submit"}
-                >
-                  {(rowIndex + 1) * 100}
-                </Button>
-              </Form>
+              <Button
+                className={`w-full text-5xl h-full flex items-center justify-center ${!activeMatrix[colIndex][rowIndex] && "bg-teal-950 hover:bg-teal-950"}`}
+                type={"submit"}
+                key={rowIndex}
+              >
+                {(rowIndex + 1) * 100}
+              </Button>
             ))}
-          </>
+          </React.Fragment>
         );
       })}
     </div>

@@ -16,17 +16,29 @@ import {
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
+import { type ChangeEventHandler, useCallback } from "react";
 
 interface Props {
   options: { value: string; label: string }[];
   label: string;
   name: string;
   defaultValue?: string;
+  onChange?: (value: string) => void;
 }
 
-const Select = ({ options, label, name, defaultValue }: Props) => {
+const Select = ({ options, label, name, defaultValue, onChange }: Props) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(defaultValue);
+  const [value, setValue] = React.useState(defaultValue ?? "");
+
+  const change = useCallback(
+    (val: string) => {
+      setValue(val);
+      if (onChange) {
+        onChange(val);
+      }
+    },
+    [onChange],
+  );
 
   return (
     <>
@@ -56,7 +68,7 @@ const Select = ({ options, label, name, defaultValue }: Props) => {
                     key={option.value}
                     value={option.value}
                     onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue);
+                      change(currentValue === value ? "" : currentValue);
                       setOpen(false);
                     }}
                   >

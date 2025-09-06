@@ -6,25 +6,20 @@ import { eventSwitch } from "~/routes/Events/eventSwitch";
 
 type Client = {
   id: string;
-  name: string;
   send: (message: { event?: string; data: string }) => void;
 };
 
 declare global {
   // eslint-disable-next-line no-var
-  var __sse_clients__: Map<string, Client> | undefined;
+  var __sse_admin_client__: Client | undefined;
 }
 
-const clients: Map<string, Client> = (globalThis.__sse_clients__ ||= new Map());
+let client: Client | undefined = (globalThis.__sse_admin_client__ ||=
+  undefined);
 
-export function broadcast(
-  event: string,
-  payload: unknown,
-  excludeClientId?: string,
-) {
+export function sendToAdmin(event: string, payload: unknown) {
   const data = typeof payload === "string" ? payload : JSON.stringify(payload);
-  for (const [id, client] of clients) {
-    if (excludeClientId && id === excludeClientId) continue;
+  if (client) {
     try {
       client.send({ event, data });
     } catch {
@@ -34,24 +29,16 @@ export function broadcast(
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const userName = getUserNameFromRequest(request) ?? "Anonymous";
-
-  if (getUserNameFromRequest(request)) {
-    addTeam(userName);
-  }
-
   return eventStream(request.signal, function setup(send) {
     const clientId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
-    const client: Client = {
+    const newClient: Client = {
       id: clientId,
-      name: userName,
       send,
     };
-    clients.set(clientId, client);
+    client = newClient;
 
     return () => {
-      clients.delete(clientId);
-      broadcast("left", { name: userName });
+      client = undefined;
     };
   });
 }

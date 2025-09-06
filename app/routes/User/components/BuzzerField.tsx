@@ -8,7 +8,7 @@ const BuzzerField = (): ReactElement => {
   return (
     <fetcher.Form
       method="post"
-      action="/sse/events"
+      action="/api/buzzer"
       className={
         "h-full w-full box-border p-3 flex items-stretch justify-center"
       }

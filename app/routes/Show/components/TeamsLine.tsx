@@ -13,12 +13,6 @@ const TeamsLine = () => {
 
   const teams = fetcher.data?.teams ?? [];
 
-  console.log(teams);
-
-  Object.entries(teams).map(([name, team]) => {
-    console.log(name, team);
-  });
-
   return (
     <div
       className="grid gap-4 mt-10"

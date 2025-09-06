@@ -6,7 +6,8 @@ import { getUserNameFromRequest } from "~/utils/session.server";
 import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useMemo, useState } from "react";
 import BuzzerField from "~/routes/User/components/BuzzerField";
-import { getAnswerType } from "~/utils/playData";
+import { getAnswerType } from "~/utils/playData.server";
+import MultipleChoiceField from "~/routes/User/components/MultipleChoiceField";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const userName = getUserNameFromRequest(request);
@@ -24,7 +25,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function User() {
   const event = useEventSource("/sse/events", { event: "answerType" });
   const data = useLoaderData<typeof loader>();
-  const [answerType, setAnswerType] = useState<string | null>(data.answerType);
+  const [questionData, setQuestionData] = useState<any>(data.answerType);
 
   useEffect(() => {
     if (event !== null) {
@@ -32,20 +33,22 @@ export default function User() {
         const payload = JSON.parse(event) as { data: any };
 
         if (payload?.data) {
-          setAnswerType(payload.data.type);
+          setQuestionData(payload.data);
         }
       } catch {}
     }
   }, [event]);
 
   const renderAnswerComponents = useMemo(() => {
-    switch (answerType) {
+    switch (questionData?.type ?? "none") {
       case "buzzer":
         return <BuzzerField />;
+      case "multipleChoice":
+        return <MultipleChoiceField data={questionData} />;
       default:
         return <Waiting />;
     }
-  }, [answerType]);
+  }, [questionData]);
 
   return (
     <main className={"h-dvh w-dvw box-border p-4"}>
