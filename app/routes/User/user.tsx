@@ -6,7 +6,7 @@ import { getUserNameFromRequest } from "~/utils/session.server";
 import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useMemo, useState } from "react";
 import BuzzerField from "~/routes/User/components/BuzzerField";
-import { getAnswerType } from "~/utils/playData.server";
+import { getAnswerType, getIsUserLocked } from "~/utils/playData.server";
 import MultipleChoiceField from "~/routes/User/components/MultipleChoiceField";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -19,7 +19,8 @@ export async function loader({ request }: Route.LoaderArgs) {
     orderBy: { id: "desc" },
     take: 20,
   });
-  return { userName, questions, answerType };
+  const isLocked = getIsUserLocked(userName);
+  return { userName, questions, answerType, isLocked };
 }
 
 export default function User() {
@@ -32,13 +33,10 @@ export default function User() {
   const data = useLoaderData<typeof loader>();
   const [questionData, setQuestionData] = useState<any>(data.answerType);
 
-  console.log(lockAnswersEvent);
-
   useEffect(() => {
     if (answerTypeEvent !== null) {
       try {
         const payload = JSON.parse(answerTypeEvent) as { data: any };
-
         if (payload?.data) {
           setQuestionData(payload.data);
         }
@@ -46,14 +44,21 @@ export default function User() {
     }
   }, [answerTypeEvent]);
 
-  const [answersLocked, setAnswersLocked] = useState<boolean>(false);
+  const [answersLocked, setAnswersLocked] = useState<boolean>(
+    data.isLocked ?? false,
+  );
 
   useEffect(() => {
-    console.log(lockAnswersEvent);
     if (lockAnswersEvent !== null) {
       try {
-        console.log("TRIGGER");
-        setAnswersLocked((prevState) => !prevState);
+        const payload = JSON.parse(lockAnswersEvent) as {
+          all: boolean | undefined;
+          user: string | undefined;
+          locked: boolean;
+        };
+        if (payload.all || payload.user === data.userName) {
+          setAnswersLocked(payload.locked);
+        }
       } catch {}
     }
   }, [lockAnswersEvent, setAnswersLocked]);
@@ -69,7 +74,7 @@ export default function User() {
       default:
         return <Waiting />;
     }
-  }, [questionData]);
+  }, [questionData, answersLocked]);
 
   return (
     <main className={"h-dvh w-dvw box-border p-4"}>

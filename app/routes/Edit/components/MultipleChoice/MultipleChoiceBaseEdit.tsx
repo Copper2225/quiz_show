@@ -45,6 +45,7 @@ const MultipleChoiceBaseEdit = ({ defaultConfig }: Props) => {
               return (
                 <OptionLine
                   index={i}
+                  key={i}
                   removeAnswer={removeAnswer}
                   defaultValues={
                     defaultConfig?.options?.[i] ?? { name: "", checked: false }

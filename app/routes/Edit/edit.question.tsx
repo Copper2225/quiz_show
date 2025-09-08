@@ -4,6 +4,9 @@ import { getConfig } from "~/utils/config.server";
 import BaseTypeSelect from "~/routes/Edit/components/BaseTypeSelect";
 import { prisma } from "~/utils/db.server";
 import dot from "dot-object";
+import MediaBase from "~/routes/Edit/components/MediaEdit/MediaBase";
+import { Button } from "~/components/ui/button";
+import * as React from "react";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -19,7 +22,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     return new Response("Invalid parameters", { status: 400 });
   }
 
-  const data = await prisma.questionEntity.upsert({
+  await prisma.questionEntity.upsert({
     where: {
       categoryColumn_points: { categoryColumn: c, points: q }, // composite unique key
     },
@@ -72,6 +75,10 @@ export default function EditQuestion() {
           defaultPrompt={data.question?.prompt}
           defaultConfig={data.question?.config}
         />
+        <MediaBase defaultConfig={(data.question?.config as any).media} />
+        <Button className={"mt-5"} type="submit">
+          Save
+        </Button>
       </Form>
     </main>
   );

@@ -15,4 +15,6 @@ export default [
   route("api/question", "routes/Api/question.ts"),
   route("api/answer", "routes/Api/answer.ts"),
   route("api/buzzer", "routes/Api/buzzer.ts"),
+  route("api/lockAnswers", "routes/Api/lockAnswers.ts"),
+  route("api/upload", "routes/Api/fileUpload.ts"),
 ] satisfies RouteConfig;

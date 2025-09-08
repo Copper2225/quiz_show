@@ -8,7 +8,7 @@ import {
 } from "~/utils/playData.server";
 import TeamsLine from "~/routes/Show/components/TeamsLine";
 import { useEventSource } from "remix-utils/sse/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import BaseQuestionShow from "~/routes/Show/components/BaseQuestionShow";
 import type { QuestionEntity } from "@prisma/client";
 
@@ -52,8 +52,6 @@ export default function Show() {
     fetcher.data?.activeMatrix !== undefined
       ? fetcher.data?.activeMatrix
       : data.activeMatrix;
-
-  console.log(question);
 
   return (
     <main className="h-dvh w-dvw box-border px-4 pt-4 flex flex-col">

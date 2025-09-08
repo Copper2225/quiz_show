@@ -4,7 +4,11 @@ import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useState } from "react";
 import QuestionSelect from "~/routes/Admin/components/QuestionSelect";
 import { getConfig } from "~/utils/config.server";
-import { getActiveMatrix, initActiveMatrix } from "~/utils/playData.server";
+import {
+  getActiveMatrix,
+  initActiveMatrix,
+  isAnyLocked,
+} from "~/utils/playData.server";
 
 export async function loader() {
   const config = getConfig();
@@ -15,7 +19,8 @@ export async function loader() {
       config.questionDepth,
     );
   }
-  return { config, activeMatrix };
+  const unlockOrLock = isAnyLocked();
+  return { config, activeMatrix, unlockOrLock };
 }
 
 export default function Admin() {
@@ -24,6 +29,7 @@ export default function Admin() {
   const [answers, setAnswers] = useState<
     Map<string, { answer: string; time: string }>
   >(new Map());
+  const [locked, setLocked] = useState<boolean>(data.unlockOrLock);
 
   const lockAnswersFetcher = useFetcher();
 
@@ -57,9 +63,19 @@ export default function Admin() {
             </li>
           ))}
         </ul>
-        <lockAnswersFetcher.Form method={"post"} action={"/sse/events"}>
-          <input hidden readOnly value={"lockAnswers"} name={"event"} />
-          <Button>Lock Answers</Button>
+        <lockAnswersFetcher.Form
+          method={"post"}
+          action={"/api/lockAnswers"}
+          onSubmit={() => setLocked((prevState) => !prevState)}
+        >
+          <input hidden readOnly value={"true"} name={"setAll"} />
+          <input
+            hidden
+            readOnly
+            value={locked ? "false" : "true"}
+            name={"locked"}
+          />
+          <Button>{locked ? "Unlock Answers" : "Lock Answers"}</Button>
         </lockAnswersFetcher.Form>
       </div>
     </main>

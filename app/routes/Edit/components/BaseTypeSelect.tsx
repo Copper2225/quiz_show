@@ -6,7 +6,6 @@ import { Label } from "~/components/ui/label";
 import { useCallback, useMemo, useState } from "react";
 import MultipleChoiceBaseEdit from "~/routes/Edit/components/MultipleChoice/MultipleChoiceBaseEdit";
 import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
 
 interface Props {
   defaultValue?: string;
@@ -70,6 +69,8 @@ const BaseTypeSelect = ({
           label={"Type"}
           defaultValue={defaultValue}
           onChange={handleChange}
+          className={"w-full justify-start"}
+          align={"start"}
         />
       </div>
       <div>
@@ -79,9 +80,6 @@ const BaseTypeSelect = ({
         <Input name={"prompt"} id={"prompt"} defaultValue={defaultPrompt} />
       </div>
       {detailedForm}
-      <Button className={"mt-5"} type="submit">
-        Save
-      </Button>
     </div>
   );
 };

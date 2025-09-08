@@ -16,28 +16,43 @@ import {
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
-import { type ChangeEventHandler, useCallback } from "react";
+import { useCallback } from "react";
 
 interface Props {
   options: { value: string; label: string }[];
   label: string;
   name: string;
   defaultValue?: string;
+  value?: string;
   onChange?: (value: string) => void;
+  className?: string;
+  align?: "center" | "start" | "end";
 }
 
-const Select = ({ options, label, name, defaultValue, onChange }: Props) => {
+const Select = ({
+  options,
+  label,
+  name,
+  defaultValue,
+  value: valueProp,
+  onChange,
+  className,
+  align,
+}: Props) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(defaultValue ?? "");
+  const [internalValue, setInternalValue] = React.useState(defaultValue ?? "");
+  const value = valueProp !== undefined ? valueProp : internalValue;
 
   const change = useCallback(
     (val: string) => {
-      setValue(val);
+      if (valueProp === undefined) {
+        setInternalValue(val);
+      }
       if (onChange) {
         onChange(val);
       }
     },
-    [onChange],
+    [onChange, valueProp],
   );
 
   return (
@@ -49,7 +64,7 @@ const Select = ({ options, label, name, defaultValue, onChange }: Props) => {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[200px] justify-between"
+            className={className}
           >
             {value
               ? options.find((option) => option.value === value)?.label
@@ -57,8 +72,15 @@ const Select = ({ options, label, name, defaultValue, onChange }: Props) => {
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
+        <PopoverContent
+          className={className}
+          style={{ width: "clamp(1000px, 100px, 2000px)" }}
+          align={align}
+        >
+          <Command
+            className={className}
+            style={{ width: "clamp(1000px, 100px, 2000px)" }}
+          >
             <CommandInput placeholder="Search ..." className="h-9" />
             <CommandList>
               <CommandEmpty>No {label} found.</CommandEmpty>

@@ -65,3 +65,41 @@ export function clearQuestion() {
 export function getQuestion() {
   return currentQuestion;
 }
+
+const answerLock = new Map<string, boolean>();
+
+export function setAllLocked(lock: boolean) {
+  for (const key of teams.keys()) {
+    answerLock.set(key, lock);
+  }
+}
+
+export function setUserLocked(user: string, lock: boolean) {
+  answerLock.set(user, lock);
+}
+
+export function getIsUserLocked(user: string): boolean | undefined {
+  return answerLock.get(user);
+}
+
+export function isAnyLocked(): boolean {
+  return Array.from(answerLock.values()).some((isLocked) => isLocked);
+}
+
+const answers: Map<string, string> = new Map();
+
+export function clearUserAnswers() {
+  answers.clear();
+}
+
+export function setUserAnswer(user: string | undefined, answer: string): void {
+  if (user) {
+    answers.set(user, answer);
+  }
+}
+
+export function getUserAnswer(user: string | undefined): string | undefined {
+  if (user) {
+    return answers.get(user);
+  }
+}

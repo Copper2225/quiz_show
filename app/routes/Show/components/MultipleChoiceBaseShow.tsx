@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "~/components/ui/button";
+import type { MediaConfig } from "~/types/adminTypes";
 
 interface Props {
   data: {
@@ -9,6 +10,7 @@ interface Props {
     }[];
     showLetters: "on" | "off";
     trueOrFalse: "on" | "off";
+    media?: MediaConfig;
   };
 }
 
@@ -41,18 +43,20 @@ const MultipleChoiceBaseShow = ({ data }: Props) => {
   }, [data.options]);
 
   return (
-    <div className={"flex flex-1 p-4 gap-4"}>
-      <div
-        className={
-          "w-3/5 content-center bg-primary h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12"
-        }
-      >
-        <img
-          src={
-            "https://images.photowall.com/products/60869/azores-mountain-landscape-1.jpg?h=699&q=85"
+    <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>
+      {data.media?.mediaChecked && (
+        <div
+          className={
+            "w-3/5 content-center bg-primary h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12"
           }
-        />
-      </div>
+        >
+          <img
+            className={"h-full justify-self-center"}
+            src={data.media.mediaFile}
+            alt={"Media"}
+          />
+        </div>
+      )}
       <div className={"w-full flex flex-1 flex-col gap-4"}>
         {data.options.map((choice, index) => (
           <Button
