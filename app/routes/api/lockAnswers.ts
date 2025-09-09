@@ -16,7 +16,7 @@ export async function action({ request }: Route.ActionArgs) {
       all: true,
     });
   } else {
-    const user = getUserNameFromRequest(request);
+    const user = await getUserNameFromRequest(request);
     if (user) {
       setUserLocked(user, JSON.parse(requestValues.locked));
       broadcast("lockAnswers", {

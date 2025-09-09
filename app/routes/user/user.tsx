@@ -1,13 +1,13 @@
 import type { Route } from "./+types/user";
 import { prisma } from "~/utils/db.server";
-import Waiting from "~/routes/User/components/Waiting";
+import Waiting from "~/routes/user/components/Waiting";
 import { useLoaderData } from "react-router";
 import { getUserNameFromRequest } from "~/utils/session.server";
 import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useMemo, useState } from "react";
-import BuzzerField from "~/routes/User/components/BuzzerField";
+import BuzzerField from "~/routes/user/components/BuzzerField";
 import { getAnswerType, getIsUserLocked } from "~/utils/playData.server";
-import MultipleChoiceField from "~/routes/User/components/MultipleChoiceField";
+import MultipleChoiceField from "~/routes/user/components/MultipleChoiceField";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const userName = getUserNameFromRequest(request);
@@ -23,7 +23,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { userName, questions, answerType, isLocked };
 }
 
-export default function User() {
+export default function user() {
   const answerTypeEvent = useEventSource("/sse/events", {
     event: "answerType",
   });

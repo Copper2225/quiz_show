@@ -1,5 +1,6 @@
 import { prisma } from "~/utils/db.server";
 import type { QuestionEntity } from "@prisma/client";
+import type { PlayerPoints } from "~/types/adminTypes";
 
 let userAnswerData: any | null = null;
 
@@ -102,4 +103,10 @@ export function getUserAnswer(user: string | undefined): string | undefined {
   if (user) {
     return answers.get(user);
   }
+}
+
+const playerPoints: Map<string, PlayerPoints> = new Map();
+
+export function getPlayerPoints() {
+  return playerPoints;
 }

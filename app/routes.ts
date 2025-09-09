@@ -1,20 +1,28 @@
-import { type RouteConfig, route, index } from "@react-router/dev/routes";
+import {
+  type RouteConfig,
+  route,
+  index,
+  prefix,
+} from "@react-router/dev/routes";
 
 export default [
   index("routes/_index.tsx"),
   route("home", "routes/home.tsx"),
-  route("user", "routes/User/user.tsx"),
-  route("login", "routes/User/login.tsx"),
-  route("edit", "routes/Edit/edit.tsx"),
-  route("edit/:c/:q", "routes/Edit/edit.question.tsx"),
-  route("sse/events", "routes/Events/sse.events.ts"),
-  route("sse/events/admin", "routes/Events/sse.events.admin.ts"),
-  route("admin", "routes/Admin/admin.tsx"),
-  route("show", "routes/Show/show.tsx"),
-  route("api/team-names", "routes/Api/team-names.ts"),
-  route("api/question", "routes/Api/question.ts"),
-  route("api/answer", "routes/Api/answer.ts"),
-  route("api/buzzer", "routes/Api/buzzer.ts"),
-  route("api/lockAnswers", "routes/Api/lockAnswers.ts"),
-  route("api/upload", "routes/Api/fileUpload.ts"),
+  route("user", "routes/user/user.tsx"),
+  route("login", "routes/user/login.tsx"),
+  route("edit", "routes/edit/edit.tsx"),
+  route("edit/:c/:q", "routes/edit/edit.question.tsx"),
+  route("sse/events", "routes/events/sse.events.ts"),
+  route("sse/events/admin", "routes/events/sse.events.admin.ts"),
+  route("admin", "routes/admin/admin.tsx"),
+  route("show", "routes/show/show.tsx"),
+  ...prefix("/api", [
+    route("teamNames", "routes/api/teamNames.ts"),
+    route("question", "routes/api/question.ts"),
+    route("answer", "routes/api/answer.ts"),
+    route("buzzer", "routes/api/buzzer.ts"),
+    route("lockAnswers", "routes/api/lockAnswers.ts"),
+    route("upload", "routes/api/fileUpload.ts"),
+    route("teamPoints", "routes/api/teamPoints.ts"),
+  ]),
 ] satisfies RouteConfig;

@@ -3,5 +3,5 @@ import { sendToAdmin } from "~/routes/Events/sse.events.admin";
 import { getUserNameFromRequest } from "~/utils/session.server";
 
 export async function action({ request }: Route.ActionArgs) {
-  sendToAdmin("buzzer", { from: getUserNameFromRequest(request) });
+  sendToAdmin("buzzer", { from: await getUserNameFromRequest(request) });
 }

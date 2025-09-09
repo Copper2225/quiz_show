@@ -30,7 +30,7 @@ export async function action({ request }: Route.ActionArgs) {
   });
 }
 
-export default function Login() {
+export default function login() {
   return (
     <main>
       <div className={"p-3"}>
