@@ -1,7 +1,7 @@
 import { Checkbox } from "~/components/ui/checkbox";
 import { Label } from "~/components/ui/label";
 import React, { useState } from "react";
-import MediaUploadOrSelect from "~/routes/Edit/components/MediaEdit/MediaUploadOrSelect";
+import MediaUploadOrSelect from "~/routes/edit/components/MediaEdit/MediaUploadOrSelect";
 import type { MediaConfig } from "~/types/adminTypes";
 
 interface Props {
