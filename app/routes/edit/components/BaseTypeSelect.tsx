@@ -4,7 +4,7 @@ import * as React from "react";
 import Select from "~/components/Select";
 import { Label } from "~/components/ui/label";
 import { useCallback, useMemo, useState } from "react";
-import MultipleChoiceBaseEdit from "~/routes/Edit/components/MultipleChoice/MultipleChoiceBaseEdit";
+import MultipleChoiceBaseEdit from "~/routes/edit/components/MultipleChoice/MultipleChoiceBaseEdit";
 import { Input } from "~/components/ui/input";
 
 interface Props {
