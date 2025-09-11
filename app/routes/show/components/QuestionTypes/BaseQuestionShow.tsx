@@ -1,7 +1,8 @@
 import type { QuestionEntity } from "@prisma/client";
-import MultipleChoiceBaseShow from "~/routes/Show/components/MultipleChoiceBaseShow";
+import MultipleChoiceBaseShow from "~/routes/show/components/QuestionTypes/MultipleChoiceBaseShow";
 import { useMemo } from "react";
 import type { MultipleChoiceQuestion } from "~/types/userTypes";
+import BuzzerBaseShow from "~/routes/show/components/QuestionTypes/BuzzerBaseShow";
 
 interface Props {
   question: QuestionEntity;
@@ -10,12 +11,20 @@ interface Props {
 
 const BaseQuestionShow = ({ question, withHeader }: Props) => {
   const detailed = useMemo(() => {
-    return (
-      <MultipleChoiceBaseShow
-        data={(question as MultipleChoiceQuestion).config}
-      />
-    );
-  }, [question]);
+    switch (question.type) {
+      case "multipleChoice":
+        return (
+          <MultipleChoiceBaseShow
+            data={(question as MultipleChoiceQuestion).config}
+          />
+        );
+      case "buzzer":
+      case "none":
+        return <BuzzerBaseShow question={question} withHeader={withHeader} />;
+      default:
+        return <div></div>;
+    }
+  }, [question, withHeader]);
 
   return (
     <div

@@ -1,15 +1,23 @@
-import TeamTile from "~/routes/Show/components/TeamTile";
-import { useEffect } from "react";
+import TeamTile from "~/routes/show/components/TeamTile";
+import { useCallback, useEffect } from "react";
 import { useFetcher } from "react-router";
+import { useEventSource } from "remix-utils/sse/react";
 
 const TeamsLine = () => {
   const fetcher = useFetcher<{ teams: Map<string, number> }>();
+  const pointsEvent = useEventSource("/sse/events", {
+    event: "pointsUpdate",
+  });
+
+  const loadPoints = useCallback(async () => {
+    if (pointsEvent || !fetcher.data) {
+      await fetcher.load("/api/teams");
+    }
+  }, [pointsEvent, fetcher]);
 
   useEffect(() => {
-    if (fetcher.state === "idle" && !fetcher.data) {
-      fetcher.load("/api/team-names");
-    }
-  }, [fetcher]);
+    loadPoints();
+  }, [pointsEvent]);
 
   const teams = fetcher.data?.teams ?? [];
 

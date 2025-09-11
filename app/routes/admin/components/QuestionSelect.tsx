@@ -1,5 +1,5 @@
 import { Button } from "~/components/ui/button";
-import { Form, useFetcher } from "react-router";
+import { useFetcher } from "react-router";
 import {
   Dialog,
   DialogContent,
@@ -7,15 +7,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import { useState } from "react";
+import { useState, Fragment } from "react";
+import type { QuestionEntity } from "@prisma/client";
 
 interface Props {
   categories: string[];
-  questions: number;
   activeMatrix: boolean[][];
+  grid: Map<string, QuestionEntity>;
 }
 
-const QuestionSelect = ({ categories, questions, activeMatrix }: Props) => {
+const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
   const [open, setOpen] = useState(false);
   const selectFetcher = useFetcher();
 
@@ -24,7 +25,11 @@ const QuestionSelect = ({ categories, questions, activeMatrix }: Props) => {
       <DialogTrigger asChild>
         <Button>OPEN</Button>
       </DialogTrigger>
-      <selectFetcher.Form method={"post"} action={"/api/question"}>
+      <selectFetcher.Form
+        method={"post"}
+        action={"/api/question"}
+        className={"flex flex-col"}
+      >
         <input hidden readOnly name={"type"} value={"none"} />
         <Button type={"submit"}>Clear Question</Button>
       </selectFetcher.Form>
@@ -37,27 +42,34 @@ const QuestionSelect = ({ categories, questions, activeMatrix }: Props) => {
           className="grid gap-4 w-full flex-1"
           style={{
             gridTemplateColumns: `repeat(${categories.length}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(${questions + 1}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${activeMatrix[0]?.length + 1}, minmax(0, 1fr))`,
             gridAutoFlow: "column dense",
           }}
         >
-          {categories.map((_cate, colIndex) => {
+          {categories.map((cate, colIndex) => {
             return (
-              <>
+              <Fragment key={colIndex}>
                 <Button
                   variant={"outline"}
                   className={`w-full overflow-hidden whitespace-break-spaces text-3xl h-full flex items-center justify-center border-2 !border-primary`}
                 >
-                  {categories[colIndex]}
+                  {cate}
                 </Button>
-                {Array.from({ length: questions }, (_, rowIndex) => (
+                {Array.from({ length: 3 }, (_, rowIndex) => (
                   <selectFetcher.Form
+                    key={`row ${rowIndex}`}
                     method={"post"}
                     action={"/api/question"}
                     onSubmit={() => setOpen(false)}
                   >
-                    <input hidden name="event" value="selectQuestion" />
                     <input
+                      hidden
+                      name="event"
+                      value="selectQuestion"
+                      readOnly
+                    />
+                    <input
+                      readOnly
                       hidden
                       name="data"
                       value={JSON.stringify({ col: colIndex, row: rowIndex })}
@@ -66,11 +78,12 @@ const QuestionSelect = ({ categories, questions, activeMatrix }: Props) => {
                       className={`w-full text-4xl h-full flex items-center justify-center ${!activeMatrix[colIndex][rowIndex] && "bg-teal-950 hover:bg-teal-950"}`}
                       type={"submit"}
                     >
-                      {(rowIndex + 1) * 100}
+                      {grid.get(`${colIndex}:${rowIndex}`)?.points ??
+                        (rowIndex + 1) * 100}
                     </Button>
                   </selectFetcher.Form>
                 ))}
-              </>
+              </Fragment>
             );
           })}
         </div>

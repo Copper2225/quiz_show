@@ -4,6 +4,7 @@ import { initActiveMatrix } from "~/utils/playData.server";
 export interface Config {
   categories: string[];
   questionDepth: number;
+  points: number[][];
 }
 
 const config: Config = { categories: [], questionDepth: 0 };
@@ -22,17 +23,19 @@ export async function initConfig(): Promise<void> {
     { length: Math.max(0, maxColumn + 1) },
     () => "",
   );
+
   categories.forEach((category) => {
     mappedCategories[category.column] = category.name;
   });
   config.categories = mappedCategories;
 
-  const maxPoints = questions.reduce((max, question) => {
-    return question.points > max ? question.points : max;
+  const maxRow = questions.reduce((max, question) => {
+    return question.row > max ? question.row : max;
   }, 0);
-  config.questionDepth = maxPoints > 0 ? Math.floor(maxPoints / 100) : 0;
 
-  initActiveMatrix(config.categories.length, config.questionDepth);
+  config.questionDepth = maxRow + 1;
+
+  initActiveMatrix(config.categories.length, maxRow + 1);
 }
 
 export function addCategory(): void {
@@ -79,8 +82,7 @@ export async function getQuestionsGrid(): Promise<Map<string, any>> {
     Array.from({ length: config.questionDepth }, (_, k) => {
       const question = questions.find(
         (question) =>
-          question.categoryColumn === catIndex &&
-          question.points / 100 - 1 === k,
+          question.categoryColumn === catIndex && question.row === k,
       );
       if (question) {
         questionGrid.set(makeKey(catIndex, k), question);

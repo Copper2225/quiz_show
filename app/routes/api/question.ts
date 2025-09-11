@@ -8,7 +8,7 @@ import {
   disableActiveMatrix,
 } from "~/utils/playData.server";
 import dot from "dot-object";
-import { broadcast } from "~/routes/Events/sse.events";
+import { broadcast } from "~/routes/events/sse.events";
 import type { MultipleChoiceQuestion } from "~/types/userTypes";
 
 export async function loader(_args: Route.LoaderArgs) {
@@ -22,6 +22,8 @@ export async function action({ request }: Route.ActionArgs) {
 
   const plainForm = Object.fromEntries(formData.entries());
   const requestValues = dot.object(plainForm) as any;
+
+  console.log(requestValues);
 
   const quest =
     requestValues.data !== undefined

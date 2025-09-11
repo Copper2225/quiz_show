@@ -48,6 +48,8 @@ export default function Edit() {
   const addDepthFetcher = useFetcher();
   const setCategoryFetcher = useFetcher();
 
+  console.log("TEST");
+
   return (
     <main>
       <div className="h-dvh w-dvw box-border p-4 flex flex-col">
@@ -102,7 +104,8 @@ export default function Edit() {
                         variant={"outline"}
                         className={`w-full text-5xl h-full flex items-center justify-center ${data.questions.get(colIndex + ":" + rowIndex) ? "!border-emerald-500" : "!border-red-400"}`}
                       >
-                        {(rowIndex + 1) * 100}
+                        {data.questions.get(colIndex + ":" + rowIndex)
+                          ?.points ?? (rowIndex + 1) * 100}
                       </Button>
                     </Link>
                   )),

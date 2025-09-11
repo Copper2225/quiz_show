@@ -1,22 +1,14 @@
-/*
-  Warnings:
-
-  - You are about to drop the `Question` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropTable
-DROP TABLE `Question`;
-
 -- CreateTable
 CREATE TABLE `QuestionEntity` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `type` VARCHAR(191) NOT NULL,
     `prompt` VARCHAR(191) NOT NULL,
-    `categoryColum` INTEGER NOT NULL,
+    `categoryColumn` INTEGER NOT NULL,
+    `row` INTEGER NOT NULL DEFAULT 0,
     `points` INTEGER NOT NULL,
     `config` JSON NOT NULL,
 
-    UNIQUE INDEX `QuestionEntity_categoryColum_points_key`(`categoryColum`, `points`),
+    UNIQUE INDEX `QuestionEntity_categoryColumn_row_key`(`categoryColumn`, `row`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -26,5 +18,6 @@ CREATE TABLE `CategoryEntity` (
     `name` VARCHAR(191) NOT NULL,
     `column` INTEGER NOT NULL,
 
+    UNIQUE INDEX `CategoryEntity_column_key`(`column`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

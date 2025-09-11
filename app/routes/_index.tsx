@@ -1,2 +1,2 @@
-export { loader } from "./User/user";
-export { default } from "./User/user";
+export { loader } from "./user/user";
+export { default } from "./user/user";

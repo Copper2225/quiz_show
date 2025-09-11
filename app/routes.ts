@@ -7,7 +7,6 @@ import {
 
 export default [
   index("routes/_index.tsx"),
-  route("home", "routes/home.tsx"),
   route("user", "routes/user/user.tsx"),
   route("login", "routes/user/login.tsx"),
   route("edit", "routes/edit/edit.tsx"),
@@ -17,12 +16,11 @@ export default [
   route("admin", "routes/admin/admin.tsx"),
   route("show", "routes/show/show.tsx"),
   ...prefix("/api", [
-    route("teamNames", "routes/api/teamNames.ts"),
+    route("teams", "routes/api/teams.ts"),
     route("question", "routes/api/question.ts"),
     route("answer", "routes/api/answer.ts"),
-    route("buzzer", "routes/api/buzzer.ts"),
     route("lockAnswers", "routes/api/lockAnswers.ts"),
     route("upload", "routes/api/fileUpload.ts"),
-    route("teamPoints", "routes/api/teamPoints.ts"),
+    route("clearAnswers", "routes/api/clearAnswers.ts"),
   ]),
 ] satisfies RouteConfig;

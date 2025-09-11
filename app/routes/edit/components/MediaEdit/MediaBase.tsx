@@ -11,8 +11,6 @@ interface Props {
 const MediaBase = ({ defaultConfig }: Props) => {
   const [media, setMedia] = useState(defaultConfig?.mediaChecked);
 
-  console.log(defaultConfig);
-
   return (
     <div className={"flex flex-col gap-2"}>
       <div>

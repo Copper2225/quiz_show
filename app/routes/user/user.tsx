@@ -10,7 +10,7 @@ import { getAnswerType, getIsUserLocked } from "~/utils/playData.server";
 import MultipleChoiceField from "~/routes/user/components/MultipleChoiceField";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const userName = getUserNameFromRequest(request);
+  const userName = await getUserNameFromRequest(request);
   if (!userName) {
     return new Response(null, { status: 302, headers: { Location: "/login" } });
   }

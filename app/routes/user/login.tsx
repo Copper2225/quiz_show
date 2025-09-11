@@ -25,7 +25,7 @@ export async function action({ request }: Route.ActionArgs) {
     status: 302,
     headers: {
       Location: "/",
-      "Set-Cookie": createUserCookie(teamName),
+      "Set-Cookie": await createUserCookie(teamName),
     },
   });
 }

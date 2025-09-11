@@ -1,15 +1,15 @@
 import { useFetcher, useLoaderData } from "react-router";
 import { getConfig } from "~/utils/config.server";
-import PointsGrid from "~/routes/Show/components/PointsGrid";
+import PointsGrid from "~/routes/show/components/PointsGrid";
 import {
   getActiveMatrix,
   getQuestion,
   initActiveMatrix,
 } from "~/utils/playData.server";
-import TeamsLine from "~/routes/Show/components/TeamsLine";
+import TeamsLine from "~/routes/show/components/TeamsLine";
 import { useEventSource } from "remix-utils/sse/react";
-import { useEffect } from "react";
-import BaseQuestionShow from "~/routes/Show/components/BaseQuestionShow";
+import { useEffect, useMemo } from "react";
+import BaseQuestionShow from "~/routes/show/components/QuestionTypes/BaseQuestionShow";
 import type { QuestionEntity } from "@prisma/client";
 
 export async function loader() {
@@ -53,10 +53,26 @@ export default function Show() {
       ? fetcher.data?.activeMatrix
       : data.activeMatrix;
 
+  const withHeader = useMemo(() => {
+    if (question) {
+      if (
+        question.type === "buzzer" &&
+        (question.config as any)?.media === undefined
+      )
+        return false;
+      return question.type !== "none";
+    } else {
+      return false;
+    }
+  }, [question]);
+
   return (
-    <main className="h-dvh w-dvw box-border px-4 pt-4 flex flex-col">
+    <main
+      className="h-dvh w-dvw box-border px-4 pt-4 flex flex-col"
+      style={{ fontFamily: "chalkduster" }}
+    >
       {question ? (
-        <BaseQuestionShow question={question} withHeader={true} />
+        <BaseQuestionShow question={question} withHeader={withHeader} />
       ) : (
         <PointsGrid
           categories={data.config.categories}

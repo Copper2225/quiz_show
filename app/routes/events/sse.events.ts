@@ -2,7 +2,6 @@ import type { Route } from "./+types/sse.events";
 import { eventStream } from "remix-utils/sse/server";
 import { getUserNameFromRequest } from "~/utils/session.server";
 import { addTeam } from "~/utils/playData.server";
-import { eventSwitch } from "~/routes/Events/eventSwitch";
 import dot from "dot-object";
 
 type Client = {
@@ -35,10 +34,12 @@ export function broadcast(
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const userName = getUserNameFromRequest(request) ?? "Anonymous";
+  const userName = (await getUserNameFromRequest(request)) ?? undefined;
 
-  if (getUserNameFromRequest(request)) {
+  if (userName) {
     addTeam(userName);
+  } else {
+    return;
   }
 
   return eventStream(request.signal, function setup(send) {

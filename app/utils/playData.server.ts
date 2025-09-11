@@ -1,6 +1,5 @@
 import { prisma } from "~/utils/db.server";
 import type { QuestionEntity } from "@prisma/client";
-import type { PlayerPoints } from "~/types/adminTypes";
 
 let userAnswerData: any | null = null;
 
@@ -12,7 +11,7 @@ export function getAnswerType() {
   return userAnswerData;
 }
 
-let activeMatrix: boolean[][] | null = null;
+let activeMatrix: boolean[][] = [];
 
 export function getActiveMatrix() {
   return activeMatrix;
@@ -26,9 +25,7 @@ export function initActiveMatrix(categories: number, questions: number) {
 }
 
 export function disableActiveMatrix(category: number, question: number) {
-  if (activeMatrix !== null) {
-    activeMatrix[category][question] = false;
-  }
+  activeMatrix[category][question] = false;
 }
 
 const teams: Map<string, number> = new Map();
@@ -43,6 +40,10 @@ export function addTeam(name: string) {
   }
 }
 
+export function setTeamPoints(team: string, points: number) {
+  teams.set(team, points);
+}
+
 let currentQuestion: QuestionEntity | null = null;
 
 export async function setQuestion(
@@ -52,7 +53,7 @@ export async function setQuestion(
   currentQuestion = await prisma.questionEntity.findFirst({
     where: {
       categoryColumn: category,
-      points: (question + 1) * 100,
+      row: question,
     },
   });
   return currentQuestion;
@@ -87,26 +88,30 @@ export function isAnyLocked(): boolean {
   return Array.from(answerLock.values()).some((isLocked) => isLocked);
 }
 
-const answers: Map<string, string> = new Map();
+const answers: Map<string, { answer: string; time: Date }> = new Map();
 
 export function clearUserAnswers() {
   answers.clear();
 }
 
-export function setUserAnswer(user: string | undefined, answer: string): void {
+export function setUserAnswer(
+  user: string | undefined,
+  answer: string,
+  time: Date,
+): void {
   if (user) {
-    answers.set(user, answer);
+    answers.set(user, { answer, time });
   }
 }
 
-export function getUserAnswer(user: string | undefined): string | undefined {
+export function getUserAnswer(
+  user: string | undefined,
+): { answer: string; time: Date } | undefined {
   if (user) {
     return answers.get(user);
   }
 }
 
-const playerPoints: Map<string, PlayerPoints> = new Map();
-
-export function getPlayerPoints() {
-  return playerPoints;
+export function getAnswers() {
+  return answers;
 }

@@ -1,12 +1,13 @@
 import type { Route } from "./+types/edit.question";
 import { Form, redirect, useLoaderData } from "react-router";
 import { getConfig } from "~/utils/config.server";
-import BaseTypeSelect from "~/routes/Edit/components/BaseTypeSelect";
+import BaseTypeSelect from "~/routes/edit/components/BaseTypeSelect";
 import { prisma } from "~/utils/db.server";
 import dot from "dot-object";
-import MediaBase from "~/routes/Edit/components/MediaEdit/MediaBase";
+import MediaBase from "~/routes/edit/components/MediaEdit/MediaBase";
 import { Button } from "~/components/ui/button";
-import * as React from "react";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -16,7 +17,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   const values = dot.object(plainForm) as any;
 
   const c = Number(params.c);
-  const q = (Number(params.q) + 1) * 100;
+  const q = Number(params.q);
 
   if (!Number.isInteger(c) || !Number.isInteger(q)) {
     return new Response("Invalid parameters", { status: 400 });
@@ -24,16 +25,18 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   await prisma.questionEntity.upsert({
     where: {
-      categoryColumn_points: { categoryColumn: c, points: q }, // composite unique key
+      categoryColumn_row: { categoryColumn: c, row: q }, // composite unique key
     },
     update: {
       prompt: values.prompt,
       config: values.config,
+      points: Number(values.points),
     },
     create: {
       type: values.baseType,
       categoryColumn: c,
-      points: q,
+      row: q,
+      points: Number(values.points),
       prompt: values.prompt,
       config: values.config ?? {},
     },
@@ -54,7 +57,10 @@ export async function loader({ params }: Route.LoaderArgs) {
 
   const question = await prisma.questionEntity.findUnique({
     where: {
-      categoryColumn_points: { categoryColumn: c, points: (q + 1) * 100 },
+      categoryColumn_row: {
+        categoryColumn: c,
+        row: q,
+      },
     },
   });
 
@@ -67,15 +73,27 @@ export default function EditQuestion() {
   return (
     <main className={"p-4"}>
       <h1 className={"text-xl"}>
-        Edit question {(data.q + 1) * 100} of {data.categoryName ?? data.c}
+        Edit question {data.question?.points ?? (data.q + 1) * 100} of{" "}
+        {data.categoryName ?? data.c}
       </h1>
       <Form method={"post"} className={"p-4 gap-2 flex flex-col"}>
+        <div>
+          <Label className={"mb-2"}>Points</Label>
+          <Input
+            name={"points"}
+            id={"points"}
+            defaultValue={data.question?.points ?? (data.q + 1) * 100}
+            type={"number"}
+          />
+        </div>
         <BaseTypeSelect
           defaultValue={data.question?.type}
           defaultPrompt={data.question?.prompt}
           defaultConfig={data.question?.config}
         />
-        <MediaBase defaultConfig={(data.question?.config as any).media} />
+        <MediaBase
+          defaultConfig={(data.question?.config as any)?.media ?? undefined}
+        />
         <Button className={"mt-5"} type="submit">
           Save
         </Button>

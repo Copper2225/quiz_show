@@ -4,6 +4,6 @@ export interface MediaConfig {
 }
 
 export interface PlayerPoints {
-  points: PlayerPoints;
+  points: number;
   pointsLog: Map<string, number>;
 }
