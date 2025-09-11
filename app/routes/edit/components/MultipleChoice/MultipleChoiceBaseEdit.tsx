@@ -6,7 +6,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { useCallback, useState } from "react";
-import OptionLine from "~/routes/Edit/components/MultipleChoice/OptionLine";
+import OptionLine from "~/routes/edit/components/MultipleChoice/OptionLine";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Checkbox } from "~/components/ui/checkbox";
