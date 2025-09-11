@@ -38,15 +38,13 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   if (userName) {
     addTeam(userName);
-  } else {
-    return;
   }
 
   return eventStream(request.signal, function setup(send) {
     const clientId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
     const client: Client = {
       id: clientId,
-      name: userName,
+      name: userName ?? `client${new Date().toTimeString()}`,
       send,
     };
     clients.set(clientId, client);

@@ -3,14 +3,19 @@ import { createCookie } from "@remix-run/node";
 
 const COOKIE_NAME = "qs_user";
 
+const isProduction =
+  typeof process !== "undefined" && process.env.NODE_ENV === "production";
+const envCookieSecure = process.env.COOKIE_SECURE;
+const cookieSecure =
+  envCookieSecure !== undefined ? envCookieSecure === "true" : isProduction;
+
 const userCookie = createCookie(COOKIE_NAME, {
   path: "/",
   httpOnly: true,
   sameSite: "lax",
   // 24 hours
   maxAge: 60 * 60 * 24,
-  secure:
-    typeof process !== "undefined" && process.env.NODE_ENV === "production",
+  secure: cookieSecure,
 });
 
 export async function createUserCookie(name: string): Promise<string> {
