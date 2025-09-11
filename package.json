@@ -5,7 +5,7 @@
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
+    "start": "react-router-serve ./build/server/index.js --port $PORT",
     "typecheck": "react-router typegen && tsc",
     "studio": "prisma studio",
     "prisma:generate": "prisma generate",
