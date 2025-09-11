@@ -7,3 +7,5 @@
 .env
 .idea
 public/uploads
+
+ecosystem.config.js
