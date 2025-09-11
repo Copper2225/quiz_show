@@ -1,7 +1,5 @@
 import type { Route } from "./+types/sse.events";
 import { eventStream } from "remix-utils/sse/server";
-import { broadcast } from "~/routes/Events/sse.events";
-import dot from "dot-object";
 
 type Client = {
   id: string;
