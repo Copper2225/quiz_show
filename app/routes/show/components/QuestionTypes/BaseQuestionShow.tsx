@@ -10,12 +10,15 @@ interface Props {
 }
 
 const BaseQuestionShow = ({ question, withHeader }: Props) => {
+  const showCorrect = true;
+
   const detailed = useMemo(() => {
     switch (question.type) {
       case "multipleChoice":
         return (
           <MultipleChoiceBaseShow
             data={(question as MultipleChoiceQuestion).config}
+            showCorrect={showCorrect}
           />
         );
       case "buzzer":
@@ -24,7 +27,7 @@ const BaseQuestionShow = ({ question, withHeader }: Props) => {
       default:
         return <div></div>;
     }
-  }, [question, withHeader]);
+  }, [question, withHeader, showCorrect]);
 
   return (
     <div

@@ -6,15 +6,16 @@ interface Props {
   data: {
     options: {
       name: string;
-      value: any;
+      checked?: "on" | "off";
     }[];
     showLetters: "on" | "off";
     trueOrFalse: "on" | "off";
     media?: MediaConfig;
   };
+  showCorrect: boolean;
 }
 
-const MultipleChoiceBaseShow = ({ data }: Props) => {
+const MultipleChoiceBaseShow = ({ data, showCorrect }: Props) => {
   const [fontSize, setFontSize] = useState("3rem");
   const optionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -62,6 +63,7 @@ const MultipleChoiceBaseShow = ({ data }: Props) => {
           <Button
             key={index}
             type={"submit"}
+            disabled={choice.checked !== "on" && showCorrect}
             className={`flex w-full flex-1 text-5xl rounded-2xl p-3 outline-4 outline-solid -outline-offset-12 outline-gray-200 ${data.trueOrFalse === "on" && (index % 2 === 0 ? "bg-green-600" : "bg-red-600")}`}
           >
             <input hidden name={"answer"} value={choice.name} readOnly />
