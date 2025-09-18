@@ -6,6 +6,7 @@ import { Label } from "~/components/ui/label";
 import { useCallback, useMemo, useState } from "react";
 import MultipleChoiceBaseEdit from "~/routes/edit/components/MultipleChoice/MultipleChoiceBaseEdit";
 import { Input } from "~/components/ui/input";
+import BuzzerBaseEdit from "~/routes/edit/components/Buzzer/BuzzerBaseEdit";
 
 interface Props {
   defaultValue?: string;
@@ -50,6 +51,8 @@ const BaseTypeSelect = ({
     switch (type) {
       case "multipleChoice":
         return <MultipleChoiceBaseEdit defaultConfig={defaultConfig} />;
+      case "buzzer":
+        return <BuzzerBaseEdit defaultConfig={defaultConfig} />;
     }
   }, [type]);
 

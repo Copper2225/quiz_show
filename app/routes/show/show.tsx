@@ -2,6 +2,7 @@ import { useFetcher, useLoaderData } from "react-router";
 import { getConfig } from "~/utils/config.server";
 import PointsGrid from "~/routes/show/components/PointsGrid";
 import {
+  answerRevealed,
   getActiveMatrix,
   getQuestion,
   initActiveMatrix,
@@ -22,7 +23,7 @@ export async function loader() {
       config.questionDepth,
     );
   }
-  return { config, activeMatrix, question };
+  return { config, activeMatrix, question, answerRevealed };
 }
 
 export default function Show() {
@@ -69,10 +70,14 @@ export default function Show() {
   return (
     <main
       className="h-dvh w-dvw box-border px-4 pt-4 flex flex-col"
-      style={{ fontFamily: "chalkduster" }}
+      style={{ fontFamily: "Unkempt, Love Ya Like A Sister, chalkduster" }}
     >
       {question ? (
-        <BaseQuestionShow question={question} withHeader={withHeader} />
+        <BaseQuestionShow
+          question={question}
+          withHeader={withHeader}
+          answerRevealed={data.answerRevealed === true}
+        />
       ) : (
         <PointsGrid
           categories={data.config.categories}

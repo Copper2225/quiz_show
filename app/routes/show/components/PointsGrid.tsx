@@ -27,7 +27,8 @@ const PointsGrid = ({
           <React.Fragment key={colIndex}>
             <Button
               variant={"outline"}
-              className={`w-full overflow-hidden whitespace-break-spaces text-4xl h-full flex items-center justify-center border-2 !border-primary`}
+              style={{ fontFamily: "Rampart One" }}
+              className={`w-full overflow-hidden whitespace-break-spaces text-5xl h-full flex items-center justify-center border-2 !border-primary`}
             >
               {categories[colIndex]}
             </Button>

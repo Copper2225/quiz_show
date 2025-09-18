@@ -115,3 +115,9 @@ export function getUserAnswer(
 export function getAnswers() {
   return answers;
 }
+
+export let answerRevealed = false;
+
+export function setAnswerRevealed(paramAnswerRevealed: boolean) {
+  answerRevealed = paramAnswerRevealed;
+}

@@ -48,8 +48,6 @@ export default function Edit() {
   const addDepthFetcher = useFetcher();
   const setCategoryFetcher = useFetcher();
 
-  console.log("TEST");
-
   return (
     <main>
       <div className="h-dvh w-dvw box-border p-4 flex flex-col">

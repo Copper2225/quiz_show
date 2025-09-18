@@ -6,16 +6,19 @@ import { useEventSource } from "remix-utils/sse/react";
 
 interface Props {
   unlockOrLock: boolean;
+  revealedOrHidden: boolean;
   dataAnswers: Map<string, { answer: string; time: Date }>;
 }
 
-const Answers = ({ unlockOrLock, dataAnswers }: Props) => {
+const Answers = ({ unlockOrLock, revealedOrHidden, dataAnswers }: Props) => {
   const [locked, setLocked] = useState<boolean>(unlockOrLock);
+  const [revealed, setRevealed] = useState<boolean>(revealedOrHidden);
 
   const answersFetcher = useFetcher();
 
   const clearEvent = useEventSource("/sse/events", { event: "clearAnswers" });
   const answerEvent = useEventSource("/sse/events/admin", { event: "answer" });
+
   const [answers, setAnswers] =
     useState<Map<string, { answer: string; time: Date }>>(dataAnswers);
 
@@ -48,6 +51,16 @@ const Answers = ({ unlockOrLock, dataAnswers }: Props) => {
     });
   }, []);
 
+  const revealAnswer = useCallback(() => {
+    const formData = new FormData();
+    formData.set("revealed", (!revealed).toString());
+    setRevealed((prevState) => !prevState);
+    answersFetcher.submit(formData, {
+      method: "post",
+      action: "/api/reveal",
+    });
+  }, [revealed]);
+
   return (
     <>
       <ul className={"h-1/8"}>
@@ -72,6 +85,9 @@ const Answers = ({ unlockOrLock, dataAnswers }: Props) => {
         />
         <Button>{locked ? "Unlock Answers" : "Lock Answers"}</Button>
       </answersFetcher.Form>
+      <Button onClick={revealAnswer}>
+        {revealed ? "Hide Answer" : "Reveal Answer"}
+      </Button>
       <Button onClick={clearAnswers}>Clear answers</Button>
     </>
   );

@@ -2,6 +2,7 @@ import { useLoaderData } from "react-router";
 import QuestionSelect from "~/routes/admin/components/QuestionSelect";
 import { getConfig, getQuestionsGrid } from "~/utils/config.server";
 import {
+  answerRevealed,
   getActiveMatrix,
   getAnswers,
   getQuestion,
@@ -28,7 +29,16 @@ export async function loader() {
   const unlockOrLock = isAnyLocked();
   const question = getQuestion();
   const answers = getAnswers();
-  return { config, activeMatrix, unlockOrLock, question, grid, answers };
+  const revealed = answerRevealed;
+  return {
+    config,
+    activeMatrix,
+    unlockOrLock,
+    question,
+    grid,
+    answers,
+    revealed,
+  };
 }
 
 export default function Admin() {
@@ -43,7 +53,11 @@ export default function Admin() {
           activeMatrix={data.activeMatrix}
           grid={data.grid}
         />
-        <Answers unlockOrLock={data.unlockOrLock} dataAnswers={data.answers} />
+        <Answers
+          unlockOrLock={data.unlockOrLock}
+          revealedOrHidden={data.revealed}
+          dataAnswers={data.answers}
+        />
         <PointsSection points={data.question?.points} />
       </div>
     </main>

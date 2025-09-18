@@ -22,5 +22,6 @@ export default [
     route("lockAnswers", "routes/api/lockAnswers.ts"),
     route("upload", "routes/api/fileUpload.ts"),
     route("clearAnswers", "routes/api/clearAnswers.ts"),
+    route("reveal", "routes/api/reveal.ts"),
   ]),
 ] satisfies RouteConfig;

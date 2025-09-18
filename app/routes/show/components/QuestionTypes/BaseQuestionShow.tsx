@@ -1,16 +1,30 @@
 import type { QuestionEntity } from "@prisma/client";
 import MultipleChoiceBaseShow from "~/routes/show/components/QuestionTypes/MultipleChoiceBaseShow";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { MultipleChoiceQuestion } from "~/types/userTypes";
 import BuzzerBaseShow from "~/routes/show/components/QuestionTypes/BuzzerBaseShow";
+import type { BuzzerQuestion } from "~/types/adminTypes";
+import { useEventSource } from "remix-utils/sse/react";
 
 interface Props {
   question: QuestionEntity;
   withHeader: boolean;
+  answerRevealed: boolean;
 }
 
-const BaseQuestionShow = ({ question, withHeader }: Props) => {
-  const showCorrect = true;
+const BaseQuestionShow = ({ question, withHeader, answerRevealed }: Props) => {
+  const [showCorrect, setShowCorrect] = useState(answerRevealed);
+  const questionEvent = useEventSource("/sse/events", {
+    event: "reveal",
+  });
+
+  useEffect(() => {
+    if (questionEvent) {
+      try {
+        setShowCorrect(JSON.parse(questionEvent).revealed === "true");
+      } catch {}
+    }
+  }, [questionEvent]);
 
   const detailed = useMemo(() => {
     switch (question.type) {
@@ -23,7 +37,13 @@ const BaseQuestionShow = ({ question, withHeader }: Props) => {
         );
       case "buzzer":
       case "none":
-        return <BuzzerBaseShow question={question} withHeader={withHeader} />;
+        return (
+          <BuzzerBaseShow
+            question={question as BuzzerQuestion}
+            withHeader={withHeader}
+            showAnswer={showCorrect}
+          />
+        );
       default:
         return <div></div>;
     }

@@ -1,12 +1,14 @@
 import React from "react";
-import type { QuestionEntity } from "@prisma/client";
+import ShowText from "~/routes/show/components/ShowText";
+import type { BuzzerQuestion } from "~/types/adminTypes";
 
 interface Props {
-  question: QuestionEntity;
+  question: BuzzerQuestion;
   withHeader: boolean;
+  showAnswer: boolean;
 }
 
-const BuzzerBaseShow = ({ question, withHeader }: Props) => {
+const BuzzerBaseShow = ({ question, withHeader, showAnswer }: Props) => {
   return (
     <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>
       {(question.config as any)?.media?.mediaChecked && (
@@ -22,10 +24,11 @@ const BuzzerBaseShow = ({ question, withHeader }: Props) => {
           />
         </div>
       )}
-      {!withHeader && (
-        <div className={"self-center w-full text-center text-7xl"}>
-          {question.prompt}
-        </div>
+      {!withHeader && !showAnswer && <ShowText>{question.prompt}</ShowText>}
+      {showAnswer && (
+        <ShowText textColor={"var(--color-emerald-500)"}>
+          Answer: {question.config.answer}
+        </ShowText>
       )}
     </div>
   );
