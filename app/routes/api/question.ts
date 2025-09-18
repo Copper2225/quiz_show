@@ -23,8 +23,6 @@ export async function action({ request }: Route.ActionArgs) {
   const plainForm = Object.fromEntries(formData.entries());
   const requestValues = dot.object(plainForm) as any;
 
-  console.log(requestValues);
-
   const quest =
     requestValues.data !== undefined
       ? await setQuestion(

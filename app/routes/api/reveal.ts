@@ -9,6 +9,5 @@ export async function action({ request }: Route.ActionArgs) {
   const plainForm = Object.fromEntries(formData.entries());
   const requestValues = dot.object(plainForm) as any;
   broadcast("reveal", requestValues);
-  console.log(requestValues);
   setAnswerRevealed(requestValues.revealed === "true");
 }
