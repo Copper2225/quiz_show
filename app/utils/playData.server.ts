@@ -1,5 +1,6 @@
 import { prisma } from "~/utils/db.server";
 import type { QuestionEntity } from "@prisma/client";
+import { broadcast } from "~/routes/events/sse.events";
 
 let userAnswerData: any | null = null;
 
@@ -61,6 +62,8 @@ export async function setQuestion(
 
 export function clearQuestion() {
   currentQuestion = null;
+  setAnswerRevealed(false);
+  broadcast("reveal", { revealed: "false" });
   return currentQuestion;
 }
 

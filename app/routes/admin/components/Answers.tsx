@@ -17,6 +17,7 @@ const Answers = ({ unlockOrLock, revealedOrHidden, dataAnswers }: Props) => {
   const answersFetcher = useFetcher();
 
   const clearEvent = useEventSource("/sse/events", { event: "clearAnswers" });
+  const revealEvent = useEventSource("/sse/events", { event: "reveal" });
   const answerEvent = useEventSource("/sse/events/admin", { event: "answer" });
 
   const [answers, setAnswers] =
@@ -44,22 +45,30 @@ const Answers = ({ unlockOrLock, revealedOrHidden, dataAnswers }: Props) => {
     }
   }, [clearEvent]);
 
-  const clearAnswers = useCallback(() => {
-    answersFetcher.submit("clear", {
+  useEffect(() => {
+    if (revealEvent) {
+      try {
+        console.log(revealEvent);
+        setRevealed(JSON.parse(revealEvent).revealed === "true");
+      } catch {}
+    }
+  }, [revealEvent]);
+
+  const clearAnswers = useCallback(async () => {
+    await answersFetcher.submit("clear", {
       method: "post",
       action: "/api/clearAnswers",
     });
-  }, []);
+  }, [answersFetcher]);
 
   const revealAnswer = useCallback(() => {
     const formData = new FormData();
     formData.set("revealed", (!revealed).toString());
-    setRevealed((prevState) => !prevState);
     answersFetcher.submit(formData, {
       method: "post",
       action: "/api/reveal",
     });
-  }, [revealed]);
+  }, [revealed, answersFetcher]);
 
   return (
     <>
