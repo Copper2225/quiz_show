@@ -1,15 +1,27 @@
 interface Props {
   name: string;
   points: number;
+  answer?: string;
+  showAnswer: boolean;
+  highlighted?: boolean;
 }
 
-const TeamTile = ({ name, points }: Props) => {
+const TeamTile = ({
+  name,
+  points,
+  showAnswer,
+  answer,
+  highlighted = false,
+}: Props) => {
   return (
     <div
-      className={
-        "self-end p-5 text-3xl text-center flex-1 flex flex-col bg-purple-700 rounded-t-2xl"
-      }
+      className={`self-end p-5 text-3xl text-center flex-1 flex flex-col rounded-t-2xl ${
+        highlighted ? "bg-orange-500" : "bg-purple-700"
+      }`}
     >
+      {answer && showAnswer && (
+        <div className={"mb-2 p-2 bg-white/20 rounded text-2xl"}>{answer}</div>
+      )}
       <span>{name}</span>
       <span className={"text-2xl"}>{points}</span>
     </div>
