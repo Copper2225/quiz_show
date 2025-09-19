@@ -3,14 +3,22 @@ import { Button } from "~/components/ui/button";
 import { useCallback, useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import { useEventSource } from "remix-utils/sse/react";
+import HiddenText from "~/routes/admin/components/HiddenText";
+import type { QuestionEntity } from "@prisma/client";
 
 interface Props {
   unlockOrLock: boolean;
   revealedOrHidden: boolean;
   dataAnswers: Map<string, { answer: string; time: Date }>;
+  question: QuestionEntity | null;
 }
 
-const Answers = ({ unlockOrLock, revealedOrHidden, dataAnswers }: Props) => {
+const Answers = ({
+  unlockOrLock,
+  revealedOrHidden,
+  dataAnswers,
+  question,
+}: Props) => {
   const [locked, setLocked] = useState<boolean>(unlockOrLock);
   const [revealed, setRevealed] = useState<boolean>(revealedOrHidden);
 
@@ -48,7 +56,6 @@ const Answers = ({ unlockOrLock, revealedOrHidden, dataAnswers }: Props) => {
   useEffect(() => {
     if (revealEvent) {
       try {
-        console.log(revealEvent);
         setRevealed(JSON.parse(revealEvent).revealed === "true");
       } catch {}
     }
@@ -72,6 +79,11 @@ const Answers = ({ unlockOrLock, revealedOrHidden, dataAnswers }: Props) => {
 
   return (
     <>
+      {question !== null &&
+        question.config !== null &&
+        (question.config.valueOf() as any).answer !== undefined && (
+          <HiddenText text={(question.config.valueOf() as any).answer} />
+        )}
       <ul className={"h-1/8"}>
         {Array.from(answers.entries()).map(([key, value]) => (
           <li key={key}>

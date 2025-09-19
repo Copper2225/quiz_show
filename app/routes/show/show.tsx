@@ -67,8 +67,6 @@ export default function Show() {
     }
   }, [question]);
 
-  console.log(data);
-
   return (
     <main
       className="h-dvh w-dvw box-border px-4 pt-4 flex flex-col"

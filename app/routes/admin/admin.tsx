@@ -57,6 +57,7 @@ export default function Admin() {
           unlockOrLock={data.unlockOrLock}
           revealedOrHidden={data.revealed}
           dataAnswers={data.answers}
+          question={data.question}
         />
         <PointsSection points={data.question?.points} />
       </div>
