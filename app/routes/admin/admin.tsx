@@ -1,6 +1,6 @@
 import { useLoaderData } from "react-router";
 import QuestionSelect from "~/routes/admin/components/QuestionSelect";
-import { getConfig } from "~/utils/config.server";
+import { getConfig, initQuestionGrid } from "~/utils/config.server";
 import {
   AdminData,
   initActiveMatrix,
@@ -17,6 +17,7 @@ export async function loader() {
     activeMatrix[0]?.length !== config.questionDepth
   ) {
     initActiveMatrix(config.categories.length, config.questionDepth);
+    await initQuestionGrid();
   }
   return { ...AdminData, unlockOrLock: isAnyLocked() };
 }

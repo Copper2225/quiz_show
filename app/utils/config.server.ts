@@ -74,7 +74,7 @@ function makeKey(c: number, q: number) {
   return `${c}:${q}`;
 }
 
-export async function getQuestionsGrid(): Promise<Map<string, any>> {
+export async function initQuestionGrid(): Promise<void> {
   const questions = await prisma.questionEntity.findMany();
 
   config.categories.forEach((_category: string, catIndex: number) => {
@@ -88,7 +88,9 @@ export async function getQuestionsGrid(): Promise<Map<string, any>> {
       }
     });
   });
+}
 
+export function getQuestionsGrid(): Map<string, any> {
   return questionGrid;
 }
 

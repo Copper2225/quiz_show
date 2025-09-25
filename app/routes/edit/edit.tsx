@@ -9,6 +9,7 @@ import {
   addQuestionDepth,
   setCategory,
   getQuestionsGrid,
+  initQuestionGrid,
 } from "~/utils/config.server";
 import { Link, useFetcher, useLoaderData } from "react-router";
 
@@ -19,7 +20,8 @@ type LoaderData = {
 
 export async function loader({}: Route.LoaderArgs) {
   const config = getConfig();
-  const questions = await getQuestionsGrid();
+  await initQuestionGrid();
+  const questions = getQuestionsGrid();
   return { config, questions };
 }
 

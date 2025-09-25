@@ -41,7 +41,7 @@ export const AdminData: AdminDataShape = {
   teams: new Map<string, number>(),
   answerRevealed: false,
   config: getConfig(),
-  questionGrid: await getQuestionsGrid(),
+  questionGrid: getQuestionsGrid(),
   playerReveal: new Map<string, boolean>(),
 };
 
