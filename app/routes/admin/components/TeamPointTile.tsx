@@ -81,7 +81,7 @@ const TeamPointTile = ({
 
   return (
     <div key={name} className={"flex items-center gap-3"}>
-      <div>{name}:</div>
+      <div className={"min-w-1/6 max-w-1/6"}>{name}:</div>
       <Input
         name={"points"}
         value={pointsValue}

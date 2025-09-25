@@ -3,8 +3,10 @@ import MultipleChoiceBaseShow from "~/routes/show/components/QuestionTypes/Multi
 import { useEffect, useMemo, useState } from "react";
 import type { MultipleChoiceQuestion } from "~/types/userTypes";
 import BuzzerBaseShow from "~/routes/show/components/QuestionTypes/BuzzerBaseShow";
-import type { BuzzerQuestion } from "~/types/adminTypes";
+import type { BuzzerQuestion, InputQuestion } from "~/types/adminTypes";
 import { useEventSource } from "remix-utils/sse/react";
+import InputBaseShow from "~/routes/show/components/QuestionTypes/InputBaseShow";
+import { useRevalidator } from "react-router";
 
 interface Props {
   question: QuestionEntity;
@@ -17,11 +19,13 @@ const BaseQuestionShow = ({ question, withHeader, answerRevealed }: Props) => {
   const questionEvent = useEventSource("/sse/events", {
     event: "reveal",
   });
+  const revalidator = useRevalidator();
 
   useEffect(() => {
     if (questionEvent) {
       try {
         setShowCorrect(JSON.parse(questionEvent).revealed === "true");
+        revalidator.revalidate();
       } catch {}
     }
   }, [questionEvent]);
@@ -33,6 +37,14 @@ const BaseQuestionShow = ({ question, withHeader, answerRevealed }: Props) => {
           <MultipleChoiceBaseShow
             data={(question as MultipleChoiceQuestion).config}
             showCorrect={showCorrect}
+          />
+        );
+      case "input":
+        return (
+          <InputBaseShow
+            question={question as InputQuestion}
+            withHeader={withHeader}
+            showAnswer={showCorrect}
           />
         );
       case "buzzer":

@@ -7,9 +7,10 @@ interface Props {
   index: number;
   removeAnswer: () => void;
   defaultValues: { name: string; checked: boolean };
+  answers: number;
 }
 
-const OptionLine = ({ index, removeAnswer, defaultValues }: Props) => {
+const OptionLine = ({ index, removeAnswer, defaultValues, answers }: Props) => {
   return (
     <TableRow>
       <TableCell className="font-medium">
@@ -27,7 +28,7 @@ const OptionLine = ({ index, removeAnswer, defaultValues }: Props) => {
         />
       </TableCell>
       <TableCell>
-        {index > 1 && (
+        {index === answers - 1 && (
           <Button type={"button"} variant={"secondary"} onClick={removeAnswer}>
             -
           </Button>

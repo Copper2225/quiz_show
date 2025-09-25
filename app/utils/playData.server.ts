@@ -1,100 +1,148 @@
 import { prisma } from "~/utils/db.server";
 import type { QuestionEntity } from "@prisma/client";
 import { broadcast } from "~/routes/events/sse.events";
+import {
+  type Config,
+  getConfig,
+  getQuestionsGrid,
+} from "~/utils/config.server";
 
-let userAnswerData: any | null = null;
+interface PlayerData {
+  answerType: any | null;
+  userLocks: Map<string, boolean>;
+}
+
+interface AdminDataShape {
+  activeMatrix: boolean[][];
+  currentQuestion: QuestionEntity | null;
+  answers: Map<string, { answer: string; time: Date }>;
+  teams: Map<string, number>;
+  answerRevealed: boolean;
+  config: Config;
+  questionGrid: Map<string, QuestionEntity>;
+  playerReveal: Map<string, boolean>;
+}
+
+interface SpecificUserData {
+  isLocked: boolean | undefined;
+  answer: { answer: string; time: Date } | undefined;
+  userName: string;
+}
+
+export const playerData: PlayerData = {
+  answerType: null,
+  userLocks: new Map<string, boolean>(),
+};
+
+export const AdminData: AdminDataShape = {
+  activeMatrix: [],
+  currentQuestion: null,
+  answers: new Map<string, { answer: string; time: Date }>(),
+  teams: new Map<string, number>(),
+  answerRevealed: false,
+  config: getConfig(),
+  questionGrid: await getQuestionsGrid(),
+  playerReveal: new Map<string, boolean>(),
+};
+
+export const ShowData = {
+  get activeMatrix() {
+    return AdminData.activeMatrix;
+  },
+  get currentQuestion() {
+    return AdminData.currentQuestion;
+  },
+  get answerRevealed() {
+    return AdminData.answerRevealed;
+  },
+  get teams() {
+    return AdminData.teams;
+  },
+  get answers() {
+    return AdminData.answers;
+  },
+  get config() {
+    return AdminData.config;
+  },
+  get playerReveal() {
+    return AdminData.playerReveal;
+  },
+};
+
+export function getUserData(user: string): SpecificUserData {
+  return {
+    isLocked: getIsUserLocked(user),
+    answer: getUserAnswer(user),
+    userName: user,
+  };
+}
 
 export function setAnswerType(newAnswerType: object) {
-  userAnswerData = newAnswerType;
-}
-
-export function getAnswerType() {
-  return userAnswerData;
-}
-
-let activeMatrix: boolean[][] = [];
-
-export function getActiveMatrix() {
-  return activeMatrix;
+  playerData.answerType = newAnswerType;
 }
 
 export function initActiveMatrix(categories: number, questions: number) {
-  activeMatrix = Array.from({ length: categories }, () =>
+  AdminData.activeMatrix = Array.from({ length: categories }, () =>
     Array.from({ length: questions }, () => true),
   );
-  return activeMatrix;
+  return AdminData.activeMatrix;
 }
 
 export function disableActiveMatrix(category: number, question: number) {
-  activeMatrix[category][question] = false;
-}
-
-const teams: Map<string, number> = new Map();
-
-export function getTeams() {
-  return teams;
+  AdminData.activeMatrix[category][question] = false;
 }
 
 export function addTeam(name: string) {
-  if (!teams.has(name)) {
-    teams.set(name, 0);
+  if (!AdminData.teams.has(name)) {
+    AdminData.teams.set(name, 0);
   }
 }
 
 export function setTeamPoints(team: string, points: number) {
-  teams.set(team, points);
+  AdminData.teams.set(team, points);
 }
-
-let currentQuestion: QuestionEntity | null = null;
 
 export async function setQuestion(
   question: number,
   category: number,
 ): Promise<QuestionEntity | null> {
-  currentQuestion = await prisma.questionEntity.findFirst({
+  AdminData.currentQuestion = await prisma.questionEntity.findFirst({
     where: {
       categoryColumn: category,
       row: question,
     },
   });
-  return currentQuestion;
+  return AdminData.currentQuestion;
 }
 
 export function clearQuestion() {
-  currentQuestion = null;
+  AdminData.currentQuestion = null;
   setAnswerRevealed(false);
   broadcast("reveal", { revealed: "false" });
-  return currentQuestion;
+  return AdminData.currentQuestion;
 }
-
-export function getQuestion() {
-  return currentQuestion;
-}
-
-const answerLock = new Map<string, boolean>();
 
 export function setAllLocked(lock: boolean) {
-  for (const key of teams.keys()) {
-    answerLock.set(key, lock);
+  for (const key of AdminData.teams.keys()) {
+    playerData.userLocks.set(key, lock);
   }
 }
 
 export function setUserLocked(user: string, lock: boolean) {
-  answerLock.set(user, lock);
+  playerData.userLocks.set(user, lock);
 }
 
 export function getIsUserLocked(user: string): boolean | undefined {
-  return answerLock.get(user);
+  return playerData.userLocks.get(user);
 }
 
 export function isAnyLocked(): boolean {
-  return Array.from(answerLock.values()).some((isLocked) => isLocked);
+  return Array.from(playerData.userLocks.values()).some((isLocked) => isLocked);
 }
 
-const answers: Map<string, { answer: string; time: Date }> = new Map();
-
 export function clearUserAnswers() {
-  answers.clear();
+  AdminData.answers.clear();
+  setAllPlayerReveal(false);
 }
 
 export function setUserAnswer(
@@ -103,7 +151,7 @@ export function setUserAnswer(
   time: Date,
 ): void {
   if (user) {
-    answers.set(user, { answer, time });
+    AdminData.answers.set(user, { answer, time });
   }
 }
 
@@ -111,16 +159,20 @@ export function getUserAnswer(
   user: string | undefined,
 ): { answer: string; time: Date } | undefined {
   if (user) {
-    return answers.get(user);
+    return AdminData.answers.get(user);
   }
 }
 
-export function getAnswers() {
-  return answers;
+export function setAnswerRevealed(paramAnswerRevealed: boolean) {
+  AdminData.answerRevealed = paramAnswerRevealed;
 }
 
-export let answerRevealed = false;
+export function setUserRevealed(user: string, paramRevealed: boolean) {
+  AdminData.playerReveal.set(user, paramRevealed);
+}
 
-export function setAnswerRevealed(paramAnswerRevealed: boolean) {
-  answerRevealed = paramAnswerRevealed;
+export function setAllPlayerReveal(reveal: boolean) {
+  for (const key of AdminData.teams.keys()) {
+    AdminData.playerReveal.set(key, reveal);
+  }
 }

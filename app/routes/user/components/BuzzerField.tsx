@@ -13,7 +13,7 @@ const BuzzerField = (): ReactElement => {
         "h-full w-full box-border p-3 flex items-stretch justify-center"
       }
     >
-      <input hidden name="answer" value="buzzer" />
+      <input hidden name="answer" readOnly value="buzzer" />
       <Button type={"submit"} className={"h-full w-full box-border"} />
     </fetcher.Form>
   );

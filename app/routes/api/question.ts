@@ -1,21 +1,14 @@
 import type { Route } from "./+types/question";
 import {
   clearQuestion,
-  getActiveMatrix,
-  getQuestion,
   setAnswerType,
   setQuestion,
   disableActiveMatrix,
+  clearUserAnswers,
 } from "~/utils/playData.server";
 import dot from "dot-object";
 import { broadcast } from "~/routes/events/sse.events";
 import type { MultipleChoiceQuestion } from "~/types/userTypes";
-
-export async function loader(_args: Route.LoaderArgs) {
-  const question = getQuestion();
-  const activeMatrix = getActiveMatrix();
-  return { question, activeMatrix };
-}
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -31,7 +24,10 @@ export async function action({ request }: Route.ActionArgs) {
         )
       : clearQuestion();
 
+  console.log(quest);
+
   if (quest) {
+    clearUserAnswers();
     disableActiveMatrix(
       JSON.parse(requestValues.data).col,
       JSON.parse(requestValues.data).row,

@@ -4,7 +4,6 @@ import { initActiveMatrix } from "~/utils/playData.server";
 export interface Config {
   categories: string[];
   questionDepth: number;
-  points: number[][];
 }
 
 const config: Config = { categories: [], questionDepth: 0 };

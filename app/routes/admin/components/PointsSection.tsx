@@ -1,34 +1,31 @@
-import { useFetcher } from "react-router";
-import { useCallback, useEffect, useMemo } from "react";
+import { useRevalidator } from "react-router";
+import { useEffect } from "react";
 import TeamPointTile from "~/routes/admin/components/TeamPointTile";
 import { useEventSource } from "remix-utils/sse/react";
 
 interface Props {
   points: number | undefined;
+  teams: Map<string, number>;
 }
 
-const PointsSection = ({ points }: Props) => {
-  const pointsFetcher = useFetcher<{ teams: Map<string, number> }>();
+const PointsSection = ({ points, teams }: Props) => {
   const pointsEvent = useEventSource("/sse/events", {
     event: "pointsUpdate",
   });
-
-  const loadTeams = useCallback(async () => {
-    await pointsFetcher.load("/api/teams");
-  }, []);
+  const revalidate = useRevalidator();
 
   useEffect(() => {
-    loadTeams();
+    revalidate.revalidate().then();
   }, [pointsEvent]);
-
-  const teams = useMemo(() => {
-    return pointsFetcher.data?.teams ?? [];
-  }, [pointsFetcher.data]);
 
   return (
     <div>
       {points && <span>Aktuelle Frage: {points} Punkte</span>}
-      <div className={"flex flex-col gap-2"}>
+      <div
+        className={
+          "flex flex-col gap-2 min-h-[20dvh] max-h-[20dvh] overflow-y-scroll"
+        }
+      >
         {Array.from(teams).map(([name, userPoints]) => (
           <TeamPointTile
             name={name}

@@ -1,14 +1,17 @@
 import TeamTile from "~/routes/show/components/TeamTile";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useFetcher } from "react-router";
+import { useEffect, useMemo } from "react";
 import { useEventSource } from "remix-utils/sse/react";
+import type { QuestionEntity } from "@prisma/client";
+import { useRevalidator } from "react-router";
 
-const TeamsLine = () => {
-  const fetcher = useFetcher<{ teams: Map<string, number> }>();
-  const answersFetcher = useFetcher<{
-    answers: Map<string, { answer: string; time: string | Date }>;
-  }>();
-  const questionFetcher = useFetcher<any>();
+interface Props {
+  teams: Map<string, number>;
+  answers: Map<string, { answer: string; time: string | Date }>;
+  question: QuestionEntity | null;
+  userReveals: Map<string, boolean>;
+}
+
+const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
   const pointsEvent = useEventSource("/sse/events", {
     event: "pointsUpdate",
   });
@@ -19,58 +22,23 @@ const TeamsLine = () => {
   const answerTypeEvent = useEventSource("/sse/events", {
     event: "answerType",
   });
-
-  const [isBuzzer, setIsBuzzer] = useState<boolean>(false);
-
-  const loadPoints = useCallback(async () => {
-    if (pointsEvent || !fetcher.data) {
-      await fetcher.load("/api/teams");
-    }
-  }, [pointsEvent, fetcher]);
-
-  const loadAnswers = useCallback(async () => {
-    if (answerUserEvent || clearEvent || !answersFetcher.data) {
-      await answersFetcher.load("/api/answers");
-    }
-  }, [answerUserEvent, clearEvent, answersFetcher]);
+  const userRevealEvent = useEventSource("/sse/events", {
+    event: "revealUser",
+  });
+  const revalidate = useRevalidator();
 
   useEffect(() => {
-    loadPoints();
-  }, [pointsEvent]);
-
-  useEffect(() => {
-    loadAnswers();
-  }, [answerUserEvent, clearEvent]);
-
-  useEffect(() => {
-    if (!fetcher.data) fetcher.load("/api/teams");
-    if (!answersFetcher.data) answersFetcher.load("/api/answers");
-    if (!questionFetcher.data) questionFetcher.load("/api/question");
-  }, []);
-
-  useEffect(() => {
-    if (answerTypeEvent !== null) {
-      try {
-        const payload = JSON.parse(answerTypeEvent) as { data?: any };
-        setIsBuzzer(payload?.data?.type === "buzzer");
-      } catch {}
-    }
-  }, [answerTypeEvent]);
-
-  useEffect(() => {
-    const q = questionFetcher.data?.question;
-    if (q) {
-      setIsBuzzer(q.type === "buzzer");
-    } else if (q === null) {
-      setIsBuzzer(false);
-    }
-  }, [questionFetcher.data]);
-
-  const teams = fetcher.data?.teams ?? [];
-  const answers = answersFetcher.data?.answers ?? new Map();
+    revalidate.revalidate();
+  }, [
+    answerUserEvent,
+    clearEvent,
+    answerTypeEvent,
+    pointsEvent,
+    userRevealEvent,
+  ]);
 
   const firstBuzzerTeam = useMemo(() => {
-    if (!isBuzzer) return undefined;
+    if (!(question?.type === "buzzer")) return undefined;
     let first: { name: string; time: string | Date } | undefined;
     for (const [name, value] of Array.from(answers.entries())) {
       const currentTime = value.time as any;
@@ -79,7 +47,7 @@ const TeamsLine = () => {
       }
     }
     return first?.name;
-  }, [answers, isBuzzer]);
+  }, [answers, question?.type]);
 
   return (
     <div
@@ -94,9 +62,9 @@ const TeamsLine = () => {
           key={name}
           name={name}
           points={points}
-          showAnswer={!isBuzzer}
+          showAnswer={userReveals.get(name) ?? false}
           answer={(answers as Map<string, any>).get(name)?.answer}
-          highlighted={isBuzzer && firstBuzzerTeam === name}
+          highlighted={question?.type === "buzzer" && firstBuzzerTeam === name}
         />
       ))}
     </div>

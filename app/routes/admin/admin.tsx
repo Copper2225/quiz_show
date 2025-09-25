@@ -1,11 +1,8 @@
 import { useLoaderData } from "react-router";
 import QuestionSelect from "~/routes/admin/components/QuestionSelect";
-import { getConfig, getQuestionsGrid } from "~/utils/config.server";
+import { getConfig } from "~/utils/config.server";
 import {
-  answerRevealed,
-  getActiveMatrix,
-  getAnswers,
-  getQuestion,
+  AdminData,
   initActiveMatrix,
   isAnyLocked,
 } from "~/utils/playData.server";
@@ -14,31 +11,14 @@ import Answers from "~/routes/admin/components/Answers";
 
 export async function loader() {
   const config = getConfig();
-  let activeMatrix = getActiveMatrix();
-  const grid = await getQuestionsGrid();
-
+  let activeMatrix = AdminData.activeMatrix;
   if (
     activeMatrix.length !== config.categories.length ||
     activeMatrix[0]?.length !== config.questionDepth
   ) {
-    activeMatrix = initActiveMatrix(
-      config.categories.length,
-      config.questionDepth,
-    );
+    initActiveMatrix(config.categories.length, config.questionDepth);
   }
-  const unlockOrLock = isAnyLocked();
-  const question = getQuestion();
-  const answers = getAnswers();
-  const revealed = answerRevealed;
-  return {
-    config,
-    activeMatrix,
-    unlockOrLock,
-    question,
-    grid,
-    answers,
-    revealed,
-  };
+  return { ...AdminData, unlockOrLock: isAnyLocked() };
 }
 
 export default function Admin() {
@@ -51,15 +31,19 @@ export default function Admin() {
         <QuestionSelect
           categories={data.config.categories}
           activeMatrix={data.activeMatrix}
-          grid={data.grid}
+          grid={data.questionGrid}
         />
         <Answers
           unlockOrLock={data.unlockOrLock}
-          revealedOrHidden={data.revealed}
-          dataAnswers={data.answers}
-          question={data.question}
+          revealedOrHidden={data.answerRevealed}
+          answers={data.answers}
+          question={data.currentQuestion}
+          userReveals={data.playerReveal}
         />
-        <PointsSection points={data.question?.points} />
+        <PointsSection
+          points={data.currentQuestion?.points}
+          teams={data.teams}
+        />
       </div>
     </main>
   );

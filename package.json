@@ -23,6 +23,7 @@
     "@react-router/serve": "^7.7.1",
     "@remix-run/form-data-parser": "^0.10.1",
     "@remix-run/node": "^2.17.0",
+    "@yamada-ui/reorder": "^2.0.26",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",

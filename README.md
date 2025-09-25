@@ -17,19 +17,19 @@ An in-progress quiz show web app built for a youth group holiday camp. It suppor
 
 ### Local Development
 
-1) Install dependencies:
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-2) Configure database (MySQL/MariaDB) and `.env`:
+2. Configure database (MySQL/MariaDB) and `.env`:
 
 ```bash
 DATABASE_URL="mysql://user:pass@localhost:3306/quiz_show"
 ```
 
-3) Run migrations and start dev server:
+3. Run migrations and start dev server:
 
 ```bash
 npx prisma migrate dev
@@ -70,5 +70,3 @@ MIT — see `LICENSE`.
 ### Acknowledgements
 
 Built on top of the React Router full-stack template. Tailored for a youth group holiday camp quiz show.
-
-

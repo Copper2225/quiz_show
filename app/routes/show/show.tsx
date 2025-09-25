@@ -1,29 +1,13 @@
-import { useFetcher, useLoaderData } from "react-router";
-import { getConfig } from "~/utils/config.server";
+import { useLoaderData, useRevalidator } from "react-router";
 import PointsGrid from "~/routes/show/components/PointsGrid";
-import {
-  answerRevealed,
-  getActiveMatrix,
-  getQuestion,
-  initActiveMatrix,
-} from "~/utils/playData.server";
+import { ShowData } from "~/utils/playData.server";
 import TeamsLine from "~/routes/show/components/TeamsLine";
 import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useMemo } from "react";
 import BaseQuestionShow from "~/routes/show/components/QuestionTypes/BaseQuestionShow";
-import type { QuestionEntity } from "@prisma/client";
 
 export async function loader() {
-  const config = getConfig();
-  const question = getQuestion();
-  let activeMatrix = getActiveMatrix();
-  if (!activeMatrix) {
-    activeMatrix = initActiveMatrix(
-      config.categories.length,
-      config.questionDepth,
-    );
-  }
-  return { config, activeMatrix, question, answerRevealed };
+  return ShowData;
 }
 
 export default function Show() {
@@ -31,41 +15,30 @@ export default function Show() {
     event: "answerType",
   });
   const data = useLoaderData<typeof loader>();
-  const fetcher = useFetcher<{
-    question: QuestionEntity;
-    activeMatrix: boolean[][];
-  }>();
+  const revalidate = useRevalidator();
 
   useEffect(() => {
     if (questionEvent) {
-      try {
-        fetcher.load("/api/question");
-      } catch {}
+      revalidate.revalidate();
     }
   }, [questionEvent]);
 
-  const question =
-    fetcher.data?.question !== undefined
-      ? fetcher.data?.question
-      : data.question;
+  const question = data.currentQuestion;
 
-  const activeMatrix =
-    fetcher.data?.activeMatrix !== undefined
-      ? fetcher.data?.activeMatrix
-      : data.activeMatrix;
+  const activeMatrix = data.activeMatrix;
 
   const withHeader = useMemo(() => {
     if (question) {
       if (
-        question.type === "buzzer" &&
+        (question.type === "buzzer" || question.type === "input") &&
         (question.config as any)?.media === undefined
       )
-        return false;
+        return data.answerRevealed;
       return question.type !== "none";
     } else {
       return false;
     }
-  }, [question]);
+  }, [question, data.answerRevealed]);
 
   return (
     <main
@@ -85,7 +58,12 @@ export default function Show() {
           activeMatrix={activeMatrix}
         />
       )}
-      <TeamsLine />
+      <TeamsLine
+        teams={data.teams}
+        question={data.currentQuestion}
+        answers={data.answers}
+        userReveals={data.playerReveal}
+      />
     </main>
   );
 }

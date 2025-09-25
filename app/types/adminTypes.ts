@@ -5,6 +5,13 @@ export interface BuzzerQuestion extends QuestionEntity {
     answer: string;
   };
 }
+
+export interface InputQuestion extends QuestionEntity {
+  config: {
+    answer: string;
+  };
+}
+
 export interface MediaConfig {
   mediaChecked: boolean;
   mediaFile: string;
