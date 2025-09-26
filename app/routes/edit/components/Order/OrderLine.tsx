@@ -6,12 +6,16 @@ interface Props {
   index: number;
   deleteRow: () => void;
   elements: number;
+  defaultConfig: any;
 }
 
-const OrderLine = ({ index, deleteRow, elements }: Props) => {
+const OrderLine = ({ index, deleteRow, elements, defaultConfig }: Props) => {
   return (
     <div className={"flex items-center gap-3"}>
-      <Input name={`config.options.${index}`} />
+      <Input
+        name={`config.options.${index}`}
+        defaultValue={defaultConfig.options[index]}
+      />
 
       <Button
         variant="ghost"

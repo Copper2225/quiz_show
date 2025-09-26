@@ -24,10 +24,8 @@ export async function action({ request }: Route.ActionArgs) {
         )
       : clearQuestion();
 
-  console.log(quest);
-
+  clearUserAnswers();
   if (quest) {
-    clearUserAnswers();
     disableActiveMatrix(
       JSON.parse(requestValues.data).col,
       JSON.parse(requestValues.data).row,

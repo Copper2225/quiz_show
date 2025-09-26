@@ -66,6 +66,16 @@ const MultipleChoiceBaseEdit = ({ defaultConfig }: Props) => {
         </Button>
       </div>
       <div>
+        <Label htmlFor={"shuffle"} className={"mb-2"}>
+          Shuffle
+        </Label>
+        <Checkbox
+          name={"config.shuffle"}
+          id={"config.shuffle"}
+          defaultChecked={defaultConfig?.shuffle}
+        />
+      </div>
+      <div>
         <Label htmlFor={"showLetters"} className={"mb-2"}>
           Show Letters
         </Label>

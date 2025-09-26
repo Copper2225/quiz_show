@@ -9,7 +9,9 @@ interface Props {
 }
 
 const OrderBaseEdit = ({ defaultConfig }: Props) => {
-  const [elements, setElements] = useState<number>(2);
+  const [elements, setElements] = useState<number>(
+    defaultConfig.options.length ?? 2,
+  );
 
   const deleteRow = useCallback(() => {
     setElements((prevElements) => prevElements - 1);
@@ -19,24 +21,31 @@ const OrderBaseEdit = ({ defaultConfig }: Props) => {
   }, []);
 
   return (
-    <div>
-      <Label className={"mb-2"}>Elements</Label>
-      <div className={"flex flex-col gap-2"}>
-        {Array.from({ length: elements }).map((_e, index) => (
-          <OrderLine index={index} deleteRow={deleteRow} elements={elements} />
-        ))}
-      </div>
+    <>
+      <div>
+        <Label className={"mb-2"}>Elements</Label>
+        <div className={"flex flex-col gap-2"}>
+          {Array.from({ length: elements }).map((_e, index) => (
+            <OrderLine
+              index={index}
+              deleteRow={deleteRow}
+              elements={elements}
+              defaultConfig={defaultConfig}
+            />
+          ))}
+        </div>
 
-      <Button
-        variant="outline"
-        className="mt-2 w-full justify-start text-muted-foreground"
-        type={"button"}
-        onClick={addRow}
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Add new element
-      </Button>
-    </div>
+        <Button
+          variant="outline"
+          className="mt-2 w-full justify-start text-muted-foreground"
+          type={"button"}
+          onClick={addRow}
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add new element
+        </Button>
+      </div>
+    </>
   );
 };
 

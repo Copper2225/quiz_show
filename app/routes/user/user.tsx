@@ -1,6 +1,6 @@
 import type { Route } from "./+types/user";
 import Waiting from "~/routes/user/components/Waiting";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useRevalidator } from "react-router";
 import { getUserNameFromRequest } from "~/utils/session.server";
 import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useMemo, useState } from "react";
@@ -8,6 +8,7 @@ import BuzzerField from "~/routes/user/components/BuzzerField";
 import { getUserData, playerData } from "~/utils/playData.server";
 import MultipleChoiceField from "~/routes/user/components/MultipleChoiceField";
 import InputAnswerField from "~/routes/user/components/InputAnswerField";
+import OrderField from "~/routes/user/components/OrderField";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const userName = await getUserNameFromRequest(request);
@@ -25,17 +26,10 @@ export default function user() {
     event: "lockAnswers",
   });
   const data = useLoaderData<typeof loader>();
-  const [questionData, setQuestionData] = useState<any>(data.answerType);
+  const revalidator = useRevalidator();
 
   useEffect(() => {
-    if (answerTypeEvent !== null) {
-      try {
-        const payload = JSON.parse(answerTypeEvent) as { data: any };
-        if (payload?.data) {
-          setQuestionData(payload.data);
-        }
-      } catch {}
-    }
+    revalidator.revalidate();
   }, [answerTypeEvent]);
 
   const [answersLocked, setAnswersLocked] = useState<boolean>(
@@ -58,24 +52,36 @@ export default function user() {
   }, [lockAnswersEvent, setAnswersLocked]);
 
   const renderAnswerComponents = useMemo(() => {
-    switch (questionData?.type ?? "none") {
-      case "buzzer":
-        return <BuzzerField />;
-      case "multipleChoice":
-        return (
-          <MultipleChoiceField locked={answersLocked} data={questionData} />
-        );
-      case "input":
-        return (
-          <InputAnswerField
-            answer={data.answer?.answer}
-            locked={answersLocked}
-          />
-        );
-      default:
-        return <Waiting />;
+    if (data.question) {
+      switch (data.question?.type ?? "none") {
+        case "buzzer":
+          return <BuzzerField />;
+        case "multipleChoice":
+          return (
+            <MultipleChoiceField locked={answersLocked} data={data.question} />
+          );
+        case "input":
+          return (
+            <InputAnswerField
+              answer={data.answer?.answer}
+              locked={answersLocked}
+            />
+          );
+        case "order":
+          return (
+            <OrderField
+              locked={answersLocked}
+              data={data.question}
+              answer={data.answer?.answer}
+            />
+          );
+        default:
+          return <Waiting />;
+      }
+    } else {
+      return <Waiting />;
     }
-  }, [questionData, answersLocked, data.answer]);
+  }, [data.question, answersLocked, data.answer]);
 
   return (
     <main className={"h-dvh w-dvw box-border p-2"}>

@@ -1,12 +1,13 @@
 import type { QuestionEntity } from "@prisma/client";
 import MultipleChoiceBaseShow from "~/routes/show/components/QuestionTypes/MultipleChoiceBaseShow";
 import { useEffect, useMemo, useState } from "react";
-import type { MultipleChoiceQuestion } from "~/types/userTypes";
+import type { MultipleChoiceQuestion, OrderQuestion } from "~/types/userTypes";
 import BuzzerBaseShow from "~/routes/show/components/QuestionTypes/BuzzerBaseShow";
 import type { BuzzerQuestion, InputQuestion } from "~/types/adminTypes";
 import { useEventSource } from "remix-utils/sse/react";
 import InputBaseShow from "~/routes/show/components/QuestionTypes/InputBaseShow";
 import { useRevalidator } from "react-router";
+import OrderBaseShow from "~/routes/show/components/QuestionTypes/OrderBaseShow";
 
 interface Props {
   question: QuestionEntity;
@@ -45,6 +46,13 @@ const BaseQuestionShow = ({ question, withHeader, answerRevealed }: Props) => {
             question={question as InputQuestion}
             withHeader={withHeader}
             showAnswer={showCorrect}
+          />
+        );
+      case "order":
+        return (
+          <OrderBaseShow
+            data={(question as OrderQuestion).config}
+            showCorrect={showCorrect}
           />
         );
       case "buzzer":

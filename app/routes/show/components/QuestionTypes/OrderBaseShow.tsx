@@ -1,28 +1,32 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "~/components/ui/button";
 import type { MediaConfig } from "~/types/adminTypes";
 
 interface Props {
   data: {
-    options: {
-      name: string;
-      checked?: "on" | "off";
-    }[];
-    showLetters: "on" | "off";
-    trueOrFalse: "on" | "off";
+    options: string[];
+    shuffledOptions: string[];
     media?: MediaConfig;
   };
   showCorrect: boolean;
 }
 
-const MultipleChoiceBaseShow = ({ data, showCorrect }: Props) => {
+const OrderBaseShow = ({ data, showCorrect }: Props) => {
   const [fontSize, setFontSize] = useState("3rem");
   const optionRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const options = useMemo(() => {
+    if (showCorrect) {
+      return data.options;
+    } else {
+      return data.shuffledOptions;
+    }
+  }, [showCorrect]);
 
   useEffect(() => {
     let smallestScale = 1;
 
-    optionRefs.current = optionRefs.current.slice(0, data.options.length);
+    optionRefs.current = optionRefs.current.slice(0, options.length);
 
     optionRefs.current.forEach((div) => {
       if (div) {
@@ -41,7 +45,7 @@ const MultipleChoiceBaseShow = ({ data, showCorrect }: Props) => {
     } else {
       setFontSize("4rem");
     }
-  }, [data.options]);
+  }, [options]);
 
   return (
     <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>
@@ -59,29 +63,27 @@ const MultipleChoiceBaseShow = ({ data, showCorrect }: Props) => {
         </div>
       )}
       <div className={"w-full flex flex-1 flex-col gap-4"}>
-        {data.options.map((choice, index) => (
+        {options.map((choice, index) => (
           <Button
             key={index}
-            disabled={choice.checked !== "on" && showCorrect}
-            className={`flex w-full flex-1 text-5xl rounded-2xl p-3 outline-4 outline-solid -outline-offset-12 outline-gray-200 ${data.trueOrFalse === "on" && (index % 2 === 0 ? "bg-green-600" : "bg-red-600")}`}
+            className={`flex w-full flex-1 text-5xl rounded-2xl p-3 outline-4 outline-solid -outline-offset-12 outline-gray-200`}
           >
-            {data.showLetters === "on" && (
-              <div
-                className={
-                  "bg-purple-600 px-5 ms-4 self-center content-center rounded-3xl aspect-square h-min"
-                }
-              >
-                {String.fromCharCode("A".charCodeAt(0) + index)}
-              </div>
-            )}
+            <div
+              style={{ fontSize }}
+              className={`${showCorrect ? "bg-emerald-400" : "bg-purple-600"} ms-4 px-5 self-center content-center text-3xl rounded-3xl aspect-square h-[1.5em]`}
+            >
+              {showCorrect
+                ? data.shuffledOptions.indexOf(options[index]) + 1
+                : index + 1}
+            </div>
             <div
               ref={(el) => {
                 optionRefs.current[index] = el;
               }}
               style={{ fontSize }}
-              className={`w-full content-center px-5 whitespace-break-spaces overflow-hidden h-full ${data.showLetters === "on" ? "text-start" : "text-center"}`}
+              className={`w-full content-center px-5 whitespace-break-spaces overflow-hidden h-full`}
             >
-              {choice.name}
+              {choice}
             </div>
           </Button>
         ))}
@@ -90,4 +92,4 @@ const MultipleChoiceBaseShow = ({ data, showCorrect }: Props) => {
   );
 };
 
-export default MultipleChoiceBaseShow;
+export default OrderBaseShow;

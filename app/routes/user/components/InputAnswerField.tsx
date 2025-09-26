@@ -40,6 +40,7 @@ const InputAnswerField = ({ answer, locked }: Props): ReactElement => {
       <Textarea
         className={"h-full text-start !text-4xl"}
         name="answer"
+        disabled={locked}
         onChange={handleChange}
         defaultValue={answer}
       />

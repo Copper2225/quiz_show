@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 interface FitGroupProps {
   texts: string[];
@@ -14,47 +14,84 @@ const FitGroup = ({
   texts,
   children,
   minFontSize = 10,
-  maxFontSize = 200,
+  maxFontSize = 150,
 }: FitGroupProps) => {
   const refs = useRef<(HTMLDivElement | null)[]>([]);
   const [fontSize, setFontSize] = useState(maxFontSize);
+  const [measureKey, setMeasureKey] = useState(0);
 
   const getRef = (index: number) => (el: HTMLDivElement | null) => {
     refs.current[index] = el;
   };
 
   useLayoutEffect(() => {
-    if (!refs.current.length) return;
+    let isCancelled = false;
 
-    let bestSize = maxFontSize;
+    const measure = async () => {
+      if (!refs.current.length) return;
 
-    refs.current.forEach((el) => {
-      if (!el) return;
-
-      let low = minFontSize;
-      let high = maxFontSize;
-      let best = minFontSize;
-
-      while (low <= high) {
-        const mid = Math.floor((low + high) / 2);
-        el.style.fontSize = `${mid}px`;
-
-        const fitsWidth = el.scrollWidth <= el.clientWidth;
-        const fitsHeight = el.scrollHeight <= el.clientHeight;
-
-        if (fitsWidth && fitsHeight) {
-          best = mid;
-          low = mid + 1;
-        } else {
-          high = mid - 1;
+      // Wait for web fonts to be ready (when supported)
+      try {
+        const docFonts: any = (document as any).fonts;
+        if (docFonts && typeof docFonts.ready?.then === "function") {
+          await docFonts.ready;
         }
+      } catch {}
+
+      // Wait a frame for layout to settle
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => resolve()),
+      );
+
+      let bestSize = maxFontSize;
+
+      refs.current.forEach((el) => {
+        if (!el) return;
+
+        const previousInlineFontSize = el.style.fontSize;
+
+        let low = minFontSize;
+        let high = maxFontSize;
+        let best = minFontSize;
+
+        while (low <= high) {
+          const mid = Math.floor((low + high) / 2);
+          el.style.fontSize = `${mid}px`;
+
+          const fitsWidth = el.scrollWidth <= el.clientWidth;
+          const fitsHeight = el.scrollHeight <= el.clientHeight;
+
+          if (fitsWidth && fitsHeight) {
+            best = mid;
+            low = mid + 1;
+          } else {
+            high = mid - 1;
+          }
+        }
+
+        // Restore previous inline style to avoid residue from measurement
+        el.style.fontSize = previousInlineFontSize;
+
+        bestSize = Math.min(bestSize, best);
+      });
+
+      if (!isCancelled) {
+        setFontSize(bestSize * 0.99);
       }
+    };
 
-      bestSize = Math.min(bestSize, best);
-    });
+    void measure();
 
-    setFontSize(bestSize * 0.95);
-  }, [texts, minFontSize, maxFontSize]);
+    return () => {
+      isCancelled = true;
+    };
+  }, [texts, minFontSize, maxFontSize, measureKey]);
+
+  useEffect(() => {
+    const handleResize = () => setMeasureKey((v) => v + 1);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return <>{children(fontSize, getRef)}</>;
 };

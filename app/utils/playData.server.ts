@@ -6,10 +6,12 @@ import {
   getConfig,
   getQuestionsGrid,
 } from "~/utils/config.server";
+import _ from "lodash";
 
 interface PlayerData {
   answerType: any | null;
   userLocks: Map<string, boolean>;
+  question: QuestionEntity | null;
 }
 
 interface AdminDataShape {
@@ -32,6 +34,7 @@ interface SpecificUserData {
 export const playerData: PlayerData = {
   answerType: null,
   userLocks: new Map<string, boolean>(),
+  question: null,
 };
 
 export const AdminData: AdminDataShape = {
@@ -106,17 +109,56 @@ export async function setQuestion(
   question: number,
   category: number,
 ): Promise<QuestionEntity | null> {
-  AdminData.currentQuestion = await prisma.questionEntity.findFirst({
+  const foundQuestion = await prisma.questionEntity.findFirst({
     where: {
       categoryColumn: category,
       row: question,
     },
   });
+
+  if (!foundQuestion) {
+    AdminData.currentQuestion = null;
+    return null;
+  }
+
+  console.log(foundQuestion);
+
+  if (
+    foundQuestion.config &&
+    ((foundQuestion.config as any).shuffle === "on" ||
+      foundQuestion.type === "order") &&
+    Array.isArray((foundQuestion.config as any).options)
+  ) {
+    const cfg = foundQuestion.config as any;
+    if (foundQuestion.type === "order") {
+      cfg.shuffledOptions = _.shuffle(cfg.options);
+    } else {
+      cfg.options = _.shuffle(cfg.options);
+    }
+    foundQuestion.config = cfg;
+  }
+
+  AdminData.currentQuestion = foundQuestion;
+  playerData.question = {
+    ...foundQuestion,
+    config: {
+      ...(foundQuestion.config as any),
+      answer: undefined,
+      options:
+        foundQuestion.type !== "order"
+          ? (foundQuestion.config as any).options?.map(
+              (o: { name: string }) => o.name,
+            )
+          : undefined,
+    },
+  };
+
   return AdminData.currentQuestion;
 }
 
 export function clearQuestion() {
   AdminData.currentQuestion = null;
+  playerData.question = null;
   setAnswerRevealed(false);
   broadcast("reveal", { revealed: "false" });
   return AdminData.currentQuestion;

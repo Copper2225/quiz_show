@@ -45,6 +45,7 @@
     "@react-router/dev": "^7.7.1",
     "@tailwindcss/vite": "^4.1.4",
     "@types/dot-object": "^2.1.6",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^20",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
