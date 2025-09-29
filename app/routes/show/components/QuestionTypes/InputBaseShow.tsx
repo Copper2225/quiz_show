@@ -9,7 +9,6 @@ interface Props {
 }
 
 const InputBaseShow = ({ question, withHeader, showAnswer }: Props) => {
-  console.log(question);
   return (
     <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>
       {(question.config as any)?.media?.mediaChecked && (

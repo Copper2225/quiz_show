@@ -1,13 +1,13 @@
 import { FitGroup } from "~/routes/user/components/FitGroup";
 import { Reorder, ReorderItem } from "@yamada-ui/reorder";
-import type { QuestionEntity } from "@prisma/client";
 import { Button } from "~/components/ui/button";
 import { GripHorizontal } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { useFetcher } from "react-router";
+import type { UserOrderQuestion } from "~/types/userTypes";
 
 interface Props {
-  data: QuestionEntity;
+  data: UserOrderQuestion;
   locked: boolean;
   answer: string | undefined;
 }
@@ -16,7 +16,7 @@ const OrderField = ({ data, locked, answer }: Props) => {
   const [testData, setTestData] = useState<string[]>([]);
 
   const loadedOrder = useMemo(() => {
-    const options = (data.config as any).shuffledOptions as string[];
+    const options = data.config.shuffledOptions as string[];
     if (answer !== undefined) {
       const parsed = JSON.parse(answer) as number[];
       return parsed.map((idx) => options[idx - 1]);
@@ -35,9 +35,7 @@ const OrderField = ({ data, locked, answer }: Props) => {
     formData.append(
       "answer",
       JSON.stringify(
-        testData.map(
-          (e) => (data.config as any).shuffledOptions.indexOf(e) + 1,
-        ),
+        testData.map((e) => data.config.shuffledOptions.indexOf(e) + 1),
       ),
     );
     submitFetcher.submit(formData, {
@@ -64,12 +62,12 @@ const OrderField = ({ data, locked, answer }: Props) => {
                 {loadedOrder.map((choice: string, index: number) => (
                   <ReorderItem
                     value={choice}
-                    className="flex h-full overflow-hidden"
+                    className={"flex h-full overflow-hidden"}
                     drag={!locked}
                     key={index}
                   >
                     <div
-                      className={`w-full h-full rounded-2xl outline-4 outline-solid -outline-offset-12 p-2 items-center flex ${locked && "opacity-50"}`}
+                      className={`w-full bg-background h-full rounded-2xl outline-4 outline-solid -outline-offset-12 p-2 items-center flex ${locked && "opacity-50"}`}
                     >
                       <div
                         ref={getRef(index)}

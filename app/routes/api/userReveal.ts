@@ -14,6 +14,4 @@ export async function action({ request }: Route.ActionArgs) {
     setUserRevealed(requestValues.user, requestValues.reveal === "true");
   }
   broadcast("revealUser", requestValues.reveal);
-
-  console.log(requestValues);
 }

@@ -7,6 +7,7 @@ import {
   getQuestionsGrid,
 } from "~/utils/config.server";
 import _ from "lodash";
+import { userColors } from "~/routes/show/userColors";
 
 interface PlayerData {
   answerType: any | null;
@@ -29,6 +30,7 @@ interface SpecificUserData {
   isLocked: boolean | undefined;
   answer: { answer: string; time: Date } | undefined;
   userName: string;
+  userColor: string;
 }
 
 export const playerData: PlayerData = {
@@ -77,6 +79,7 @@ export function getUserData(user: string): SpecificUserData {
     isLocked: getIsUserLocked(user),
     answer: getUserAnswer(user),
     userName: user,
+    userColor: userColors[Array.from(AdminData.teams.keys()).indexOf(user)],
   };
 }
 
@@ -121,8 +124,6 @@ export async function setQuestion(
     return null;
   }
 
-  console.log(foundQuestion);
-
   if (
     foundQuestion.config &&
     ((foundQuestion.config as any).shuffle === "on" ||
@@ -152,6 +153,16 @@ export async function setQuestion(
           : undefined,
     },
   };
+
+  if (foundQuestion.type === "pin") {
+    playerData.question = {
+      ...foundQuestion,
+      config: {
+        ...(foundQuestion.config as any),
+        pin: undefined,
+      },
+    };
+  }
 
   return AdminData.currentQuestion;
 }

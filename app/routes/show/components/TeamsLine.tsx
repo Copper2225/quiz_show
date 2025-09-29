@@ -3,6 +3,7 @@ import { useEffect, useMemo } from "react";
 import { useEventSource } from "remix-utils/sse/react";
 import type { QuestionEntity } from "@prisma/client";
 import { useRevalidator } from "react-router";
+import { userColors } from "~/routes/show/userColors";
 
 interface Props {
   teams: Map<string, number>;
@@ -65,6 +66,11 @@ const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
           showAnswer={userReveals.get(name) ?? false}
           answer={(answers as Map<string, any>).get(name)?.answer}
           highlighted={question?.type === "buzzer" && firstBuzzerTeam === name}
+          color={
+            question?.type === "pin"
+              ? userColors[Array.from(teams.keys()).indexOf(name)]
+              : undefined
+          }
         />
       ))}
     </div>

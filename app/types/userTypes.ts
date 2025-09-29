@@ -1,17 +1,21 @@
 import type { QuestionEntity } from "@prisma/client";
 
-export interface MultipleChoiceQuestion extends QuestionEntity {
+export interface UserMultipleChoiceQuestion extends QuestionEntity {
   config: {
-    options: { name: string; value: any }[];
+    options: string[];
     showLetters: "on" | "off";
     trueOrFalse: "on" | "off";
   };
 }
-
-export interface OrderQuestion extends QuestionEntity {
+export interface UserOrderQuestion extends QuestionEntity {
   config: {
-    options: string[];
     shuffledOptions: string[];
+  };
+}
+
+export interface UserPinQuestion extends QuestionEntity {
+  config: {
+    image: string;
   };
 }
 

@@ -9,6 +9,7 @@ import { Input } from "~/components/ui/input";
 import BuzzerBaseEdit from "~/routes/edit/components/Buzzer/BuzzerBaseEdit";
 import InputBaseEdit from "~/routes/edit/components/Input/InputBaseEdit";
 import OrderBaseEdit from "~/routes/edit/components/Order/OrderBaseEdit";
+import PinBaseEdit from "~/routes/edit/components/Pin/PinBaseEdit";
 
 interface Props {
   defaultValue?: string;
@@ -59,6 +60,8 @@ const BaseTypeSelect = ({
         return <InputBaseEdit defaultConfig={defaultConfig} />;
       case "order":
         return <OrderBaseEdit defaultConfig={defaultConfig} />;
+      case "pin":
+        return <PinBaseEdit defaultConfig={defaultConfig} />;
     }
   }, [type]);
 

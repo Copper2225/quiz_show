@@ -2,10 +2,10 @@ import { Button } from "~/components/ui/button";
 import { useFetcher } from "react-router";
 import { FitGroup } from "./FitGroup";
 import { useEffect } from "react";
-import type { QuestionEntity } from "@prisma/client";
+import type { UserMultipleChoiceQuestion } from "~/types/userTypes";
 
 interface Props {
-  data: QuestionEntity;
+  data: UserMultipleChoiceQuestion;
   locked: boolean;
 }
 
@@ -17,15 +17,15 @@ const MultipleChoiceField = ({ data, locked }: Props) => {
   }, []);
 
   return (
-    <FitGroup texts={(data.config as any).options}>
+    <FitGroup texts={data.config.options}>
       {(fontSize, getRef) => (
         <div
           className="h-full w-full grid gap-3 touch-manipulation"
           style={{
-            gridTemplateRows: `repeat(${(data.config as any).options.length}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${data.config.options.length}, minmax(0, 1fr))`,
           }}
         >
-          {(data.config as any).options.map((choice: string, index: number) => (
+          {data.config.options.map((option, index) => (
             <selectionFetcher.Form
               method="post"
               action="/api/answer"
@@ -35,26 +35,27 @@ const MultipleChoiceField = ({ data, locked }: Props) => {
               <Button
                 type="submit"
                 disabled={locked}
-                className={`w-full h-full rounded-2xl outline-4 ${selectionFetcher.data?.answer === choice ? "outline-purple-700" : "outline-gray-200"} outline-solid -outline-offset-12 p-2 ${
-                  (data.config as any).trueOrFalse === "on" &&
+                className={`w-full h-full rounded-2xl outline-4 ${selectionFetcher.data?.answer === option ? "outline-purple-700" : "outline-gray-200"} outline-solid -outline-offset-12 p-2 ${
+                  data.config.trueOrFalse === "on" &&
                   (index % 2 === 0 ? "bg-green-600" : "bg-red-600")
                 }`}
               >
-                <input hidden name="answer" value={choice} readOnly />
-                {(data.config as any).showLetters === "on" && (
+                <input hidden name="answer" value={option} readOnly />
+                {data.config.showLetters === "on" && (
                   <div className="bg-purple-600 ms-4 px-5 self-center content-center text-3xl rounded-3xl aspect-square h-min">
                     {String.fromCharCode("A".charCodeAt(0) + index)}
                   </div>
                 )}
                 <div
                   ref={getRef(index)}
+                  style={{ fontSize }}
                   className={`w-full content-center px-5 whitespace-pre-wrap overflow-hidden ${
-                    (data.config as any).showLetters === "on"
+                    data.config.showLetters === "on"
                       ? "text-start"
                       : "text-center"
                   }`}
                 >
-                  {choice}
+                  {option}
                 </div>
               </Button>
             </selectionFetcher.Form>

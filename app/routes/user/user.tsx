@@ -9,6 +9,12 @@ import { getUserData, playerData } from "~/utils/playData.server";
 import MultipleChoiceField from "~/routes/user/components/MultipleChoiceField";
 import InputAnswerField from "~/routes/user/components/InputAnswerField";
 import OrderField from "~/routes/user/components/OrderField";
+import type {
+  UserMultipleChoiceQuestion,
+  UserOrderQuestion,
+  UserPinQuestion,
+} from "~/types/userTypes";
+import PinField from "~/routes/user/components/PinField";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const userName = await getUserNameFromRequest(request);
@@ -58,7 +64,10 @@ export default function user() {
           return <BuzzerField />;
         case "multipleChoice":
           return (
-            <MultipleChoiceField locked={answersLocked} data={data.question} />
+            <MultipleChoiceField
+              locked={answersLocked}
+              data={data.question as UserMultipleChoiceQuestion}
+            />
           );
         case "input":
           return (
@@ -71,8 +80,17 @@ export default function user() {
           return (
             <OrderField
               locked={answersLocked}
-              data={data.question}
+              data={data.question as UserOrderQuestion}
               answer={data.answer?.answer}
+            />
+          );
+        case "pin":
+          return (
+            <PinField
+              locked={answersLocked}
+              data={data.question as UserPinQuestion}
+              answer={data.answer?.answer}
+              teamColor={data.userColor}
             />
           );
         default:
@@ -84,10 +102,10 @@ export default function user() {
   }, [data.question, answersLocked, data.answer]);
 
   return (
-    <main className={"h-dvh w-dvw box-border p-2"}>
+    <main className={"max-h-dvh h-dvh w-dvw box-border p-2"}>
       <div className={"h-full w-full box-border flex flex-col gap-3"}>
         <h1 className={"w-full text-center"}>{data.userName}</h1>
-        <div className={"flex-1 min-h-0"}>{renderAnswerComponents}</div>
+        <div className={"h-full min-h-0"}>{renderAnswerComponents}</div>
       </div>
     </main>
   );

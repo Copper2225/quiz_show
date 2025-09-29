@@ -8,7 +8,7 @@ import {
 } from "~/utils/playData.server";
 import dot from "dot-object";
 import { broadcast } from "~/routes/events/sse.events";
-import type { MultipleChoiceQuestion } from "~/types/userTypes";
+import type { MultipleChoiceQuestion } from "~/types/adminTypes";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();

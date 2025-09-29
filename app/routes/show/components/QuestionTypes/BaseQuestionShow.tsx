@@ -1,21 +1,35 @@
 import type { QuestionEntity } from "@prisma/client";
 import MultipleChoiceBaseShow from "~/routes/show/components/QuestionTypes/MultipleChoiceBaseShow";
 import { useEffect, useMemo, useState } from "react";
-import type { MultipleChoiceQuestion, OrderQuestion } from "~/types/userTypes";
 import BuzzerBaseShow from "~/routes/show/components/QuestionTypes/BuzzerBaseShow";
-import type { BuzzerQuestion, InputQuestion } from "~/types/adminTypes";
+import type {
+  BuzzerQuestion,
+  InputQuestion,
+  MultipleChoiceQuestion,
+  OrderQuestion,
+  PinQuestion,
+} from "~/types/adminTypes";
 import { useEventSource } from "remix-utils/sse/react";
 import InputBaseShow from "~/routes/show/components/QuestionTypes/InputBaseShow";
 import { useRevalidator } from "react-router";
 import OrderBaseShow from "~/routes/show/components/QuestionTypes/OrderBaseShow";
+import PinQuestionShow from "~/routes/show/components/QuestionTypes/PinQuestion/PinQuestionShow";
 
 interface Props {
   question: QuestionEntity;
   withHeader: boolean;
   answerRevealed: boolean;
+  answers: Map<string, { answer: string; time: Date }>;
+  teams: Map<string, number>;
 }
 
-const BaseQuestionShow = ({ question, withHeader, answerRevealed }: Props) => {
+const BaseQuestionShow = ({
+  question,
+  withHeader,
+  answerRevealed,
+  answers,
+  teams,
+}: Props) => {
   const [showCorrect, setShowCorrect] = useState(answerRevealed);
   const questionEvent = useEventSource("/sse/events", {
     event: "reveal",
@@ -55,6 +69,16 @@ const BaseQuestionShow = ({ question, withHeader, answerRevealed }: Props) => {
             showCorrect={showCorrect}
           />
         );
+      case "pin":
+        return (
+          <PinQuestionShow
+            question={question as PinQuestion}
+            answers={answers}
+            showAnswer={showCorrect}
+            withHeader={withHeader}
+            teams={teams}
+          />
+        );
       case "buzzer":
       case "none":
         return (
@@ -67,7 +91,7 @@ const BaseQuestionShow = ({ question, withHeader, answerRevealed }: Props) => {
       default:
         return <div></div>;
     }
-  }, [question, withHeader, showCorrect]);
+  }, [question, withHeader, showCorrect, teams]);
 
   return (
     <div
