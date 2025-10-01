@@ -1,7 +1,7 @@
 import type { Route } from "./+types/sse.events";
 import { eventStream } from "remix-utils/sse/server";
 import { getUserNameFromRequest } from "~/utils/session.server";
-import { addTeam } from "~/utils/playData.server";
+import { addTeam, AdminData } from "~/utils/playData.server";
 import dot from "dot-object";
 
 type Client = {
@@ -38,6 +38,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   if (userName) {
     addTeam(userName);
+    broadcast("pointsUpdate", AdminData.teams);
   }
 
   return eventStream(request.signal, function setup(send) {

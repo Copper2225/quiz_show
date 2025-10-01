@@ -94,8 +94,21 @@ export function initActiveMatrix(categories: number, questions: number) {
   return AdminData.activeMatrix;
 }
 
-export function disableActiveMatrix(category: number, question: number) {
-  AdminData.activeMatrix[category][question] = false;
+export function disableActiveMatrix(
+  category: number,
+  question: number,
+  switching: boolean = false,
+) {
+  AdminData.activeMatrix[category][question] = switching
+    ? !AdminData.activeMatrix[category][question]
+    : false;
+}
+
+export function resetActiveMatrix() {
+  AdminData.activeMatrix = Array.from(
+    { length: getConfig().categories.length },
+    () => Array.from({ length: getConfig().questionDepth }, () => true),
+  );
 }
 
 export function addTeam(name: string) {

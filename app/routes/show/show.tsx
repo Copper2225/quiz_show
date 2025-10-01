@@ -14,14 +14,17 @@ export default function Show() {
   const questionEvent = useEventSource("/sse/events", {
     event: "answerType",
   });
+  const disableEvent = useEventSource("/sse/events", {
+    event: "disableEvent",
+  });
   const data = useLoaderData<typeof loader>();
   const revalidate = useRevalidator();
 
   useEffect(() => {
-    if (questionEvent) {
+    if (questionEvent || disableEvent) {
       revalidate.revalidate();
     }
-  }, [questionEvent]);
+  }, [questionEvent, disableEvent]);
 
   const question = data.currentQuestion;
 
