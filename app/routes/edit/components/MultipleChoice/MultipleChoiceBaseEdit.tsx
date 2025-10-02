@@ -10,14 +10,15 @@ import OptionLine from "~/routes/edit/components/MultipleChoice/OptionLine";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Checkbox } from "~/components/ui/checkbox";
+import type { MultipleChoiceQuestion } from "~/types/adminTypes";
 
 interface Props {
-  defaultConfig?: any;
+  question?: MultipleChoiceQuestion;
 }
 
-const MultipleChoiceBaseEdit = ({ defaultConfig }: Props) => {
+const MultipleChoiceBaseEdit = ({ question }: Props) => {
   const [answers, setAnswers] = useState<number>(
-    defaultConfig?.options?.length ?? 2,
+    question?.config.options.length ?? 2,
   );
 
   const addAnswer = useCallback(() => {
@@ -49,7 +50,10 @@ const MultipleChoiceBaseEdit = ({ defaultConfig }: Props) => {
                   answers={answers}
                   removeAnswer={removeAnswer}
                   defaultValues={
-                    defaultConfig?.options?.[i] ?? { name: "", checked: false }
+                    question?.config.options[i] ?? {
+                      name: "",
+                      checked: "off",
+                    }
                   }
                 />
               );
@@ -72,7 +76,7 @@ const MultipleChoiceBaseEdit = ({ defaultConfig }: Props) => {
         <Checkbox
           name={"config.shuffle"}
           id={"config.shuffle"}
-          defaultChecked={defaultConfig?.shuffle}
+          defaultChecked={question?.config?.shuffle === "on"}
         />
       </div>
       <div>
@@ -82,7 +86,7 @@ const MultipleChoiceBaseEdit = ({ defaultConfig }: Props) => {
         <Checkbox
           name={"config.showLetters"}
           id={"config.showLetters"}
-          defaultChecked={defaultConfig?.showLetters}
+          defaultChecked={question?.config?.showLetters === "on"}
         />
       </div>
       <div>
@@ -92,7 +96,7 @@ const MultipleChoiceBaseEdit = ({ defaultConfig }: Props) => {
         <Checkbox
           name={"config.trueOrFalse"}
           id={"config.trueOrFalse"}
-          defaultChecked={defaultConfig?.trueOrFalse}
+          defaultChecked={question?.config?.trueOrFalse === "on"}
         />
       </div>
     </>

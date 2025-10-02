@@ -6,7 +6,7 @@ CREATE TABLE `QuestionEntity` (
     `categoryColumn` INTEGER NOT NULL,
     `row` INTEGER NOT NULL DEFAULT 0,
     `points` INTEGER NOT NULL,
-    `config` JSON NOT NULL,
+    `config` LONGTEXT NOT NULL,
 
     UNIQUE INDEX `QuestionEntity_categoryColumn_row_key`(`categoryColumn`, `row`),
     PRIMARY KEY (`id`)
@@ -21,3 +21,4 @@ CREATE TABLE `CategoryEntity` (
     UNIQUE INDEX `CategoryEntity_column_key`(`column`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+

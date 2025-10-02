@@ -8,6 +8,7 @@ import MediaBase from "~/routes/edit/components/MediaEdit/MediaBase";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
+import type { Question, QuestionType } from "~/types/question";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -55,14 +56,14 @@ export async function loader({ params }: Route.LoaderArgs) {
     return new Response("Invalid parameters", { status: 400 });
   }
 
-  const question = await prisma.questionEntity.findUnique({
+  const question = (await prisma.questionEntity.findUnique({
     where: {
       categoryColumn_row: {
         categoryColumn: c,
         row: q,
       },
     },
-  });
+  })) as Question<any>;
 
   return { c, q, categoryName, question };
 }
@@ -87,9 +88,9 @@ export default function EditQuestion() {
           />
         </div>
         <BaseTypeSelect
-          defaultValue={data.question?.type}
+          defaultValue={data.question?.type as QuestionType}
           defaultPrompt={data.question?.prompt}
-          defaultConfig={data.question?.config}
+          question={data.question}
         />
         <MediaBase
           defaultConfig={(data.question?.config as any)?.media ?? undefined}

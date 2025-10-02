@@ -3,15 +3,22 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useFetcher, useRevalidator } from "react-router";
 import { useEventSource } from "remix-utils/sse/react";
 import HiddenText from "~/routes/admin/components/HiddenText";
-import type { QuestionEntity } from "@prisma/client";
+import { type Question, QuestionType } from "~/types/question";
 import { Eye, EyeOff } from "lucide-react";
 import AnswerLine from "~/routes/admin/components/AnswerLine";
+import type {
+  BuzzerQuestion,
+  InputQuestion,
+  MultipleChoiceQuestion,
+  OrderQuestion,
+  PinQuestion,
+} from "~/types/adminTypes";
 
 interface Props {
   unlockOrLock: boolean;
   revealedOrHidden: boolean;
   answers: Map<string, { answer: string; time: Date }>;
-  question: QuestionEntity | null;
+  question: Question<any> | null;
   userReveals: Map<string, boolean>;
 }
 
@@ -63,13 +70,33 @@ const Answers = ({
     });
   }, [revealedOrHidden, allAnswersRevealed]);
 
+  const correctAnswerString = useMemo(() => {
+    if (question === null) {
+      return null;
+    }
+    console.log(question);
+    switch (question.type) {
+      case QuestionType.BUZZER:
+        return (question as BuzzerQuestion).config.answer;
+      case QuestionType.INPUT:
+        return (question as InputQuestion).config.answer;
+      case QuestionType.PIN:
+        return JSON.stringify((question as PinQuestion).config.pin);
+      case QuestionType.ORDER:
+        return (question as OrderQuestion).config.options.toString();
+      case QuestionType.MULTIPLE_CHOICE:
+        return (question as MultipleChoiceQuestion).config.options
+          .filter((e) => e.checked)
+          .map((e) => e.name)
+          .toString();
+      default:
+        return null;
+    }
+  }, [question]);
+
   return (
     <>
-      {question !== null &&
-        question.config !== null &&
-        (question.config.valueOf() as any).answer !== undefined && (
-          <HiddenText text={(question.config.valueOf() as any).answer} />
-        )}
+      {correctAnswerString && <HiddenText text={correctAnswerString} />}
       <Button onClick={revealAllPlayerAnswers}>
         Reveal All Player Answers
         {allAnswersRevealed ? <EyeOff /> : <Eye />}

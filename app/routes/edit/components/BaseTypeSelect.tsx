@@ -1,72 +1,69 @@
 "use client";
 
 import * as React from "react";
+import { useCallback, useMemo, useState } from "react";
 import Select from "~/components/Select";
 import { Label } from "~/components/ui/label";
-import { useCallback, useMemo, useState } from "react";
 import MultipleChoiceBaseEdit from "~/routes/edit/components/MultipleChoice/MultipleChoiceBaseEdit";
 import { Input } from "~/components/ui/input";
 import BuzzerBaseEdit from "~/routes/edit/components/Buzzer/BuzzerBaseEdit";
 import InputBaseEdit from "~/routes/edit/components/Input/InputBaseEdit";
 import OrderBaseEdit from "~/routes/edit/components/Order/OrderBaseEdit";
 import PinBaseEdit from "~/routes/edit/components/Pin/PinBaseEdit";
+import { type Question, QuestionType } from "~/types/question";
 
 interface Props {
-  defaultValue?: string;
+  defaultValue?: QuestionType;
   defaultPrompt?: string;
-  defaultConfig?: any;
+  question?: Question<any>;
 }
 
 const types = [
   {
-    value: "multipleChoice",
+    value: QuestionType.MULTIPLE_CHOICE,
     label: "Multiple choice",
   },
   {
-    value: "buzzer",
+    value: QuestionType.BUZZER,
     label: "Buzzer",
   },
   {
-    value: "input",
+    value: QuestionType.INPUT,
     label: "Input",
   },
   {
-    value: "pin",
+    value: QuestionType.PIN,
     label: "Pin",
   },
   {
-    value: "order",
+    value: QuestionType.ORDER,
     label: "Order",
   },
   {
-    value: "none",
+    value: QuestionType.NONE,
     label: "None",
   },
 ];
 
-const BaseTypeSelect = ({
-  defaultValue,
-  defaultPrompt,
-  defaultConfig,
-}: Props) => {
-  const [type, setType] = useState<string>(defaultValue ?? "");
+const BaseTypeSelect = ({ defaultValue, defaultPrompt, question }: Props) => {
+  const [type, setType] = useState<"" | QuestionType>(defaultValue ?? "");
   const detailedForm = useMemo(() => {
     switch (type) {
-      case "multipleChoice":
-        return <MultipleChoiceBaseEdit defaultConfig={defaultConfig} />;
-      case "buzzer":
-        return <BuzzerBaseEdit defaultConfig={defaultConfig} />;
-      case "input":
-        return <InputBaseEdit defaultConfig={defaultConfig} />;
-      case "order":
-        return <OrderBaseEdit defaultConfig={defaultConfig} />;
-      case "pin":
-        return <PinBaseEdit defaultConfig={defaultConfig} />;
+      case QuestionType.MULTIPLE_CHOICE:
+        return <MultipleChoiceBaseEdit question={question} />;
+      case QuestionType.BUZZER:
+        return <BuzzerBaseEdit question={question} />;
+      case QuestionType.INPUT:
+        return <InputBaseEdit question={question} />;
+      case QuestionType.ORDER:
+        return <OrderBaseEdit question={question} />;
+      case QuestionType.PIN:
+        return <PinBaseEdit question={question} />;
     }
-  }, [type]);
+  }, [type, question]);
 
   const handleChange = useCallback((val: string) => {
-    setType(val);
+    setType(val as QuestionType);
   }, []);
 
   return (
@@ -79,7 +76,7 @@ const BaseTypeSelect = ({
           options={types}
           name={"baseType"}
           label={"Type"}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue?.toString()}
           onChange={handleChange}
           className={"w-full justify-start"}
           align={"start"}

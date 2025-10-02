@@ -1,31 +1,20 @@
-import type { QuestionEntity } from "@prisma/client";
+import type { Question } from "~/types/question";
 
-export interface BuzzerQuestion extends QuestionEntity {
-  config: {
-    answer: string;
-  };
-}
+export type BuzzerQuestion = Question<{ answer: string }>;
 
-export interface InputQuestion extends QuestionEntity {
-  config: {
-    answer: string;
-  };
-}
+export type InputQuestion = Question<{ answer: string }>;
 
-export interface MultipleChoiceQuestion extends QuestionEntity {
-  config: {
-    options: { name: string; value: any }[];
-    showLetters: "on" | "off";
-    trueOrFalse: "on" | "off";
-  };
-}
+export type MultipleChoiceQuestion = Question<{
+  options: { name: string; checked?: "on" | "off" }[];
+  showLetters: "on" | "off";
+  trueOrFalse: "on" | "off";
+  shuffle: "on" | "off";
+}>;
 
-export interface OrderQuestion extends QuestionEntity {
-  config: {
-    options: string[];
-    shuffledOptions: string[];
-  };
-}
+export type OrderQuestion = Question<{
+  options: string[];
+  shuffledOptions: string[];
+}>;
 
 export type PinData = {
   xPercent: number;
@@ -35,12 +24,10 @@ export type PinData = {
   imgH?: number;
 };
 
-export interface PinQuestion extends QuestionEntity {
-  config: {
-    image: string;
-    pin: PinData;
-  };
-}
+export type PinQuestion = Question<{
+  image: string;
+  pin: PinData;
+}>;
 
 export interface MediaConfig {
   mediaChecked: boolean;

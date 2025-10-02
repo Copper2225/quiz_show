@@ -14,7 +14,7 @@ const OrderLine = ({ index, deleteRow, elements, defaultConfig }: Props) => {
     <div className={"flex items-center gap-3"}>
       <Input
         name={`config.options.${index}`}
-        defaultValue={defaultConfig.options[index]}
+        defaultValue={defaultConfig?.options[index]}
       />
 
       <Button

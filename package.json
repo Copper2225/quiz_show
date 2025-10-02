@@ -9,6 +9,7 @@
     "start": "react-router-serve ./build/server/index.js --port $PORT",
     "typecheck": "react-router typegen && tsc",
     "studio": "prisma studio",
+    "prisma:diff": "npx prisma migrate diff --from-url=$DATABASE_URL --to-schema-datamodel=prisma/schema.prisma --script > prisma/migrations/$npm_config_name.sql",
     "prisma:generate": "prisma generate",
     "prettier": "npx prettier . --write"
   },

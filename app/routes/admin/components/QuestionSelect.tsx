@@ -8,13 +8,13 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { useState, Fragment, useCallback } from "react";
-import type { QuestionEntity } from "@prisma/client";
 import { SquareDashedMousePointer } from "lucide-react";
+import type { Question } from "~/types/question";
 
 interface Props {
   categories: string[];
   activeMatrix: boolean[][];
-  grid: Map<string, QuestionEntity>;
+  grid: Map<string, Question<any>>;
 }
 
 const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
@@ -77,34 +77,37 @@ const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
                   >
                     {cate}
                   </Button>
-                  {Array.from({ length: 3 }, (_, rowIndex) => (
-                    <selectFetcher.Form
-                      key={`row ${rowIndex}`}
-                      method={"post"}
-                      action={"/api/question"}
-                      onSubmit={
-                        mode === "open" ? () => setOpen(false) : undefined
-                      }
-                    >
-                      <input hidden name="mode" value={mode} readOnly />
-                      <input
-                        readOnly
-                        hidden
-                        name="data"
-                        value={JSON.stringify({
-                          col: colIndex,
-                          row: rowIndex,
-                        })}
-                      />
-                      <Button
-                        className={`w-full text-4xl h-full flex items-center justify-center ${!activeMatrix[colIndex][rowIndex] && "bg-teal-950 hover:bg-teal-950"}`}
-                        type={"submit"}
+                  {Array.from(
+                    { length: activeMatrix[0]?.length },
+                    (_, rowIndex) => (
+                      <selectFetcher.Form
+                        key={`row ${rowIndex}`}
+                        method={"post"}
+                        action={"/api/question"}
+                        onSubmit={
+                          mode === "open" ? () => setOpen(false) : undefined
+                        }
                       >
-                        {grid.get(`${colIndex}:${rowIndex}`)?.points ??
-                          (rowIndex + 1) * 100}
-                      </Button>
-                    </selectFetcher.Form>
-                  ))}
+                        <input hidden name="mode" value={mode} readOnly />
+                        <input
+                          readOnly
+                          hidden
+                          name="data"
+                          value={JSON.stringify({
+                            col: colIndex,
+                            row: rowIndex,
+                          })}
+                        />
+                        <Button
+                          className={`w-full text-4xl h-full flex items-center justify-center ${!activeMatrix[colIndex][rowIndex] && "bg-teal-950 hover:bg-teal-950"}`}
+                          type={"submit"}
+                        >
+                          {grid.get(`${colIndex}:${rowIndex}`)?.points ??
+                            (rowIndex + 1) * 100}
+                        </Button>
+                      </selectFetcher.Form>
+                    ),
+                  )}
                 </Fragment>
               );
             })}

@@ -1,4 +1,3 @@
-import type { QuestionEntity } from "@prisma/client";
 import MultipleChoiceBaseShow from "~/routes/show/components/QuestionTypes/MultipleChoiceBaseShow";
 import { useEffect, useMemo, useState } from "react";
 import BuzzerBaseShow from "~/routes/show/components/QuestionTypes/BuzzerBaseShow";
@@ -14,9 +13,10 @@ import InputBaseShow from "~/routes/show/components/QuestionTypes/InputBaseShow"
 import { useRevalidator } from "react-router";
 import OrderBaseShow from "~/routes/show/components/QuestionTypes/OrderBaseShow";
 import PinQuestionShow from "~/routes/show/components/QuestionTypes/PinQuestion/PinQuestionShow";
+import { type Question, QuestionType } from "~/types/question";
 
 interface Props {
-  question: QuestionEntity;
+  question: Question<any>;
   withHeader: boolean;
   answerRevealed: boolean;
   answers: Map<string, { answer: string; time: Date }>;
@@ -45,14 +45,14 @@ const BaseQuestionShow = ({
 
   const detailed = useMemo(() => {
     switch (question.type) {
-      case "multipleChoice":
+      case QuestionType.MULTIPLE_CHOICE:
         return (
           <MultipleChoiceBaseShow
             data={(question as MultipleChoiceQuestion).config}
             showCorrect={showCorrect}
           />
         );
-      case "input":
+      case QuestionType.INPUT:
         return (
           <InputBaseShow
             question={question as InputQuestion}
@@ -60,14 +60,14 @@ const BaseQuestionShow = ({
             showAnswer={showCorrect}
           />
         );
-      case "order":
+      case QuestionType.ORDER:
         return (
           <OrderBaseShow
             data={(question as OrderQuestion).config}
             showCorrect={showCorrect}
           />
         );
-      case "pin":
+      case QuestionType.PIN:
         return (
           <PinQuestionShow
             question={question as PinQuestion}
@@ -76,8 +76,8 @@ const BaseQuestionShow = ({
             withHeader={withHeader}
           />
         );
-      case "buzzer":
-      case "none":
+      case QuestionType.BUZZER:
+      case QuestionType.NONE:
         return (
           <BuzzerBaseShow
             question={question as BuzzerQuestion}

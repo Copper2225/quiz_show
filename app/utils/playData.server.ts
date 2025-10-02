@@ -1,5 +1,4 @@
 import { prisma } from "~/utils/db.server";
-import type { QuestionEntity } from "@prisma/client";
 import { broadcast } from "~/routes/events/sse.events";
 import {
   type Config,
@@ -8,21 +7,22 @@ import {
 } from "~/utils/config.server";
 import _ from "lodash";
 import { userColors } from "~/routes/show/userColors";
+import { type Question, QuestionType } from "~/types/question";
 
 interface PlayerData {
   answerType: any | null;
   userLocks: Map<string, boolean>;
-  question: QuestionEntity | null;
+  question: Question<any> | null;
 }
 
 interface AdminDataShape {
   activeMatrix: boolean[][];
-  currentQuestion: QuestionEntity | null;
+  currentQuestion: Question<any> | null;
   answers: Map<string, { answer: string; time: Date }>;
   teams: Map<string, number>;
   answerRevealed: boolean;
   config: Config;
-  questionGrid: Map<string, QuestionEntity>;
+  questionGrid: Map<string, Question<any>>;
   playerReveal: Map<string, boolean>;
 }
 
@@ -124,13 +124,13 @@ export function setTeamPoints(team: string, points: number) {
 export async function setQuestion(
   question: number,
   category: number,
-): Promise<QuestionEntity | null> {
-  const foundQuestion = await prisma.questionEntity.findFirst({
+): Promise<Question<any> | null> {
+  const foundQuestion = (await prisma.questionEntity.findFirst({
     where: {
       categoryColumn: category,
       row: question,
     },
-  });
+  })) as Question<any>;
 
   if (!foundQuestion) {
     AdminData.currentQuestion = null;
@@ -140,11 +140,11 @@ export async function setQuestion(
   if (
     foundQuestion.config &&
     ((foundQuestion.config as any).shuffle === "on" ||
-      foundQuestion.type === "order") &&
+      foundQuestion.type === QuestionType.ORDER) &&
     Array.isArray((foundQuestion.config as any).options)
   ) {
     const cfg = foundQuestion.config as any;
-    if (foundQuestion.type === "order") {
+    if (foundQuestion.type === QuestionType.ORDER) {
       cfg.shuffledOptions = _.shuffle(cfg.options);
     } else {
       cfg.options = _.shuffle(cfg.options);
@@ -152,14 +152,14 @@ export async function setQuestion(
     foundQuestion.config = cfg;
   }
 
-  AdminData.currentQuestion = foundQuestion;
+  AdminData.currentQuestion = foundQuestion as Question<any>;
   playerData.question = {
     ...foundQuestion,
     config: {
       ...(foundQuestion.config as any),
       answer: undefined,
       options:
-        foundQuestion.type !== "order"
+        foundQuestion.type !== QuestionType.ORDER
           ? (foundQuestion.config as any).options?.map(
               (o: { name: string }) => o.name,
             )
@@ -167,7 +167,7 @@ export async function setQuestion(
     },
   };
 
-  if (foundQuestion.type === "pin") {
+  if (foundQuestion.type === QuestionType.PIN) {
     playerData.question = {
       ...foundQuestion,
       config: {

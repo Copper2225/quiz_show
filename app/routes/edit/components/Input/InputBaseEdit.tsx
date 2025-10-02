@@ -1,11 +1,12 @@
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
+import type { InputQuestion } from "~/types/adminTypes";
 
 interface Props {
-  defaultConfig?: any;
+  question?: InputQuestion;
 }
 
-const InputBaseEdit = ({ defaultConfig }: Props) => {
+const InputBaseEdit = ({ question }: Props) => {
   return (
     <div>
       <Label htmlFor={"config.answer"} className={"mb-2"}>
@@ -14,7 +15,7 @@ const InputBaseEdit = ({ defaultConfig }: Props) => {
       <Input
         name={"config.answer"}
         id={"config.answer"}
-        defaultValue={defaultConfig?.answer}
+        defaultValue={question?.config.answer}
       />
     </div>
   );

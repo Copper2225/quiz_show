@@ -1,14 +1,14 @@
 import TeamTile from "~/routes/show/components/TeamTile";
 import { useEffect, useMemo } from "react";
 import { useEventSource } from "remix-utils/sse/react";
-import type { QuestionEntity } from "@prisma/client";
+import { type Question, QuestionType } from "~/types/question";
 import { useRevalidator } from "react-router";
 import { userColors } from "~/routes/show/userColors";
 
 interface Props {
   teams: Map<string, number>;
   answers: Map<string, { answer: string; time: string | Date }>;
-  question: QuestionEntity | null;
+  question: Question<any> | null;
   userReveals: Map<string, boolean>;
 }
 
@@ -39,7 +39,7 @@ const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
   ]);
 
   const firstBuzzerTeam = useMemo(() => {
-    if (!(question?.type === "buzzer")) return undefined;
+    if (!(question?.type === QuestionType.BUZZER)) return undefined;
     let first: { name: string; time: string | Date } | undefined;
     for (const [name, value] of Array.from(answers.entries())) {
       const currentTime = value.time as any;
@@ -65,9 +65,11 @@ const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
           points={points}
           showAnswer={userReveals.get(name) ?? false}
           answer={(answers as Map<string, any>).get(name)?.answer}
-          highlighted={question?.type === "buzzer" && firstBuzzerTeam === name}
+          highlighted={
+            question?.type === QuestionType.BUZZER && firstBuzzerTeam === name
+          }
           color={
-            question?.type === "pin"
+            question?.type === QuestionType.PIN
               ? userColors[Array.from(teams.keys()).indexOf(name)]
               : undefined
           }

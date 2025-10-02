@@ -3,17 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider          = "mysql"
-  url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
-
-// Define your models below. Example:
-// model User {
-//   id        Int      @id @default(autoincrement())
-//   email     String   @unique
-//   createdAt DateTime @default(now())
-// }
 
 model QuestionEntity {
   id             Int    @id @default(autoincrement())
@@ -22,7 +14,7 @@ model QuestionEntity {
   categoryColumn Int
   row            Int    @default(0)
   points         Int
-  config         Json
+  config         String @db.LongText
 
   @@unique([categoryColumn, row])
 }
@@ -30,7 +22,5 @@ model QuestionEntity {
 model CategoryEntity {
   id     Int    @id @default(autoincrement())
   name   String
-  column Int
-
-  @@unique([column])
+  column Int    @unique
 }

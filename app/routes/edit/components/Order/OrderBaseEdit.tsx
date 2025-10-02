@@ -3,14 +3,15 @@ import { Label } from "~/components/ui/label";
 import { Plus } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import OrderLine from "~/routes/edit/components/Order/OrderLine";
+import type { OrderQuestion } from "~/types/adminTypes";
 
 interface Props {
-  defaultConfig?: any;
+  question?: OrderQuestion;
 }
 
-const OrderBaseEdit = ({ defaultConfig }: Props) => {
+const OrderBaseEdit = ({ question }: Props) => {
   const [elements, setElements] = useState<number>(
-    defaultConfig.options.length ?? 2,
+    question?.config.options?.length ?? 2,
   );
 
   const deleteRow = useCallback(() => {
@@ -30,7 +31,7 @@ const OrderBaseEdit = ({ defaultConfig }: Props) => {
               index={index}
               deleteRow={deleteRow}
               elements={elements}
-              defaultConfig={defaultConfig}
+              defaultConfig={question?.config}
             />
           ))}
         </div>

@@ -6,7 +6,7 @@ import { Button } from "~/components/ui/button";
 interface Props {
   index: number;
   removeAnswer: () => void;
-  defaultValues: { name: string; checked: boolean };
+  defaultValues: { name: string; checked?: "on" | "off" };
   answers: number;
 }
 
@@ -24,7 +24,7 @@ const OptionLine = ({ index, removeAnswer, defaultValues, answers }: Props) => {
         <Checkbox
           name={`config.options.${index}.checked`}
           id={`config.options.${index}.checked`}
-          defaultChecked={defaultValues.checked}
+          defaultChecked={defaultValues.checked === "on"}
         />
       </TableCell>
       <TableCell>
