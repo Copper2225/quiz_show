@@ -30,7 +30,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     },
     update: {
       prompt: values.prompt,
-      config: values.config,
+      config: JSON.stringify(values.config),
       points: Number(values.points),
     },
     create: {
@@ -39,7 +39,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       row: q,
       points: Number(values.points),
       prompt: values.prompt,
-      config: values.config ?? {},
+      config: JSON.stringify(values.config ?? {}),
     },
   });
 
