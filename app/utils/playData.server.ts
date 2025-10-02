@@ -125,56 +125,59 @@ export async function setQuestion(
   question: number,
   category: number,
 ): Promise<Question<any> | null> {
-  const foundQuestion = (await prisma.questionEntity.findFirst({
+  const foundQuestionEntity = (await prisma.questionEntity.findFirst({
     where: {
       categoryColumn: category,
       row: question,
     },
   })) as Question<any>;
 
-  if (!foundQuestion) {
+  if (!foundQuestionEntity) {
     AdminData.currentQuestion = null;
     return null;
   }
-
-  if (
-    foundQuestion.config &&
-    ((foundQuestion.config as any).shuffle === "on" ||
-      foundQuestion.type === QuestionType.ORDER) &&
-    Array.isArray((foundQuestion.config as any).options)
-  ) {
-    const cfg = foundQuestion.config as any;
-    if (foundQuestion.type === QuestionType.ORDER) {
-      cfg.shuffledOptions = _.shuffle(cfg.options);
-    } else {
-      cfg.options = _.shuffle(cfg.options);
+  let config: any = {};
+  if (foundQuestionEntity.config) {
+    try {
+      config = JSON.parse(foundQuestionEntity.config);
+    } catch (e) {
+      console.error("Failed to parse question config", e);
     }
-    foundQuestion.config = cfg;
   }
 
-  AdminData.currentQuestion = foundQuestion as Question<any>;
+  if (
+    (config.shuffle === "on" ||
+      foundQuestionEntity.type === QuestionType.ORDER) &&
+    Array.isArray(config.options)
+  ) {
+    if (foundQuestionEntity.type === QuestionType.ORDER) {
+      config.shuffledOptions = _.shuffle(config.options);
+    } else {
+      config.options = _.shuffle(config.options);
+    }
+  }
+
+  const foundQuestion: Question<any> = {
+    ...foundQuestionEntity,
+    config,
+  };
+
+  AdminData.currentQuestion = foundQuestion;
+
   playerData.question = {
     ...foundQuestion,
     config: {
-      ...(foundQuestion.config as any),
+      ...config,
       answer: undefined,
       options:
         foundQuestion.type !== QuestionType.ORDER
-          ? (foundQuestion.config as any).options?.map(
-              (o: { name: string }) => o.name,
-            )
+          ? config.options?.map((o: { name: string }) => o.name)
           : undefined,
     },
   };
 
   if (foundQuestion.type === QuestionType.PIN) {
-    playerData.question = {
-      ...foundQuestion,
-      config: {
-        ...(foundQuestion.config as any),
-        pin: undefined,
-      },
-    };
+    playerData.question.config.pin = undefined;
   }
 
   return AdminData.currentQuestion;
