@@ -70,7 +70,7 @@ const OrderBaseShow = ({ data, showCorrect }: Props) => {
           >
             <div
               style={{ fontSize }}
-              className={`${showCorrect ? "bg-emerald-400" : "bg-purple-600"} ms-4 px-5 self-center content-center text-3xl rounded-3xl aspect-square h-[1.5em]`}
+              className={`${showCorrect ? "bg-purple-600" : "bg-gray-700"} ms-4 px-5 self-center content-center text-3xl rounded-3xl aspect-square h-[1.5em]`}
             >
               {showCorrect
                 ? data.shuffledOptions.indexOf(options[index]) + 1

@@ -50,8 +50,8 @@ export async function action({ request }: Route.ActionArgs) {
 
     const quest = await prisma.questionEntity.findFirst({
       where: {
-        categoryColumn: JSON.parse(requestValues.data).row,
-        row: JSON.parse(requestValues.data).col,
+        categoryColumn: JSON.parse(requestValues.data).col,
+        row: JSON.parse(requestValues.data).row,
       },
     });
 

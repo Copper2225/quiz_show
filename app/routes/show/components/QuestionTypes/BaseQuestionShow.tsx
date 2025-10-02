@@ -20,7 +20,6 @@ interface Props {
   withHeader: boolean;
   answerRevealed: boolean;
   answers: Map<string, { answer: string; time: Date }>;
-  teams: Map<string, number>;
 }
 
 const BaseQuestionShow = ({
@@ -28,7 +27,6 @@ const BaseQuestionShow = ({
   withHeader,
   answerRevealed,
   answers,
-  teams,
 }: Props) => {
   const [showCorrect, setShowCorrect] = useState(answerRevealed);
   const questionEvent = useEventSource("/sse/events", {
@@ -76,7 +74,6 @@ const BaseQuestionShow = ({
             answers={answers}
             showAnswer={showCorrect}
             withHeader={withHeader}
-            teams={teams}
           />
         );
       case "buzzer":
@@ -91,7 +88,7 @@ const BaseQuestionShow = ({
       default:
         return <div></div>;
     }
-  }, [question, withHeader, showCorrect, teams]);
+  }, [question, withHeader, showCorrect]);
 
   return (
     <div
@@ -105,7 +102,7 @@ const BaseQuestionShow = ({
             borderRadius:
               "calc(var(--radius-3xl) - 4px) calc(var(--radius-3xl) - 4px) 0 0",
           }}
-          className={"bg-purple-700 rounded-t-3xl px-4 py-2 text-center"}
+          className={"bg-gray-700 rounded-t-3xl px-4 py-3 text-center"}
         >
           {question.prompt}
         </div>

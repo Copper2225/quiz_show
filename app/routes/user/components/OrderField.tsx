@@ -67,7 +67,7 @@ const OrderField = ({ data, locked, answer }: Props) => {
                     key={index}
                   >
                     <div
-                      className={`w-full bg-background h-full rounded-2xl outline-4 outline-solid -outline-offset-12 p-2 items-center flex ${locked && "opacity-50"}`}
+                      className={`w-full bg-background h-full rounded-2xl outline-4 outline-solid -outline-offset-12 p-4 ps-2 items-center flex ${locked && "opacity-50"}`}
                     >
                       <div
                         ref={getRef(index)}

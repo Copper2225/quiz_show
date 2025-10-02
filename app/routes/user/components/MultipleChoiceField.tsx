@@ -37,12 +37,17 @@ const MultipleChoiceField = ({ data, locked }: Props) => {
                 disabled={locked}
                 className={`w-full h-full rounded-2xl outline-4 ${selectionFetcher.data?.answer === option ? "outline-purple-700" : "outline-gray-200"} outline-solid -outline-offset-12 p-2 ${
                   data.config.trueOrFalse === "on" &&
-                  (index % 2 === 0 ? "bg-green-600" : "bg-red-600")
+                  (index % 2 === 0
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-red-600 hover:bg-red-700")
                 }`}
               >
                 <input hidden name="answer" value={option} readOnly />
                 {data.config.showLetters === "on" && (
-                  <div className="bg-purple-600 ms-4 px-5 self-center content-center text-3xl rounded-3xl aspect-square h-min">
+                  <div
+                    style={{ fontSize, lineHeight: 1 }}
+                    className={`bg-gray-700 ms-4 px-5 self-center content-center rounded-3xl aspect-square h-8/10`}
+                  >
                     {String.fromCharCode("A".charCodeAt(0) + index)}
                   </div>
                 )}

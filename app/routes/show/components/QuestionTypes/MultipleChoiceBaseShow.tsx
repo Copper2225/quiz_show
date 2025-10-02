@@ -68,7 +68,7 @@ const MultipleChoiceBaseShow = ({ data, showCorrect }: Props) => {
             {data.showLetters === "on" && (
               <div
                 className={
-                  "bg-purple-600 px-5 ms-4 self-center content-center rounded-3xl aspect-square h-min"
+                  "bg-gray-700 px-5 ms-4 self-center content-center rounded-3xl aspect-square h-min"
                 }
               >
                 {String.fromCharCode("A".charCodeAt(0) + index)}
