@@ -5,6 +5,9 @@ interface FitGroupProps {
   children: (
     fontSize: number,
     getRef: (index: number) => (el: HTMLDivElement | null) => void,
+    getWrapperRef: (
+      index: number,
+    ) => (el: HTMLDivElement | HTMLButtonElement | null) => void,
   ) => React.ReactNode;
   minFontSize?: number;
   maxFontSize?: number;
@@ -17,12 +20,18 @@ const FitGroup = ({
   maxFontSize = 150,
 }: FitGroupProps) => {
   const refs = useRef<(HTMLDivElement | null)[]>([]);
+  const wrapperRefs = useRef<(HTMLDivElement | HTMLButtonElement | null)[]>([]);
   const [fontSize, setFontSize] = useState(maxFontSize);
   const [measureKey, setMeasureKey] = useState(0);
 
   const getRef = (index: number) => (el: HTMLDivElement | null) => {
     refs.current[index] = el;
   };
+
+  const getWrapperRef =
+    (index: number) => (el: HTMLDivElement | HTMLButtonElement | null) => {
+      wrapperRefs.current[index] = el;
+    };
 
   useLayoutEffect(() => {
     let isCancelled = false;
@@ -45,8 +54,8 @@ const FitGroup = ({
 
       let bestSize = maxFontSize;
 
-      refs.current.forEach((el) => {
-        if (!el) return;
+      refs.current.forEach((el, index) => {
+        if (!el || !wrapperRefs.current[index]) return;
 
         const previousInlineFontSize = el.style.fontSize;
 
@@ -58,9 +67,15 @@ const FitGroup = ({
           const mid = Math.floor((low + high) / 2);
           el.style.fontSize = `${mid}px`;
 
-          const fitsWidth = el.scrollWidth <= el.clientWidth;
-          const fitsHeight = el.scrollHeight <= el.clientHeight;
-
+          const fitsWidth =
+            el.scrollWidth <= wrapperRefs.current[index].clientWidth;
+          const fitsHeight =
+            el.scrollHeight <= wrapperRefs.current[index].clientHeight;
+          console.log(
+            el.scrollHeight,
+            wrapperRefs.current[index].clientHeight,
+            best,
+          );
           if (fitsWidth && fitsHeight) {
             best = mid;
             low = mid + 1;
@@ -93,7 +108,7 @@ const FitGroup = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  return <>{children(fontSize, getRef)}</>;
+  return <>{children(fontSize, getRef, getWrapperRef)}</>;
 };
 
 export { FitGroup };

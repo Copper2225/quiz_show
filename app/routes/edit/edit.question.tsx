@@ -9,6 +9,7 @@ import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import type { Question, QuestionType } from "~/types/question";
+import type { JsonValue } from "@prisma/client/runtime/client";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -29,8 +30,9 @@ export async function action({ request, params }: Route.ActionArgs) {
       categoryColumn_row: { categoryColumn: c, row: q }, // composite unique key
     },
     update: {
+      type: values.baseType,
       prompt: values.prompt,
-      config: JSON.stringify(values.config),
+      config: values.config,
       points: Number(values.points),
     },
     create: {
@@ -39,7 +41,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       row: q,
       points: Number(values.points),
       prompt: values.prompt,
-      config: JSON.stringify(values.config ?? {}),
+      config: values.config ?? {},
     },
   });
 
@@ -63,7 +65,7 @@ export async function loader({ params }: Route.LoaderArgs) {
         row: q,
       },
     },
-  })) as Question<any>;
+  })) as Question<JsonValue>;
 
   return { c, q, categoryName, question };
 }
@@ -73,6 +75,7 @@ export default function EditQuestion() {
 
   return (
     <main className={"p-4"}>
+      <title>Edit - Quiz</title>
       <h1 className={"text-xl"}>
         Edit question {data.question?.points ?? (data.q + 1) * 100} of{" "}
         {data.categoryName ?? data.c}

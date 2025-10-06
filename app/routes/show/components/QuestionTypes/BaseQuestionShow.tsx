@@ -14,9 +14,10 @@ import { useRevalidator } from "react-router";
 import OrderBaseShow from "~/routes/show/components/QuestionTypes/OrderBaseShow";
 import PinQuestionShow from "~/routes/show/components/QuestionTypes/PinQuestion/PinQuestionShow";
 import { type Question, QuestionType } from "~/types/question";
+import type { JsonValue } from "@prisma/client/runtime/client";
 
 interface Props {
-  question: Question<any>;
+  question: Question<JsonValue>;
   withHeader: boolean;
   answerRevealed: boolean;
   answers: Map<string, { answer: string; time: Date }>;

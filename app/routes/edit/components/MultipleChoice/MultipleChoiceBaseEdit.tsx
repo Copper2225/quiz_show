@@ -18,7 +18,7 @@ interface Props {
 
 const MultipleChoiceBaseEdit = ({ question }: Props) => {
   const [answers, setAnswers] = useState<number>(
-    question?.config.options.length ?? 2,
+    question?.config?.options?.length ?? 2,
   );
 
   const addAnswer = useCallback(() => {

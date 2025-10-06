@@ -5,6 +5,7 @@ import TeamsLine from "~/routes/show/components/TeamsLine";
 import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useMemo } from "react";
 import BaseQuestionShow from "~/routes/show/components/QuestionTypes/BaseQuestionShow";
+import { QuestionType } from "~/types/question";
 
 export async function loader() {
   return ShowData;
@@ -33,11 +34,12 @@ export default function Show() {
   const withHeader = useMemo(() => {
     if (question) {
       if (
-        (question.type === "buzzer" || question.type === "input") &&
+        (question.type === QuestionType.BUZZER ||
+          question.type === QuestionType.INPUT) &&
         (question.config as any)?.media === undefined
       )
         return data.answerRevealed;
-      return question.type !== "none";
+      return question.type !== QuestionType.NONE;
     } else {
       return false;
     }
@@ -48,6 +50,7 @@ export default function Show() {
       className="h-dvh w-dvw box-border px-4 pt-4 flex flex-col"
       style={{ fontFamily: "Unkempt, Love Ya Like A Sister, chalkduster" }}
     >
+      <title>Show - Quiz</title>
       {question ? (
         <BaseQuestionShow
           question={question}
@@ -67,6 +70,7 @@ export default function Show() {
         question={data.currentQuestion}
         answers={data.answers}
         userReveals={data.playerReveal}
+        userLocks={data.userLocks}
       />
     </main>
   );

@@ -10,11 +10,12 @@ import {
 import { useState, Fragment, useCallback } from "react";
 import { SquareDashedMousePointer } from "lucide-react";
 import type { Question } from "~/types/question";
+import type { JsonValue } from "@prisma/client/runtime/client";
 
 interface Props {
   categories: string[];
   activeMatrix: boolean[][];
-  grid: Map<string, Question<any>>;
+  grid: Map<string, Question<JsonValue>>;
 }
 
 const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {

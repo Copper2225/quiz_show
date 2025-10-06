@@ -27,6 +27,7 @@ export default function Admin() {
 
   return (
     <main className={"h-dvh w-dvw box-border p-4"}>
+      <title>Admin - Quiz</title>
       <div className={"h-full w-full box-border flex flex-col gap-4"}>
         <h1 className={"text-xl font-semibold"}>Admin</h1>
         <QuestionSelect
@@ -40,6 +41,8 @@ export default function Admin() {
           answers={data.answers}
           question={data.currentQuestion}
           userReveals={data.playerReveal}
+          userLocks={data.userLocks}
+          teams={data.teams}
         />
         <PointsSection
           points={data.currentQuestion?.points}

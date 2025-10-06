@@ -52,6 +52,7 @@ export default function Edit() {
 
   return (
     <main>
+      <title>Edit - Quiz</title>
       <div className="h-dvh w-dvw box-border p-4 flex flex-col">
         <h1 className="text-2xl font-bold mb-6">Points Grid</h1>
 

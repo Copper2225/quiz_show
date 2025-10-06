@@ -1,8 +1,12 @@
-import type { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { Button } from "~/components/ui/button";
 import { useFetcher } from "react-router";
 
-const BuzzerField = (): ReactElement => {
+interface Props {
+  isLocked: boolean | undefined;
+}
+
+const BuzzerField = ({ isLocked }: Props): ReactElement => {
   const fetcher = useFetcher();
 
   return (
@@ -14,7 +18,11 @@ const BuzzerField = (): ReactElement => {
       }
     >
       <input hidden name="answer" readOnly value="buzzer" />
-      <Button type={"submit"} className={"h-full w-full box-border"} />
+      <Button
+        type={"submit"}
+        disabled={isLocked}
+        className={"h-full w-full box-border"}
+      />
     </fetcher.Form>
   );
 };

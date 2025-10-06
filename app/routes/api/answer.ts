@@ -2,7 +2,12 @@ import type { Route } from "./+types/answer";
 import dot from "dot-object";
 import { getUserNameFromRequest } from "~/utils/session.server";
 import { sendToAdmin } from "~/routes/events/sse.events.admin";
-import { getUserAnswer, setUserAnswer } from "~/utils/playData.server";
+import {
+  AdminData,
+  getUserAnswer,
+  setUserAnswer,
+} from "~/utils/playData.server";
+import { QuestionType } from "~/types/question";
 
 export async function action({ request }: Route.ActionArgs) {
   const time = new Date();
@@ -10,7 +15,11 @@ export async function action({ request }: Route.ActionArgs) {
   const plainForm = Object.fromEntries(formData.entries());
   const requestValues = dot.object(plainForm) as any;
   const user = await getUserNameFromRequest(request);
-  if (getUserAnswer(user)?.answer !== requestValues.answer)
+  if (
+    getUserAnswer(user)?.answer !== requestValues.answer &&
+    AdminData.currentQuestion?.type === QuestionType.BUZZER &&
+    requestValues.ansers !== "buzzer blocked"
+  )
     sendToAdmin("answer", {
       from: user,
       data: {

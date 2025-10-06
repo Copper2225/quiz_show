@@ -48,15 +48,12 @@ const OrderField = ({ data, locked, answer }: Props) => {
     <div className={"h-full flex flex-col"}>
       <div className="flex-1 min-h-0">
         <FitGroup texts={loadedOrder}>
-          {(fontSize, getRef) => (
+          {(fontSize, getRef, getWrapperRef) => (
             <>
               <Reorder
                 className={
-                  "h-full w-full grid gap-3 touch-manipulation overflow-auto"
+                  "h-full w-full grid gap-3 touch-manipulation overflow-hidden"
                 }
-                style={{
-                  gridTemplateRows: `repeat(${loadedOrder.length}, minmax(0, 1fr))`,
-                }}
                 onCompleteChange={handleDragChange}
               >
                 {loadedOrder.map((choice: string, index: number) => (
@@ -68,11 +65,12 @@ const OrderField = ({ data, locked, answer }: Props) => {
                   >
                     <div
                       className={`w-full bg-background h-full rounded-2xl outline-4 outline-solid -outline-offset-12 p-4 ps-2 items-center flex ${locked && "opacity-50"}`}
+                      ref={getWrapperRef(index)}
                     >
                       <div
                         ref={getRef(index)}
                         className={`w-full h-full content-center px-5 whitespace-pre-wrap overflow-hidden`}
-                        style={{ fontSize, lineHeight: 1 }}
+                        style={{ fontSize }}
                       >
                         {choice}
                       </div>

@@ -24,5 +24,6 @@ export default [
     route("clearAnswers", "routes/api/clearAnswers.ts"),
     route("reveal", "routes/api/reveal.ts"),
     route("userReveal", "routes/api/userReveal.ts"),
+    route("userBlock", "routes/api/userBlock.ts"),
   ]),
 ] satisfies RouteConfig;

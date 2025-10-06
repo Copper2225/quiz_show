@@ -1,27 +1,22 @@
+import type { JsonValue } from "@prisma/client/runtime/client";
 import type { Question } from "~/types/question";
 
 export type UserMultipleChoiceQuestion = Question<{
-  config: {
-    options: string[];
-    showLetters: "on" | "off";
-    trueOrFalse: "on" | "off";
-  };
+  options: string[];
+  showLetters: "on" | "off";
+  trueOrFalse: "on" | "off";
 }>;
 
 export type UserOrderQuestion = Question<{
-  config: {
-    shuffledOptions: string[];
-  };
+  shuffledOptions: string[];
 }>;
 
 export type UserPinQuestion = Question<{
-  config: {
-    image: string;
-  };
+  image: string;
 }>;
 
 export interface PlayerData {
   answerType: any | null;
   userLocks: Map<string, boolean>;
-  question: Question<any> | null;
+  question: Question<JsonValue> | null;
 }

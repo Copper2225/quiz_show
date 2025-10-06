@@ -13,13 +13,16 @@ import type {
   OrderQuestion,
   PinQuestion,
 } from "~/types/adminTypes";
+import type { JsonValue } from "@prisma/client/runtime/client";
 
 interface Props {
   unlockOrLock: boolean;
   revealedOrHidden: boolean;
   answers: Map<string, { answer: string; time: Date }>;
-  question: Question<any> | null;
+  question: Question<JsonValue> | null;
   userReveals: Map<string, boolean>;
+  userLocks: Map<string, boolean>;
+  teams: Map<string, number>;
 }
 
 const Answers = ({
@@ -28,6 +31,8 @@ const Answers = ({
   answers,
   question,
   userReveals,
+  userLocks,
+  teams,
 }: Props) => {
   const answersFetcher = useFetcher();
 
@@ -74,7 +79,6 @@ const Answers = ({
     if (question === null) {
       return null;
     }
-    console.log(question);
     switch (question.type) {
       case QuestionType.BUZZER:
         return (question as BuzzerQuestion).config.answer;
@@ -102,12 +106,13 @@ const Answers = ({
         {allAnswersRevealed ? <EyeOff /> : <Eye />}
       </Button>
       <ul className={"h-1/4 flex flex-col gap-3 overflow-y-scroll"}>
-        {Array.from(answers.entries()).map(([key, value]) => (
+        {Array.from(teams.keys()).map((name) => (
           <AnswerLine
-            key={key}
-            name={key}
-            valueAnswer={value}
-            answerRevealed={userReveals.get(key) ?? false}
+            key={name}
+            name={name}
+            valueAnswer={answers.get(name)}
+            answerRevealed={userReveals.get(name) ?? false}
+            userLocked={userLocks.get(name) ?? false}
           />
         ))}
       </ul>

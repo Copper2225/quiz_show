@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model QuestionEntity {
@@ -14,7 +15,7 @@ model QuestionEntity {
   categoryColumn Int
   row            Int    @default(0)
   points         Int
-  config         String @db.LongText
+  config         Json
 
   @@unique([categoryColumn, row])
 }

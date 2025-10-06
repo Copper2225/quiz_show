@@ -8,22 +8,23 @@ import {
 import _ from "lodash";
 import { userColors } from "~/routes/show/userColors";
 import { type Question, QuestionType } from "~/types/question";
+import type { JsonValue } from "@prisma/client/runtime/client";
 
 interface PlayerData {
   answerType: any | null;
-  userLocks: Map<string, boolean>;
-  question: Question<any> | null;
+  question: Question<JsonValue> | null;
 }
 
 interface AdminDataShape {
   activeMatrix: boolean[][];
-  currentQuestion: Question<any> | null;
+  currentQuestion: Question<JsonValue> | null;
   answers: Map<string, { answer: string; time: Date }>;
   teams: Map<string, number>;
   answerRevealed: boolean;
   config: Config;
-  questionGrid: Map<string, Question<any>>;
+  questionGrid: Map<string, Question<JsonValue>>;
   playerReveal: Map<string, boolean>;
+  userLocks: Map<string, boolean>;
 }
 
 interface SpecificUserData {
@@ -35,7 +36,6 @@ interface SpecificUserData {
 
 export const playerData: PlayerData = {
   answerType: null,
-  userLocks: new Map<string, boolean>(),
   question: null,
 };
 
@@ -48,6 +48,7 @@ export const AdminData: AdminDataShape = {
   config: getConfig(),
   questionGrid: getQuestionsGrid(),
   playerReveal: new Map<string, boolean>(),
+  userLocks: new Map<string, boolean>(),
 };
 
 export const ShowData = {
@@ -71,6 +72,9 @@ export const ShowData = {
   },
   get playerReveal() {
     return AdminData.playerReveal;
+  },
+  get userLocks() {
+    return AdminData.userLocks;
   },
 };
 
@@ -124,26 +128,19 @@ export function setTeamPoints(team: string, points: number) {
 export async function setQuestion(
   question: number,
   category: number,
-): Promise<Question<any> | null> {
+): Promise<Question<JsonValue> | null> {
   const foundQuestionEntity = (await prisma.questionEntity.findFirst({
     where: {
       categoryColumn: category,
       row: question,
     },
-  })) as Question<any>;
+  })) as Question<JsonValue>;
 
   if (!foundQuestionEntity) {
     AdminData.currentQuestion = null;
     return null;
   }
-  let config: any = {};
-  if (foundQuestionEntity.config) {
-    try {
-      config = JSON.parse(foundQuestionEntity.config);
-    } catch (e) {
-      console.error("Failed to parse question config", e);
-    }
-  }
+  const config: any = foundQuestionEntity.config;
 
   if (
     (config.shuffle === "on" ||
@@ -157,7 +154,7 @@ export async function setQuestion(
     }
   }
 
-  const foundQuestion: Question<any> = {
+  const foundQuestion: Question<JsonValue> = {
     ...foundQuestionEntity,
     config,
   };
@@ -177,7 +174,7 @@ export async function setQuestion(
   };
 
   if (foundQuestion.type === QuestionType.PIN) {
-    playerData.question.config.pin = undefined;
+    (playerData.question.config as any).pin = undefined;
   }
 
   return AdminData.currentQuestion;
@@ -193,20 +190,20 @@ export function clearQuestion() {
 
 export function setAllLocked(lock: boolean) {
   for (const key of AdminData.teams.keys()) {
-    playerData.userLocks.set(key, lock);
+    AdminData.userLocks.set(key, lock);
   }
 }
 
 export function setUserLocked(user: string, lock: boolean) {
-  playerData.userLocks.set(user, lock);
+  AdminData.userLocks.set(user, lock);
 }
 
 export function getIsUserLocked(user: string): boolean | undefined {
-  return playerData.userLocks.get(user);
+  return AdminData.userLocks.get(user);
 }
 
 export function isAnyLocked(): boolean {
-  return Array.from(playerData.userLocks.values()).some((isLocked) => isLocked);
+  return Array.from(AdminData.userLocks.values()).some((isLocked) => isLocked);
 }
 
 export function clearUserAnswers() {

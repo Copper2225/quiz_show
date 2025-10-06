@@ -11,11 +11,19 @@ import InputBaseEdit from "~/routes/edit/components/Input/InputBaseEdit";
 import OrderBaseEdit from "~/routes/edit/components/Order/OrderBaseEdit";
 import PinBaseEdit from "~/routes/edit/components/Pin/PinBaseEdit";
 import { type Question, QuestionType } from "~/types/question";
+import type { JsonValue } from "@prisma/client/runtime/client";
+import type {
+  BuzzerQuestion,
+  InputQuestion,
+  MultipleChoiceQuestion,
+  OrderQuestion,
+  PinQuestion,
+} from "~/types/adminTypes";
 
 interface Props {
   defaultValue?: QuestionType;
   defaultPrompt?: string;
-  question?: Question<any>;
+  question?: Question<JsonValue>;
 }
 
 const types = [
@@ -50,15 +58,19 @@ const BaseTypeSelect = ({ defaultValue, defaultPrompt, question }: Props) => {
   const detailedForm = useMemo(() => {
     switch (type) {
       case QuestionType.MULTIPLE_CHOICE:
-        return <MultipleChoiceBaseEdit question={question} />;
+        return (
+          <MultipleChoiceBaseEdit
+            question={question as MultipleChoiceQuestion}
+          />
+        );
       case QuestionType.BUZZER:
-        return <BuzzerBaseEdit question={question} />;
+        return <BuzzerBaseEdit question={question as BuzzerQuestion} />;
       case QuestionType.INPUT:
-        return <InputBaseEdit question={question} />;
+        return <InputBaseEdit question={question as InputQuestion} />;
       case QuestionType.ORDER:
-        return <OrderBaseEdit question={question} />;
+        return <OrderBaseEdit question={question as OrderQuestion} />;
       case QuestionType.PIN:
-        return <PinBaseEdit question={question} />;
+        return <PinBaseEdit question={question as PinQuestion} />;
     }
   }, [type, question]);
 

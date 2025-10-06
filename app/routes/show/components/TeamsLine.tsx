@@ -1,20 +1,31 @@
 import TeamTile from "~/routes/show/components/TeamTile";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useEventSource } from "remix-utils/sse/react";
 import { type Question, QuestionType } from "~/types/question";
 import { useRevalidator } from "react-router";
 import { userColors } from "~/routes/show/userColors";
+import type { JsonValue } from "@prisma/client/runtime/client";
 
 interface Props {
   teams: Map<string, number>;
   answers: Map<string, { answer: string; time: string | Date }>;
-  question: Question<any> | null;
+  question: Question<JsonValue> | null;
   userReveals: Map<string, boolean>;
+  userLocks: Map<string, boolean>;
 }
 
-const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
+const TeamsLine = ({
+  teams,
+  answers,
+  question,
+  userReveals,
+  userLocks,
+}: Props) => {
   const pointsEvent = useEventSource("/sse/events", {
     event: "pointsUpdate",
+  });
+  const lockEvent = useEventSource("/sse/events", {
+    event: "lockAnswers",
   });
   const answerUserEvent = useEventSource("/sse/events/admin", {
     event: "answer",
@@ -27,6 +38,7 @@ const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
     event: "revealUser",
   });
   const revalidate = useRevalidator();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     revalidate.revalidate();
@@ -36,6 +48,7 @@ const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
     answerTypeEvent,
     pointsEvent,
     userRevealEvent,
+    lockEvent,
   ]);
 
   const firstBuzzerTeam = useMemo(() => {
@@ -43,12 +56,24 @@ const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
     let first: { name: string; time: string | Date } | undefined;
     for (const [name, value] of Array.from(answers.entries())) {
       const currentTime = value.time as any;
-      if (!first || (currentTime as any) < (first.time as any)) {
+      if (
+        !userLocks.get(name) &&
+        (!first || (currentTime as any) < (first.time as any))
+      ) {
         first = { name, time: currentTime };
       }
     }
     return first?.name;
-  }, [answers, question?.type]);
+  }, [answers, question?.type, userLocks]);
+
+  const prevBuzzerTeamRef = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (!prevBuzzerTeamRef.current && firstBuzzerTeam) {
+      audioRef.current?.play();
+    }
+    prevBuzzerTeamRef.current = firstBuzzerTeam;
+  }, [firstBuzzerTeam]);
 
   return (
     <div
@@ -58,6 +83,7 @@ const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
         gridAutoFlow: "column dense",
       }}
     >
+      <audio ref={audioRef} src={"/buzzer.mp3"} muted={false} />
       {Array.from(teams).map(([name, points]) => (
         <TeamTile
           key={name}

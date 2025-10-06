@@ -15,6 +15,7 @@ import type {
   UserPinQuestion,
 } from "~/types/userTypes";
 import PinField from "~/routes/user/components/PinField";
+import { QuestionType } from "~/types/question";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const userName = await getUserNameFromRequest(request);
@@ -36,7 +37,7 @@ export default function user() {
 
   useEffect(() => {
     revalidator.revalidate();
-  }, [answerTypeEvent]);
+  }, [answerTypeEvent, lockAnswersEvent]);
 
   const [answersLocked, setAnswersLocked] = useState<boolean>(
     data.isLocked ?? false,
@@ -60,23 +61,23 @@ export default function user() {
   const renderAnswerComponents = useMemo(() => {
     if (data.question) {
       switch (data.question?.type ?? "none") {
-        case "buzzer":
-          return <BuzzerField />;
-        case "multipleChoice":
+        case QuestionType.BUZZER:
+          return <BuzzerField isLocked={data.isLocked} />;
+        case QuestionType.MULTIPLE_CHOICE:
           return (
             <MultipleChoiceField
               locked={answersLocked}
               data={data.question as UserMultipleChoiceQuestion}
             />
           );
-        case "input":
+        case QuestionType.INPUT:
           return (
             <InputAnswerField
               answer={data.answer?.answer}
               locked={answersLocked}
             />
           );
-        case "order":
+        case QuestionType.ORDER:
           return (
             <OrderField
               locked={answersLocked}
@@ -84,7 +85,7 @@ export default function user() {
               answer={data.answer?.answer}
             />
           );
-        case "pin":
+        case QuestionType.PIN:
           return (
             <PinField
               locked={answersLocked}

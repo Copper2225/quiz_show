@@ -7,6 +7,7 @@ import {
   setAnswerType,
   resetActiveMatrix,
   AdminData,
+  setAllLocked,
 } from "~/utils/playData.server";
 import dot from "dot-object";
 import type { MultipleChoiceQuestion } from "~/types/adminTypes";
@@ -34,6 +35,8 @@ export async function action({ request }: Route.ActionArgs) {
         JSON.parse(requestValues.data).col,
         JSON.parse(requestValues.data).row,
       );
+    } else {
+      setAllLocked(false);
     }
 
     const data = quest ? answerData(quest) : { type: "none" };
