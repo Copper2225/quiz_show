@@ -87,7 +87,14 @@ const Answers = ({
       case QuestionType.PIN:
         return JSON.stringify((question as PinQuestion).config.pin);
       case QuestionType.ORDER:
-        return (question as OrderQuestion).config.options.toString();
+        return (question as OrderQuestion).config.options
+          .map(
+            (answer) =>
+              (question as OrderQuestion).config.shuffledOptions.indexOf(
+                answer,
+              ) + 1,
+          )
+          .toString();
       case QuestionType.MULTIPLE_CHOICE:
         return (question as MultipleChoiceQuestion).config.options
           .filter((e) => e.checked)
