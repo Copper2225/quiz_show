@@ -127,18 +127,18 @@ const Answers = ({
           />
         ))}
       </ul>
-      <div className={"flex gap-2"}>
+      <div className={"flex gap-2 flex-wrap mb-3"}>
         <Button
-          className={"lg:text-3xl h-full flex-1"}
+          className={"lg:text-3xl flex-1 h-full max-h-[3em]"}
           onClick={handleLockAnswers}
         >
           {unlockOrLock ? "Unlock Answers" : "Lock Answers"}
         </Button>
         <Button
-          className={"flex-1 lg:text-3xl h-full"}
+          className={"lg:text-3xl flex-1 h-full max-h-[3em]"}
           onClick={revealAllPlayerAnswers}
         >
-          <span className={"flex items-center gap-2"}>
+          <span className={"flex items-center h-full gap-2 "}>
             Reveal All Player Answers
             {allAnswersRevealed ? (
               <EyeOff className={"size-4 lg:size-6"} />
@@ -147,7 +147,10 @@ const Answers = ({
             )}
           </span>
         </Button>
-        <Button className={"lg:text-3xl h-full flex-1"} onClick={clearAnswers}>
+        <Button
+          className={"lg:text-3xl flex-1 h-full max-h-[3em]"}
+          onClick={clearAnswers}
+        >
           Clear answers
         </Button>
       </div>
