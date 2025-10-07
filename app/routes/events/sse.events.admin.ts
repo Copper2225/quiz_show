@@ -16,6 +16,7 @@ let client: Client | undefined = (globalThis.__sse_admin_client__ ||=
 
 export function sendToAdmin(event: string, payload: unknown) {
   const data = typeof payload === "string" ? payload : JSON.stringify(payload);
+  console.log(data, client);
   if (client) {
     try {
       client.send({ event, data });
