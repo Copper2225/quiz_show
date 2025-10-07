@@ -8,16 +8,15 @@ type Client = {
 
 declare global {
   // eslint-disable-next-line no-var
-  var __sse_admin_client__: Client | undefined;
+  var __sse_admin_client__: Map<string, Client> | undefined;
 }
 
-let client: Client | undefined = (globalThis.__sse_admin_client__ ||=
-  undefined);
+let clients: Map<string, Client> = (globalThis.__sse_admin_client__ ||=
+  new Map());
 
 export function sendToAdmin(event: string, payload: unknown) {
   const data = typeof payload === "string" ? payload : JSON.stringify(payload);
-  console.log(data, client);
-  if (client) {
+  for (const [_id, client] of clients) {
     try {
       client.send({ event, data });
     } catch {
@@ -29,13 +28,15 @@ export function sendToAdmin(event: string, payload: unknown) {
 export async function loader({ request }: Route.LoaderArgs) {
   return eventStream(request.signal, function setup(send) {
     const clientId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
-    client = {
+    const client = {
       id: clientId,
       send,
     };
 
+    clients.set(clientId, client);
+
     return () => {
-      client = undefined;
+      clients.delete(clientId);
     };
   });
 }

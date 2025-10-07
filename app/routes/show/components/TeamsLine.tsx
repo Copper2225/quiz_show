@@ -11,16 +11,9 @@ interface Props {
   answers: Map<string, { answer: string; time: string | Date }>;
   question: Question<JsonValue> | null;
   userReveals: Map<string, boolean>;
-  userLocks: Map<string, boolean>;
 }
 
-const TeamsLine = ({
-  teams,
-  answers,
-  question,
-  userReveals,
-  userLocks,
-}: Props) => {
+const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
   const pointsEvent = useEventSource("/sse/events", {
     event: "pointsUpdate",
   });
@@ -56,15 +49,12 @@ const TeamsLine = ({
     let first: { name: string; time: string | Date } | undefined;
     for (const [name, value] of Array.from(answers.entries())) {
       const currentTime = value.time as any;
-      if (
-        !userLocks.get(name) &&
-        (!first || (currentTime as any) < (first.time as any))
-      ) {
+      if (!first || (currentTime as any) < (first.time as any)) {
         first = { name, time: currentTime };
       }
     }
     return first?.name;
-  }, [answers, question?.type, userLocks]);
+  }, [answers, question?.type]);
 
   const prevBuzzerTeamRef = useRef<string | undefined>(undefined);
 

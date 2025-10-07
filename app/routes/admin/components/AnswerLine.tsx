@@ -1,5 +1,5 @@
 import { Button } from "~/components/ui/button";
-import { Ban, Eye, EyeOff, LockOpen } from "lucide-react";
+import { Ban, Eye, EyeOff, LockOpen, Trash } from "lucide-react";
 import { format } from "date-fns";
 import { useFetcher } from "react-router";
 import { useCallback } from "react";
@@ -40,6 +40,16 @@ const AnswerLine = ({
     });
   }, [name, userLocked]);
 
+  const clearUserAnswer = useCallback(() => {
+    const formData = new FormData();
+    formData.append("user", name);
+    formData.append("clear", "true");
+    blockFetcher.submit(formData, {
+      method: "post",
+      action: "/api/userBlock",
+    });
+  }, [name, userLocked]);
+
   return (
     <li key={name} className={"flex gap-3 items-center"}>
       <Button onClick={revealAnswer}>
@@ -47,6 +57,9 @@ const AnswerLine = ({
       </Button>
       <Button onClick={lockAnswer}>
         {userLocked ? <LockOpen /> : <Ban />}
+      </Button>
+      <Button onClick={clearUserAnswer}>
+        <Trash />
       </Button>
 
       <span>

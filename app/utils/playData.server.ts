@@ -221,6 +221,12 @@ export function setUserAnswer(
   }
 }
 
+export function removeUserAnswer(user: string | undefined): void {
+  if (user) {
+    AdminData.answers.delete(user);
+  }
+}
+
 export function getUserAnswer(
   user: string | undefined,
 ): { answer: string; time: Date } | undefined {

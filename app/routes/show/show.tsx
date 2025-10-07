@@ -70,7 +70,6 @@ export default function Show() {
         question={data.currentQuestion}
         answers={data.answers}
         userReveals={data.playerReveal}
-        userLocks={data.userLocks}
       />
     </main>
   );
