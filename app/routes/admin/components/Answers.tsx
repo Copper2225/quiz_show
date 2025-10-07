@@ -98,13 +98,24 @@ const Answers = ({
     }
   }, [question]);
 
+  const handleLockAnswers = useCallback(() => {
+    const formData = new FormData();
+    formData.append("setAll", "true");
+    formData.append("locked", unlockOrLock ? "false" : "true");
+    answersFetcher.submit(formData, {
+      method: "post",
+      action: "/api/lockAnswers",
+    });
+  }, [unlockOrLock]);
+
   return (
     <>
       {correctAnswerString && <HiddenText text={correctAnswerString} />}
-      <Button onClick={revealAllPlayerAnswers}>
-        Reveal All Player Answers
-        {allAnswersRevealed ? <EyeOff /> : <Eye />}
-      </Button>
+      <div className={"flex gap-2"}>
+        <Button className={"lg:text-3xl h-full flex-1"} onClick={revealAnswer}>
+          {revealedOrHidden ? "Hide Answer" : "Reveal Answer"}
+        </Button>
+      </div>
       <ul className={"h-1/4 flex flex-col gap-3 overflow-y-scroll"}>
         {Array.from(teams.keys()).map((name) => (
           <AnswerLine
@@ -116,24 +127,30 @@ const Answers = ({
           />
         ))}
       </ul>
-      <answersFetcher.Form
-        method={"post"}
-        action={"/api/lockAnswers"}
-        className={"flex flex-col"}
-      >
-        <input hidden readOnly value={"true"} name={"setAll"} />
-        <input
-          hidden
-          readOnly
-          value={unlockOrLock ? "false" : "true"}
-          name={"locked"}
-        />
-        <Button>{unlockOrLock ? "Unlock Answers" : "Lock Answers"}</Button>
-      </answersFetcher.Form>
-      <Button onClick={revealAnswer}>
-        {revealedOrHidden ? "Hide Answer" : "Reveal Answer"}
-      </Button>
-      <Button onClick={clearAnswers}>Clear answers</Button>
+      <div className={"flex gap-2"}>
+        <Button
+          className={"lg:text-3xl h-full flex-1"}
+          onClick={handleLockAnswers}
+        >
+          {unlockOrLock ? "Unlock Answers" : "Lock Answers"}
+        </Button>
+        <Button
+          className={"flex-1 lg:text-3xl h-full"}
+          onClick={revealAllPlayerAnswers}
+        >
+          <span className={"flex items-center gap-2"}>
+            Reveal All Player Answers
+            {allAnswersRevealed ? (
+              <EyeOff className={"size-4 lg:size-6"} />
+            ) : (
+              <Eye className={"size-4 lg:size-6"} />
+            )}
+          </span>
+        </Button>
+        <Button className={"lg:text-3xl h-full flex-1"} onClick={clearAnswers}>
+          Clear answers
+        </Button>
+      </div>
     </>
   );
 };
