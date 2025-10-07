@@ -50,7 +50,7 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
                   answers={answers}
                   removeAnswer={removeAnswer}
                   defaultValues={
-                    question?.config.options[i] ?? {
+                    question?.config?.options[i] ?? {
                       name: "",
                       checked: "off",
                     }
