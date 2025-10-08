@@ -1,6 +1,6 @@
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, UserMinus } from "lucide-react";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import MinusHalfIcon from "~/routes/admin/components/MinusHalfIcon";
@@ -38,6 +38,16 @@ const TeamPointTile = ({
     },
     [],
   );
+
+  const kickUser = useCallback(async () => {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("kick", "true");
+    await setPointsFetcher.submit(formData, {
+      method: "POST",
+      action: "/api/teams",
+    });
+  }, [name, setPointsFetcher, questionPoints, points]);
 
   const onAddClick = useCallback(async () => {
     if (questionPoints !== undefined) {
@@ -80,30 +90,39 @@ const TeamPointTile = ({
   }, [points]);
 
   return (
-    <div key={name} className={"flex items-center gap-3"}>
-      <div className={"min-w-1/6 max-w-1/6"}>{name}:</div>
-      <Input
-        name={"points"}
-        value={pointsValue}
-        onChange={handleChange}
-        className={"w-[300px]"}
-        type={"number"}
-        onBlur={onBlur}
-      />
-      <Button onClick={onAddClick}>
-        <Plus strokeWidth={4} />
-      </Button>
-      <Button
-        className={"p-0! aspect-square bg-destructive"}
-        onClick={onHalfClick}
-      >
-        <MinusHalfIcon className={"size-7"} strokeWidth={8} fill={"#FFFFFF"} />
-      </Button>
-      <Button
-        className={"p-0! aspect-square bg-destructive"}
-        onClick={onMinusClick}
-      >
-        <Minus strokeWidth={4} />
+    <div key={name} className={"flex justify-between"}>
+      <div className={"flex gap-3 items-center"}>
+        <div className={"min-w-1/6 max-w-1/6"}>{name}:</div>
+        <Input
+          name={"points"}
+          value={pointsValue}
+          onChange={handleChange}
+          className={"w-[300px]"}
+          type={"number"}
+          onBlur={onBlur}
+        />
+        <Button onClick={onAddClick}>
+          <Plus strokeWidth={4} />
+        </Button>
+        <Button
+          className={"p-0! aspect-square bg-destructive"}
+          onClick={onHalfClick}
+        >
+          <MinusHalfIcon
+            className={"size-7"}
+            strokeWidth={8}
+            fill={"#FFFFFF"}
+          />
+        </Button>
+        <Button
+          className={"p-0! aspect-square bg-destructive"}
+          onClick={onMinusClick}
+        >
+          <Minus strokeWidth={4} />
+        </Button>
+      </div>
+      <Button className={"self-end"} onClick={kickUser}>
+        <UserMinus />
       </Button>
     </div>
   );

@@ -9,6 +9,7 @@ export default [
   index("routes/_index.tsx"),
   route("user", "routes/user/user.tsx"),
   route("login", "routes/user/login.tsx"),
+  route("logout", "routes/user/logout.tsx"),
   route("edit", "routes/edit/edit.tsx"),
   route("edit/:c/:q", "routes/edit/edit.question.tsx"),
   route("sse/events", "routes/events/sse.events.ts"),
