@@ -4,7 +4,7 @@ import { prisma } from "~/utils/db.server";
 import { sendToAdmin } from "~/routes/events/sse.events.admin";
 import { initConfig } from "~/utils/config.server";
 
-export async function action({ request, params }: Route.ActionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
 
   const plainForm = Object.fromEntries(formData.entries());

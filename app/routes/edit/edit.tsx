@@ -45,7 +45,7 @@ export async function action({ request }: Route.ActionArgs) {
   } else if (intent === "setCategory") {
     const categoryName = formData.get("categoryName") as string;
     const index = formData.get("index") as string;
-    setCategory(categoryName, Number(index));
+    await setCategory(categoryName, Number(index));
   }
 
   return { config: getConfig() };
