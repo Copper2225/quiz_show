@@ -19,7 +19,7 @@ const PinMap = ({ correct, image, showCorrect, pins }: Props) => {
           ref={previewImgRef}
           src={image}
           alt="preview"
-          className={"w-full h-full object-cover block select-none"}
+          className={"w-full h-full object-contain block select-none"}
         />
         {showCorrect && (
           <Pin
