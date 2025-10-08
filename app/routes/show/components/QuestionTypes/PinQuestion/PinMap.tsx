@@ -13,13 +13,13 @@ const PinMap = ({ correct, image, showCorrect, pins }: Props) => {
   const previewImgRef = useRef<HTMLImageElement | null>(null);
 
   return (
-    <div className={"mt-4 flex flex-col gap-3 self-center"}>
-      <div className={"relative inline-block max-w-full"}>
+    <div className={"mt-4 flex flex-col gap-3 self-center h-full"}>
+      <div className={"relative inline-block max-w-full max-h-full"}>
         <img
           ref={previewImgRef}
           src={image}
           alt="preview"
-          className={"w-full h-auto block select-none"}
+          className={"w-full h-full object-cover block select-none"}
         />
         {showCorrect && (
           <Pin
