@@ -65,18 +65,16 @@ const FitGroup = ({
 
         while (low <= high) {
           const mid = Math.floor((low + high) / 2);
+
+          // Hide text during measurement
+          el.style.opacity = "1";
           el.style.fontSize = `${mid}px`;
 
           const fitsWidth =
-            el.scrollWidth <= wrapperRefs.current[index].clientWidth;
+            el.scrollWidth <= wrapperRefs.current[index]!.clientWidth;
           const fitsHeight =
-            el.scrollHeight <= wrapperRefs.current[index].clientHeight;
-          console.log(
-            el.scrollWidth,
-            wrapperRefs.current[index]?.clientWidth,
-            best,
-            fitsWidth,
-          );
+            el.scrollHeight <= wrapperRefs.current[index]!.clientHeight;
+
           if (fitsWidth && fitsHeight) {
             best = mid;
             low = mid + 1;
@@ -84,6 +82,10 @@ const FitGroup = ({
             high = mid - 1;
           }
         }
+
+        // Restore previous inline style
+        el.style.fontSize = previousInlineFontSize;
+        el.style.visibility = "";
 
         // Restore previous inline style to avoid residue from measurement
         el.style.fontSize = previousInlineFontSize;

@@ -23,7 +23,7 @@ const PointsGrid = ({
     <FitGroup texts={categories}>
       {(fontSize, getRef, getWrapperRef) => (
         <div
-          className="grid gap-4 h-full flex-1 self-center"
+          className="grid gap-4 h-full flex-1 self-center overflow-hidden"
           style={{
             gridTemplateColumns: `repeat(${categories.length}, minmax(0, 1fr))`,
             gridTemplateRows: `repeat(${questions + 1}, minmax(0, 1fr))`,
@@ -40,7 +40,11 @@ const PointsGrid = ({
                   style={{ fontFamily: "Rampart One", fontSize: fontSize }}
                   className={`w-full overflow-hidden whitespace-break-spaces text-5xl h-full flex items-center justify-center border-2 !border-primary`}
                 >
-                  <div className={"px-1"} ref={getRef(colIndex)}>
+                  <div
+                    style={{ opacity: 0, transition: "opacity 0.2s" }}
+                    className={"px-1"}
+                    ref={getRef(colIndex)}
+                  >
                     {categories[colIndex]}
                   </div>
                 </Button>
