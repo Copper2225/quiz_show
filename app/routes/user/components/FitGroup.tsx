@@ -17,7 +17,7 @@ const FitGroup = ({
   texts,
   children,
   minFontSize = 10,
-  maxFontSize = 150,
+  maxFontSize = 50,
 }: FitGroupProps) => {
   const refs = useRef<(HTMLDivElement | null)[]>([]);
   const wrapperRefs = useRef<(HTMLDivElement | HTMLButtonElement | null)[]>([]);
