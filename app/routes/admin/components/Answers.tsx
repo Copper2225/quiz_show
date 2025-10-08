@@ -191,14 +191,6 @@ const Answers = ({
     setCorrectAnswers(correctMap);
   }, [answers, question]);
 
-  const setUserCorrect = useCallback((team: string, correct: boolean) => {
-    setCorrectAnswers((prevState) => {
-      const newMap = new Map(prevState);
-      newMap.set(team, correct);
-      return newMap;
-    });
-  }, []);
-
   return (
     <>
       {correctAnswerString && <HiddenText text={correctAnswerString} />}
@@ -221,7 +213,6 @@ const Answers = ({
             question={question}
             correct={correctAnswers.get(name) ?? false}
             questionRevealTime={questionRevealTime}
-            setUserCorrect={setUserCorrect}
           />
         ))}
       </ul>

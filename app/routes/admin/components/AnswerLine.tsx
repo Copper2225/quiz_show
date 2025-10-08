@@ -16,7 +16,6 @@ interface Props {
   answerRevealed: boolean;
   userLocked: boolean;
   correct: boolean;
-  setUserCorrect: (team: string, correct: boolean) => void;
 }
 
 const AnswerLine = ({
@@ -25,7 +24,6 @@ const AnswerLine = ({
   questionRevealTime,
   question,
   answerRevealed,
-  setUserCorrect,
   userLocked,
   correct,
 }: Props) => {
@@ -93,14 +91,9 @@ const AnswerLine = ({
     return valueAnswer?.answer;
   }, [question, valueAnswer, questionRevealTime]);
 
-  const triggerChecked = useCallback(() => {
-    console.log(correct);
-    setUserCorrect(name, !correct);
-  }, [name, correct]);
-
   return (
     <li key={name} className={"flex gap-3 items-center"}>
-      <Checkbox onCheckedChange={triggerChecked} checked={correct} />
+      <Checkbox checked={correct} />
       <Button onClick={revealAnswer}>
         {answerRevealed ? <EyeOff /> : <Eye />}
       </Button>
