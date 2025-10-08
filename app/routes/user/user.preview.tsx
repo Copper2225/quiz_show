@@ -18,6 +18,7 @@ import { type Question, QuestionType } from "~/types/question";
 import { prisma } from "~/utils/db.server";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import { userColors } from "~/routes/show/userColors";
+import _ from "lodash";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const c = Number(params.c);
@@ -27,7 +28,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     return new Response("Invalid parameters", { status: 400 });
   }
 
-  const question = (await prisma.questionEntity.findUnique({
+  const foundQuestionEntity = (await prisma.questionEntity.findUnique({
     where: {
       categoryColumn_row: {
         categoryColumn: c,
@@ -35,6 +36,41 @@ export async function loader({ params }: Route.LoaderArgs) {
       },
     },
   })) as Question<JsonValue>;
+
+  const qConfig: any = foundQuestionEntity.config;
+
+  if (
+    (qConfig.shuffle === "on" ||
+      foundQuestionEntity.type === QuestionType.ORDER) &&
+    Array.isArray(qConfig.options)
+  ) {
+    if (foundQuestionEntity.type === QuestionType.ORDER) {
+      qConfig.shuffledOptions = _.shuffle(qConfig.options);
+    } else {
+      qConfig.options = _.shuffle(qConfig.options);
+    }
+  }
+
+  const foundQuestion: Question<JsonValue> = {
+    ...foundQuestionEntity,
+    config: qConfig,
+  };
+
+  const question = {
+    ...foundQuestion,
+    config: {
+      ...qConfig,
+      answer: undefined,
+      options:
+        foundQuestion.type !== QuestionType.ORDER
+          ? qConfig.options?.map((o: { name: string }) => o.name)
+          : undefined,
+    },
+  };
+
+  if (foundQuestion.type === QuestionType.PIN) {
+    (question.config as any).pin = undefined;
+  }
 
   const { config, activeMatrix, questionGrid } = AdminData;
   return {
@@ -99,7 +135,11 @@ export default function user() {
   }, [question]);
 
   return (
-    <main className={"max-h-dvh h-dvh w-dvw box-border p-2"}>
+    <main
+      className={
+        "max-h-dvh h-dvh box-border p-2 aspect-9/19 border-gray-400 justify-self-center"
+      }
+    >
       <div className={"h-full w-full box-border flex flex-col gap-3"}>
         <h1 className={"w-full text-center"}>Test Name</h1>
         <div className={"h-full min-h-0"}>{renderAnswerComponents}</div>
