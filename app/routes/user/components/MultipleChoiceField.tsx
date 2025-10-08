@@ -29,14 +29,14 @@ const MultipleChoiceField = ({ data, locked }: Props) => {
             <selectionFetcher.Form
               method="post"
               action="/api/answer"
-              className="flex h-full"
+              className="flex h-full overflow-hidden"
               key={index}
             >
               <Button
                 type="submit"
                 disabled={locked}
                 ref={getWrapperRef(index)}
-                className={`w-full overflow-hidden h-full rounded-2xl outline-4 ${selectionFetcher.data?.answer === option ? "outline-purple-700" : "outline-gray-200"} outline-solid -outline-offset-12 p-2 ${
+                className={`w-full h-full rounded-2xl outline-4 ${selectionFetcher.data?.answer === option ? "outline-purple-700" : "outline-gray-200"} outline-solid -outline-offset-12 p-2 ${
                   data.config.trueOrFalse === "on" &&
                   (index % 2 === 0
                     ? "bg-green-600 hover:bg-green-700"
@@ -44,23 +44,19 @@ const MultipleChoiceField = ({ data, locked }: Props) => {
                 }`}
               >
                 <input hidden name="answer" value={option} readOnly />
-                {data.config.showLetters === "on" && (
-                  <div
-                    style={{ fontSize, lineHeight: 1 }}
-                    className={`bg-gray-700 ms-4 px-5 self-center content-center rounded-3xl aspect-square h-8/10`}
-                  >
-                    {String.fromCharCode("A".charCodeAt(0) + index)}
-                  </div>
-                )}
                 <div
                   ref={getRef(index)}
                   style={{ fontSize }}
-                  className={`w-full content-center px-5 whitespace-pre-wrap overflow-hidden ${
-                    data.config.showLetters === "on"
-                      ? "text-start"
-                      : "text-center"
-                  }`}
+                  className={`flex-1 ps-4 pe-6 whitespace-pre-wrap overflow-hidden flex justify-start`}
                 >
+                  {data.config.showLetters === "on" && (
+                    <div
+                      style={{ lineHeight: 1 }}
+                      className={`bg-gray-700 px-5 me-3 self-center content-center rounded-3xl aspect-square`}
+                    >
+                      {String.fromCharCode("A".charCodeAt(0) + index)}
+                    </div>
+                  )}
                   {option}
                 </div>
               </Button>

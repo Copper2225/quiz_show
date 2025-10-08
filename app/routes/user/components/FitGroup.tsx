@@ -72,9 +72,10 @@ const FitGroup = ({
           const fitsHeight =
             el.scrollHeight <= wrapperRefs.current[index].clientHeight;
           console.log(
-            el.scrollHeight,
-            wrapperRefs.current[index].clientHeight,
+            el.scrollWidth,
+            wrapperRefs.current[index]?.clientWidth,
             best,
+            fitsWidth,
           );
           if (fitsWidth && fitsHeight) {
             best = mid;
@@ -89,6 +90,8 @@ const FitGroup = ({
 
         bestSize = Math.min(bestSize, best);
       });
+
+      console.log(isCancelled);
 
       if (!isCancelled) {
         setFontSize(bestSize * 0.99);
