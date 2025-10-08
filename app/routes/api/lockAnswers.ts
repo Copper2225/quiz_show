@@ -14,6 +14,7 @@ export async function action({ request }: Route.ActionArgs) {
     broadcast("lockAnswers", {
       locked: JSON.parse(requestValues.locked),
       all: true,
+      time: new Date(),
     });
   } else {
     const user = await getUserNameFromRequest(request);
@@ -22,6 +23,7 @@ export async function action({ request }: Route.ActionArgs) {
       broadcast("lockAnswers", {
         locked: JSON.parse(requestValues.locked),
         user: user,
+        time: new Date(),
       });
     }
   }
