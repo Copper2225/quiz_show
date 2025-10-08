@@ -23,6 +23,7 @@ interface Props {
   userReveals: Map<string, boolean>;
   userLocks: Map<string, boolean>;
   teams: Map<string, number>;
+  questionRevealTime: Date | null;
 }
 
 const Answers = ({
@@ -33,6 +34,7 @@ const Answers = ({
   userReveals,
   userLocks,
   teams,
+  questionRevealTime,
 }: Props) => {
   const answersFetcher = useFetcher();
 
@@ -134,6 +136,8 @@ const Answers = ({
             valueAnswer={answers.get(name)}
             answerRevealed={userReveals.get(name) ?? false}
             userLocked={userLocks.get(name) ?? false}
+            question={question}
+            questionRevealTime={questionRevealTime}
           />
         ))}
       </ul>

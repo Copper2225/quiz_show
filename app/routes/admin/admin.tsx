@@ -45,6 +45,7 @@ export default function Admin() {
           userReveals={data.playerReveal}
           userLocks={data.userLocks}
           teams={data.teams}
+          questionRevealTime={data.questionRevealTime}
         />
         <PointsSection
           points={data.currentQuestion?.points}

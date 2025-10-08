@@ -47,7 +47,7 @@ export default function user() {
         case QuestionType.MULTIPLE_CHOICE:
           return (
             <MultipleChoiceField
-              locked={data.isLocked ?? true}
+              locked={data.isLocked ?? false}
               data={data.question as UserMultipleChoiceQuestion}
             />
           );
@@ -55,13 +55,13 @@ export default function user() {
           return (
             <InputAnswerField
               answer={data.answer?.answer}
-              locked={data.isLocked ?? true}
+              locked={data.isLocked ?? false}
             />
           );
         case QuestionType.ORDER:
           return (
             <OrderField
-              locked={data.isLocked ?? true}
+              locked={data.isLocked ?? false}
               data={data.question as UserOrderQuestion}
               answer={data.answer?.answer}
             />
@@ -69,7 +69,7 @@ export default function user() {
         case QuestionType.PIN:
           return (
             <PinField
-              locked={data.isLocked ?? true}
+              locked={data.isLocked ?? false}
               data={data.question as UserPinQuestion}
               answer={data.answer?.answer}
               teamColor={data.userColor}
@@ -81,7 +81,7 @@ export default function user() {
     } else {
       return <Waiting />;
     }
-  }, [data.question, data.isLocked ?? true, data.answer]);
+  }, [data.question, data.isLocked, data.answer]);
 
   return (
     <main className={"max-h-dvh h-dvh w-dvw box-border p-2"}>

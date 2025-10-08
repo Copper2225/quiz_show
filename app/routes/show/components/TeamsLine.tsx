@@ -11,9 +11,16 @@ interface Props {
   answers: Map<string, { answer: string; time: string | Date }>;
   question: Question<JsonValue> | null;
   userReveals: Map<string, boolean>;
+  questionRevealTime: Date | null;
 }
 
-const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
+const TeamsLine = ({
+  teams,
+  answers,
+  question,
+  userReveals,
+  questionRevealTime,
+}: Props) => {
   const pointsEvent = useEventSource("/sse/events", {
     event: "pointsUpdate",
   });
@@ -80,10 +87,12 @@ const TeamsLine = ({ teams, answers, question, userReveals }: Props) => {
           name={name}
           points={points}
           showAnswer={userReveals.get(name) ?? false}
-          answer={(answers as Map<string, any>).get(name)?.answer}
+          question={question}
+          answer={(answers as Map<string, any>).get(name)}
           highlighted={
             question?.type === QuestionType.BUZZER && firstBuzzerTeam === name
           }
+          questionRevealTime={questionRevealTime}
           color={
             question?.type === QuestionType.PIN
               ? userColors[Array.from(teams.keys()).indexOf(name)]

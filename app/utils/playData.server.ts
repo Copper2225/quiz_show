@@ -25,6 +25,7 @@ interface AdminDataShape {
   questionGrid: Map<string, Question<JsonValue>>;
   playerReveal: Map<string, boolean>;
   userLocks: Map<string, boolean>;
+  questionRevealTime: Date | null;
 }
 
 interface SpecificUserData {
@@ -49,6 +50,7 @@ export const AdminData: AdminDataShape = {
   questionGrid: getQuestionsGrid(),
   playerReveal: new Map<string, boolean>(),
   userLocks: new Map<string, boolean>(),
+  questionRevealTime: null,
 };
 
 export const ShowData = {
@@ -75,6 +77,9 @@ export const ShowData = {
   },
   get userLocks() {
     return AdminData.userLocks;
+  },
+  get questionRevealTime() {
+    return AdminData.questionRevealTime;
   },
 };
 
@@ -138,6 +143,7 @@ export async function setQuestion(
 
   if (!foundQuestionEntity) {
     AdminData.currentQuestion = null;
+    AdminData.questionRevealTime = null;
     return null;
   }
   const config: any = foundQuestionEntity.config;
@@ -176,6 +182,8 @@ export async function setQuestion(
   if (foundQuestion.type === QuestionType.PIN) {
     (playerData.question.config as any).pin = undefined;
   }
+
+  AdminData.questionRevealTime = new Date();
 
   return AdminData.currentQuestion;
 }

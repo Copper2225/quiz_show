@@ -28,6 +28,8 @@ const PinField = ({ data, locked, answer, teamColor }: Props) => {
     }
   }, []);
 
+  const [isDirty, setDirty] = useState(false);
+
   const [naturalSize, setNaturalSize] = useState<{
     w: number;
     h: number;
@@ -66,6 +68,7 @@ const PinField = ({ data, locked, answer, teamColor }: Props) => {
       method: "post",
       action: "/api/answer",
     });
+    setDirty(false);
   }, [xPercent, yPercent, teamColor]);
 
   useEffect(() => {
@@ -94,6 +97,7 @@ const PinField = ({ data, locked, answer, teamColor }: Props) => {
       const pctY = Math.round((pxY / naturalSize.h) * 10000) / 100;
       setXPercent(pctX);
       setYPercent(pctY);
+      setDirty(true);
     },
     [naturalSize, fullImgRef, locked],
   );
@@ -120,7 +124,7 @@ const PinField = ({ data, locked, answer, teamColor }: Props) => {
       </div>
       <Button
         onClick={submit}
-        disabled={locked}
+        disabled={locked || !isDirty}
         className={"self-bottom w-full text-3xl py-6"}
       >
         Absenden
