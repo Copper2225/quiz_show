@@ -14,12 +14,14 @@ const PinMap = ({ correct, image, showCorrect, pins }: Props) => {
 
   return (
     <div className={"mt-4 flex flex-col gap-3 self-center h-full"}>
-      <div className={"relative inline-block max-w-full max-h-full"}>
+      <div
+        className={"relative inline-block max-w-full max-h-full self-center"}
+      >
         <img
           ref={previewImgRef}
           src={image}
           alt="preview"
-          className={"w-full h-full object-contain block select-none"}
+          className={"max-w-full max-h-full object-contain block select-none"}
         />
         {showCorrect && (
           <Pin
