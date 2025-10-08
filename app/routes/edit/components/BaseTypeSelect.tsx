@@ -54,7 +54,9 @@ const types = [
 ];
 
 const BaseTypeSelect = ({ defaultValue, defaultPrompt, question }: Props) => {
-  const [type, setType] = useState<"" | QuestionType>(defaultValue ?? "");
+  const [type, setType] = useState<QuestionType>(
+    defaultValue ?? QuestionType.NONE,
+  );
   const detailedForm = useMemo(() => {
     switch (type) {
       case QuestionType.MULTIPLE_CHOICE:

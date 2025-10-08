@@ -85,6 +85,8 @@ export async function initQuestionGrid(): Promise<void> {
       );
       if (question) {
         questionGrid.set(makeKey(catIndex, k), question);
+      } else {
+        questionGrid.delete(makeKey(catIndex, k));
       }
     });
   });

@@ -11,7 +11,16 @@ import {
   getQuestionsGrid,
   initQuestionGrid,
 } from "~/utils/config.server";
-import { Link, useFetcher, useLoaderData } from "react-router";
+import { Link, useFetcher, useLoaderData, useRevalidator } from "react-router";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "~/components/ui/context-menu";
+import { Trash } from "lucide-react";
+import { useCallback, useEffect } from "react";
+import { useEventSource } from "remix-utils/sse/react";
 
 type LoaderData = {
   config: Config;
@@ -46,9 +55,31 @@ export default function Edit() {
   const data = useLoaderData<LoaderData>();
   const headers = data.config.categories.map((cate) => cate);
   const depth = data.config.questionDepth;
+  const deleteEvent = useEventSource("/sse/events/admin", {
+    event: "deleteQuestion",
+  });
   const addCategoryFetcher = useFetcher();
   const addDepthFetcher = useFetcher();
   const setCategoryFetcher = useFetcher();
+  const revalidator = useRevalidator();
+
+  const deleteFetcher = useFetcher();
+
+  const deleteQuestion = useCallback((c: number, q?: number) => {
+    const formData = new FormData();
+    formData.append("c", c.toString());
+    if (q) {
+      formData.append("q", q.toString());
+    }
+    deleteFetcher.submit(formData, {
+      method: "POST",
+      action: "/api/delete",
+    });
+  }, []);
+
+  useEffect(() => {
+    revalidator.revalidate();
+  }, [deleteEvent]);
 
   return (
     <main>
@@ -97,18 +128,37 @@ export default function Edit() {
               >
                 {data.config.categories.map((_cate, colIndex) =>
                   Array.from({ length: depth }, (_, rowIndex) => (
-                    <Link
-                      key={`${colIndex}-${rowIndex}`}
-                      to={"/edit/" + colIndex + "/" + rowIndex}
-                    >
-                      <Button
-                        variant={"outline"}
-                        className={`w-full text-5xl h-full flex items-center justify-center ${data.questions.get(colIndex + ":" + rowIndex) ? "!border-emerald-500" : "!border-red-400"}`}
-                      >
-                        {data.questions.get(colIndex + ":" + rowIndex)
-                          ?.points ?? (rowIndex + 1) * 100}
-                      </Button>
-                    </Link>
+                    <ContextMenu>
+                      <ContextMenuTrigger>
+                        <Link
+                          key={`${colIndex}-${rowIndex}`}
+                          to={"/edit/" + colIndex + "/" + rowIndex}
+                        >
+                          <Button
+                            variant={"outline"}
+                            className={`w-full text-5xl h-full flex items-center justify-center ${data.questions.get(colIndex + ":" + rowIndex) ? "!border-emerald-500" : "!border-red-400"}`}
+                          >
+                            {data.questions.get(colIndex + ":" + rowIndex)
+                              ?.points ?? (rowIndex + 1) * 100}
+                          </Button>
+                        </Link>
+                      </ContextMenuTrigger>
+                      <ContextMenuContent className="w-52">
+                        <ContextMenuItem
+                          onClick={() => deleteQuestion(colIndex, rowIndex)}
+                          className={"text-destructive"}
+                        >
+                          <Trash className={"text-destructive"} /> Delete
+                        </ContextMenuItem>
+                        <ContextMenuItem
+                          onClick={() => deleteQuestion(colIndex)}
+                          className={"text-destructive"}
+                        >
+                          <Trash className={"text-destructive"} /> Delete
+                          Category
+                        </ContextMenuItem>
+                      </ContextMenuContent>
+                    </ContextMenu>
                   )),
                 )}
               </div>

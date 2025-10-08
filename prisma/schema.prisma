@@ -8,6 +8,13 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+model CategoryEntity {
+  id        Int              @id @default(autoincrement())
+  name      String
+  column    Int              @unique
+  questions QuestionEntity[] // one-to-many relation
+}
+
 model QuestionEntity {
   id             Int    @id @default(autoincrement())
   type           String
@@ -17,11 +24,8 @@ model QuestionEntity {
   points         Int
   config         Json
 
-  @@unique([categoryColumn, row])
-}
+  // relation field
+  category CategoryEntity @relation(fields: [categoryColumn], references: [column], onDelete: Cascade)
 
-model CategoryEntity {
-  id     Int    @id @default(autoincrement())
-  name   String
-  column Int    @unique
+  @@unique([categoryColumn, row])
 }
