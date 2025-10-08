@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import QuestionSelect from "~/routes/admin/components/QuestionSelect";
 import { getConfig, initQuestionGrid } from "~/utils/config.server";
 import {
@@ -29,7 +29,9 @@ export default function Admin() {
     <main className={"h-dvh w-dvw box-border p-4"}>
       <title>Admin - Quiz</title>
       <div className={"h-full w-full box-border flex flex-col gap-4"}>
-        <h1 className={"text-xl font-semibold"}>Admin</h1>
+        <h1 className={"text-xl font-semibold"}>
+          Admin - <Link to={"/show"}>Navigate to Show</Link>
+        </h1>
         <QuestionSelect
           categories={data.config.categories}
           activeMatrix={data.activeMatrix}

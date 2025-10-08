@@ -119,7 +119,10 @@ const Answers = ({
     <>
       {correctAnswerString && <HiddenText text={correctAnswerString} />}
       <div className={"flex gap-2"}>
-        <Button className={"lg:text-3xl h-full flex-1"} onClick={revealAnswer}>
+        <Button
+          className={"lg:text-2xl xl:text-3xl h-full flex-1"}
+          onClick={revealAnswer}
+        >
           {revealedOrHidden ? "Hide Answer" : "Reveal Answer"}
         </Button>
       </div>
@@ -136,13 +139,13 @@ const Answers = ({
       </ul>
       <div className={"flex gap-2 flex-wrap mb-3"}>
         <Button
-          className={"lg:text-3xl flex-1 h-full max-h-[3em]"}
+          className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
           onClick={handleLockAnswers}
         >
           {unlockOrLock ? "Unlock Answers" : "Lock Answers"}
         </Button>
         <Button
-          className={"lg:text-3xl flex-1 h-full max-h-[3em]"}
+          className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
           onClick={revealAllPlayerAnswers}
         >
           <span className={"flex items-center h-full gap-2 "}>
@@ -155,7 +158,7 @@ const Answers = ({
           </span>
         </Button>
         <Button
-          className={"lg:text-3xl flex-1 h-full max-h-[3em]"}
+          className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
           onClick={clearAnswers}
         >
           Clear answers

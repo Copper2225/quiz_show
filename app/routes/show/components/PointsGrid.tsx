@@ -1,6 +1,7 @@
-import type { ReactElement } from "react";
+import { type ReactElement, useCallback } from "react";
 import { Button } from "~/components/ui/button";
 import React from "react";
+import { useNavigate } from "react-router";
 
 interface Props {
   categories: string[];
@@ -13,6 +14,10 @@ const PointsGrid = ({
   questions,
   activeMatrix,
 }: Props): ReactElement => {
+  const navigate = useNavigate();
+  const handleCategoryClick = useCallback(() => {
+    navigate("/admin");
+  }, []);
   return (
     <div
       className="grid gap-4 h-full flex-1"
@@ -26,6 +31,7 @@ const PointsGrid = ({
         return (
           <React.Fragment key={colIndex}>
             <Button
+              onClick={handleCategoryClick}
               variant={"outline"}
               style={{ fontFamily: "Rampart One" }}
               className={`w-full overflow-hidden whitespace-break-spaces text-5xl h-full flex items-center justify-center border-2 !border-primary`}

@@ -39,7 +39,7 @@ const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
           <div className={"flex gap-2 flex-1 h-full "}>
             <Button
               onClick={handleOpenClick}
-              className={"flex-2 h-full lg:text-3xl"}
+              className={"flex-2 h-full lg:text-2xl xl:text-3xl"}
             >
               OPEN
             </Button>
@@ -47,7 +47,9 @@ const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
               className={"h-full aspect-square"}
               onClick={handleSwitchClick}
             >
-              <SquareDashedMousePointer className={"size-4 lg:size-6"} />
+              <SquareDashedMousePointer
+                className={"size-4 lg:size-5 xl:size-6"}
+              />
             </Button>
           </div>
         </DialogTrigger>
@@ -59,7 +61,7 @@ const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
           <input hidden readOnly name={"type"} value={"none"} />
           <input hidden name="mode" value={mode} readOnly />
           <Button
-            className={"lg:text-3xl h-full"}
+            className={"lg:text-2xl xl:text-3xl h-full"}
             onClick={handleOpenClick}
             type={"submit"}
           >
@@ -84,7 +86,7 @@ const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
                 <Fragment key={colIndex}>
                   <Button
                     variant={"outline"}
-                    className={`w-full overflow-hidden whitespace-break-spaces lg:text-3xl h-full flex items-center justify-center border-2 !border-primary`}
+                    className={`w-full overflow-hidden whitespace-break-spaces xl:text-3xl h-full flex items-center justify-center border-2 !border-primary`}
                   >
                     {cate}
                   </Button>
@@ -110,7 +112,7 @@ const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
                           })}
                         />
                         <Button
-                          className={`flex-1 lg:text-4xl w-full h-full flex items-center justify-center ${!activeMatrix[colIndex][rowIndex] && "bg-teal-950 hover:bg-teal-950"}`}
+                          className={`flex-1 md:text-3xl xl:text-4xl w-full h-full flex items-center justify-center ${!activeMatrix[colIndex][rowIndex] && "opacity-40"}`}
                           type={"submit"}
                         >
                           {grid.get(`${colIndex}:${rowIndex}`)?.points ??

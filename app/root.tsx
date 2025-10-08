@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -26,10 +27,21 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&family=Rampart+One&family=Unkempt:wght@400;700&display=swap",
   },
-  { rel: "manifest", href: "/manifest.json" },
 ];
 
+export async function loader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+
+  let manifestHref = "/manifests/manifest.json";
+  if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/show")) {
+    manifestHref = "/manifests/admin-manifest.json";
+  }
+
+  return { manifestHref };
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { manifestHref } = useLoaderData<typeof loader>();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -37,6 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#111827" />
         <title>Quiz</title>
+        <link rel={"manifest"} href={manifestHref} />
         <Meta />
         <Links />
       </head>
