@@ -1,5 +1,5 @@
 import MultipleChoiceBaseShow from "~/routes/show/components/QuestionTypes/MultipleChoiceBaseShow";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import BuzzerBaseShow from "~/routes/show/components/QuestionTypes/BuzzerBaseShow";
 import type {
   BuzzerQuestion,
@@ -31,19 +31,13 @@ const BaseQuestionShow = ({
   answers,
   playerReveals,
 }: Props) => {
-  const [showCorrect, setShowCorrect] = useState(answerRevealed);
   const questionEvent = useEventSource("/sse/events", {
     event: "reveal",
   });
   const revalidator = useRevalidator();
 
   useEffect(() => {
-    if (questionEvent) {
-      try {
-        setShowCorrect(JSON.parse(questionEvent).revealed === "true");
-        revalidator.revalidate();
-      } catch {}
-    }
+    revalidator.revalidate();
   }, [questionEvent]);
 
   const detailed = useMemo(() => {
@@ -52,7 +46,7 @@ const BaseQuestionShow = ({
         return (
           <MultipleChoiceBaseShow
             data={(question as MultipleChoiceQuestion).config}
-            showCorrect={showCorrect}
+            showCorrect={answerRevealed}
           />
         );
       case QuestionType.INPUT:
@@ -60,14 +54,14 @@ const BaseQuestionShow = ({
           <InputBaseShow
             question={question as InputQuestion}
             withHeader={withHeader}
-            showAnswer={showCorrect}
+            showAnswer={answerRevealed}
           />
         );
       case QuestionType.ORDER:
         return (
           <OrderBaseShow
             data={(question as OrderQuestion).config}
-            showCorrect={showCorrect}
+            showCorrect={answerRevealed}
           />
         );
       case QuestionType.PIN:
@@ -75,7 +69,7 @@ const BaseQuestionShow = ({
           <PinQuestionShow
             question={question as PinQuestion}
             answers={answers}
-            showAnswer={showCorrect}
+            showAnswer={answerRevealed}
             withHeader={withHeader}
             playerReveals={playerReveals}
           />
@@ -86,13 +80,13 @@ const BaseQuestionShow = ({
           <BuzzerBaseShow
             question={question as BuzzerQuestion}
             withHeader={withHeader}
-            showAnswer={showCorrect}
+            showAnswer={answerRevealed}
           />
         );
       default:
         return <div></div>;
     }
-  }, [question, withHeader, showCorrect, playerReveals]);
+  }, [question, withHeader, answerRevealed, playerReveals]);
 
   return (
     <div

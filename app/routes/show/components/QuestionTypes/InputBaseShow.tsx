@@ -27,7 +27,7 @@ const InputBaseShow = ({ question, withHeader, showAnswer }: Props) => {
       {!withHeader && !showAnswer && <ShowText>{question.prompt}</ShowText>}
       {showAnswer && (
         <ShowText textColor={"var(--color-emerald-500)"}>
-          Answer: {question.config.answer}
+          {question.config.answer}
         </ShowText>
       )}
     </div>

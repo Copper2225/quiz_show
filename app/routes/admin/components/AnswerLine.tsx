@@ -6,6 +6,7 @@ import { useCallback, useMemo } from "react";
 import { type Question, QuestionType } from "~/types/question";
 import type { PinData, PinQuestion } from "~/types/adminTypes";
 import type { JsonValue } from "@prisma/client/runtime/client";
+import { Checkbox } from "~/components/ui/checkbox";
 
 interface Props {
   name: string;
@@ -14,6 +15,7 @@ interface Props {
   questionRevealTime: Date | null;
   answerRevealed: boolean;
   userLocked: boolean;
+  correct: boolean;
 }
 
 const AnswerLine = ({
@@ -23,6 +25,7 @@ const AnswerLine = ({
   question,
   answerRevealed,
   userLocked,
+  correct,
 }: Props) => {
   const fetcher = useFetcher();
   const blockFetcher = useFetcher();
@@ -90,6 +93,7 @@ const AnswerLine = ({
 
   return (
     <li key={name} className={"flex gap-3 items-center"}>
+      <Checkbox checked={correct} />
       <Button onClick={revealAnswer}>
         {answerRevealed ? <EyeOff /> : <Eye />}
       </Button>

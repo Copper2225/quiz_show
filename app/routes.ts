@@ -15,6 +15,7 @@ export default [
   route("sse/events", "routes/events/sse.events.ts"),
   route("sse/events/admin", "routes/events/sse.events.admin.ts"),
   route("admin", "routes/admin/admin.tsx"),
+  route("admin/peek/:c/:q", "routes/admin/admin.peek.tsx"),
   route("show", "routes/show/show.tsx"),
   ...prefix("/api", [
     route("teams", "routes/api/teams.ts"),

@@ -13,6 +13,7 @@ import dot from "dot-object";
 import type { MultipleChoiceQuestion } from "~/types/adminTypes";
 import { prisma } from "~/utils/db.server";
 import { broadcast } from "../events/sse.events";
+import { redirect } from "react-router";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -44,7 +45,7 @@ export async function action({ request }: Route.ActionArgs) {
     broadcast("answerType", { data });
 
     return { quest };
-  } else {
+  } else if (requestValues.mode === "switch") {
     if (requestValues.reset === "true") {
       resetActiveMatrix();
       broadcast("disableEvent", AdminData.activeMatrix);
@@ -67,6 +68,10 @@ export async function action({ request }: Route.ActionArgs) {
       broadcast("disableEvent", AdminData.activeMatrix);
     }
     return { quest };
+  } else if (requestValues.mode === "peek") {
+    const categoryColumn = JSON.parse(requestValues.data).col;
+    const row = JSON.parse(requestValues.data).row;
+    return redirect(`/admin/peek/${categoryColumn}/${row}`);
   }
 }
 

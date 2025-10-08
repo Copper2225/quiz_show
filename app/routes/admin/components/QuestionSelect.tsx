@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { useState, Fragment, useCallback } from "react";
-import { SquareDashedMousePointer } from "lucide-react";
+import { HatGlasses, SquareDashedMousePointer } from "lucide-react";
 import type { Question } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
 
@@ -20,7 +20,7 @@ interface Props {
 
 const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<"open" | "switch">("open");
+  const [mode, setMode] = useState<"open" | "switch" | "peek">("open");
 
   const handleOpenClick = useCallback(() => {
     setMode("open");
@@ -28,6 +28,10 @@ const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
 
   const handleSwitchClick = useCallback(() => {
     setMode("switch");
+  }, []);
+
+  const handlePeekClick = useCallback(() => {
+    setMode("peek");
   }, []);
 
   const selectFetcher = useFetcher();
@@ -50,6 +54,12 @@ const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
               <SquareDashedMousePointer
                 className={"size-4 lg:size-5 xl:size-6"}
               />
+            </Button>
+            <Button
+              className={"h-full aspect-square"}
+              onClick={handlePeekClick}
+            >
+              <HatGlasses className={"size-4 lg:size-5 xl:size-6"} />
             </Button>
           </div>
         </DialogTrigger>

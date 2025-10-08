@@ -1,5 +1,5 @@
 import { Button } from "~/components/ui/button";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFetcher, useRevalidator } from "react-router";
 import { useEventSource } from "remix-utils/sse/react";
 import HiddenText from "~/routes/admin/components/HiddenText";
@@ -37,7 +37,9 @@ const Answers = ({
   questionRevealTime,
 }: Props) => {
   const answersFetcher = useFetcher();
-
+  const [correctAnswers, setCorrectAnswers] = useState<Map<string, boolean>>(
+    new Map(),
+  );
   const clearEvent = useEventSource("/sse/events", { event: "clearAnswers" });
   const revealEvent = useEventSource("/sse/events", { event: "reveal" });
   const answerEvent = useEventSource("/sse/events/admin", { event: "answer" });
@@ -117,6 +119,80 @@ const Answers = ({
     });
   }, [unlockOrLock]);
 
+  useEffect(() => {
+    if (!answers || !question) return;
+
+    const correctMap = new Map<string, boolean>();
+
+    for (const [team, answer] of answers) {
+      let isCorrect = false;
+
+      console.log(answer);
+
+      switch (question.type) {
+        case QuestionType.INPUT:
+        case QuestionType.BUZZER: {
+          const correctAnswer = (question as InputQuestion | BuzzerQuestion)
+            .config.answer;
+          isCorrect =
+            correctAnswer.trim().toLowerCase() ===
+            answer.answer.trim().toLowerCase();
+          break;
+        }
+        case QuestionType.MULTIPLE_CHOICE: {
+          try {
+            const correctOptions = (
+              question as MultipleChoiceQuestion
+            ).config.options
+              .filter((opt) => opt.checked === "on")
+              .map((opt) => opt.name)
+              .sort();
+
+            isCorrect = correctOptions.includes(answer.answer);
+          } catch {
+            isCorrect = false;
+          }
+          break;
+        }
+
+        case QuestionType.ORDER: {
+          try {
+            const correctOrder = (question as OrderQuestion).config.options;
+            const teamOrder = JSON.parse(answer.answer) as string[];
+            isCorrect =
+              JSON.stringify(correctOrder) === JSON.stringify(teamOrder);
+          } catch {
+            isCorrect = false;
+          }
+          break;
+        }
+
+        case QuestionType.PIN: {
+          try {
+            const correctPin = (question as PinQuestion).config.pin;
+            const teamPin = JSON.parse(answer.answer) as typeof correctPin;
+
+            const tolerance = 2; // percent
+            const dx = Math.abs(correctPin.xPercent - teamPin.xPercent);
+            const dy = Math.abs(correctPin.yPercent - teamPin.yPercent);
+
+            isCorrect = dx <= tolerance && dy <= tolerance;
+          } catch {
+            isCorrect = false;
+          }
+          break;
+        }
+
+        default:
+          isCorrect = false;
+      }
+
+      correctMap.set(team, isCorrect);
+    }
+
+    setCorrectAnswers(correctMap);
+  }, [answers, question]);
+
   return (
     <>
       {correctAnswerString && <HiddenText text={correctAnswerString} />}
@@ -137,6 +213,7 @@ const Answers = ({
             answerRevealed={userReveals.get(name) ?? false}
             userLocked={userLocks.get(name) ?? false}
             question={question}
+            correct={correctAnswers.get(name) ?? false}
             questionRevealTime={questionRevealTime}
           />
         ))}
