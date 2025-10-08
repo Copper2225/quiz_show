@@ -21,6 +21,7 @@ interface Props {
   withHeader: boolean;
   answerRevealed: boolean;
   answers: Map<string, { answer: string; time: Date }>;
+  playerReveals: Map<string, boolean>;
 }
 
 const BaseQuestionShow = ({
@@ -28,6 +29,7 @@ const BaseQuestionShow = ({
   withHeader,
   answerRevealed,
   answers,
+  playerReveals,
 }: Props) => {
   const [showCorrect, setShowCorrect] = useState(answerRevealed);
   const questionEvent = useEventSource("/sse/events", {
@@ -75,6 +77,7 @@ const BaseQuestionShow = ({
             answers={answers}
             showAnswer={showCorrect}
             withHeader={withHeader}
+            playerReveals={playerReveals}
           />
         );
       case QuestionType.BUZZER:
@@ -89,7 +92,7 @@ const BaseQuestionShow = ({
       default:
         return <div></div>;
     }
-  }, [question, withHeader, showCorrect]);
+  }, [question, withHeader, showCorrect, playerReveals]);
 
   return (
     <div

@@ -1,12 +1,13 @@
 import React, { useRef } from "react";
 import Pin from "~/routes/edit/components/Pin/Pin";
 import type { PinData } from "~/types/adminTypes";
+import type { ShowPin } from "~/routes/show/components/QuestionTypes/PinQuestion/PinQuestionShow";
 
 interface Props {
   correct: PinData;
   image: string;
   showCorrect: boolean;
-  pins: PinData[];
+  pins: ShowPin[];
 }
 
 const PinMap = ({ correct, image, showCorrect, pins }: Props) => {
@@ -43,27 +44,30 @@ const PinMap = ({ correct, image, showCorrect, pins }: Props) => {
             large
           />
         )}
-        {pins.map((pin) => (
-          <Pin
-            xPercent={pin.xPercent}
-            yPercent={pin.yPercent}
-            fill={pin.teamColor}
-            tilt={pins
-              .filter(
-                (p) =>
-                  Math.abs(
-                    (p.xPercent / 100) * Number(correct.imgW) -
-                      (pin.xPercent / 100) * Number(correct.imgW),
-                  ) <= 5 &&
-                  Math.abs(
-                    (p.yPercent / 100) * Number(correct.imgH) -
-                      (pin.yPercent / 100) * Number(correct.imgH),
-                  ) <= 5,
-              )
-              .indexOf(pin)}
-            large
-          />
-        ))}
+        {pins.map(
+          (pin) =>
+            pin.show && (
+              <Pin
+                xPercent={pin.xPercent}
+                yPercent={pin.yPercent}
+                fill={pin.teamColor}
+                tilt={pins
+                  .filter(
+                    (p) =>
+                      Math.abs(
+                        (p.xPercent / 100) * Number(correct.imgW) -
+                          (pin.xPercent / 100) * Number(correct.imgW),
+                      ) <= 5 &&
+                      Math.abs(
+                        (p.yPercent / 100) * Number(correct.imgH) -
+                          (pin.yPercent / 100) * Number(correct.imgH),
+                      ) <= 5,
+                  )
+                  .indexOf(pin)}
+                large
+              />
+            ),
+        )}
       </div>
     </div>
   );

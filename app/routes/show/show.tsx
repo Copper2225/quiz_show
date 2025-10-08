@@ -57,6 +57,7 @@ export default function Show() {
           withHeader={withHeader}
           answerRevealed={data.answerRevealed === true}
           answers={data.answers}
+          playerReveals={data.playerReveal}
         />
       ) : (
         <PointsGrid

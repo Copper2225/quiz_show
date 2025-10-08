@@ -8,6 +8,11 @@ interface Props {
   withHeader: boolean;
   showAnswer: boolean;
   answers: Map<string, { answer: string; time: Date }>;
+  playerReveals: Map<string, boolean>;
+}
+
+export interface ShowPin extends PinData {
+  show: boolean;
 }
 
 const PinQuestionShow = ({
@@ -15,12 +20,16 @@ const PinQuestionShow = ({
   withHeader,
   showAnswer,
   answers,
+  playerReveals,
 }: Props) => {
   const pins = useMemo(() => {
-    const pinMap: PinData[] = [];
-    Array.from(answers).forEach(([_teamName, { answer }]) => {
+    const pinMap: ShowPin[] = [];
+    Array.from(answers).forEach(([teamName, { answer }]) => {
       try {
-        const pin = JSON.parse(answer) as PinData;
+        const pin = {
+          ...(JSON.parse(answer) as PinData),
+          show: playerReveals.get(teamName) ?? false,
+        };
         pinMap.push(pin);
       } catch (e) {
         console.error("Invalid pin JSON:", answer, e);
