@@ -1,11 +1,11 @@
 import type { Route } from "./+types/edit.question";
-import { Form, redirect, useLoaderData } from "react-router";
+import { Form, NavLink, redirect, useLoaderData } from "react-router";
 import { getConfig } from "~/utils/config.server";
 import BaseTypeSelect from "~/routes/edit/components/BaseTypeSelect";
 import { prisma } from "~/utils/db.server";
 import dot from "dot-object";
 import MediaBase from "~/routes/edit/components/MediaEdit/MediaBase";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import type { Question, QuestionType } from "~/types/question";
@@ -101,6 +101,20 @@ export default function EditQuestion() {
         <Button className={"mt-5"} type="submit">
           Save
         </Button>
+        <div className={`flex gap-3`}>
+          <NavLink
+            className={`flex-1 ${buttonVariants({ variant: "default" })}`}
+            to={`/show/preview/${data.c}/${data.q}`}
+          >
+            Preview Show
+          </NavLink>
+          <NavLink
+            className={`flex-1 ${buttonVariants({ variant: "default" })}`}
+            to={`/user/preview/${data.c}/${data.q}`}
+          >
+            Preview User
+          </NavLink>
+        </div>
       </Form>
     </main>
   );

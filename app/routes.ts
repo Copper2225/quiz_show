@@ -8,6 +8,7 @@ import {
 export default [
   index("routes/_index.tsx"),
   route("user", "routes/user/user.tsx"),
+  route("user/preview/:c/:q", "routes/user/user.preview.tsx"),
   route("login", "routes/user/login.tsx"),
   route("logout", "routes/user/logout.tsx"),
   route("edit", "routes/edit/edit.tsx"),
@@ -16,6 +17,7 @@ export default [
   route("sse/events/admin", "routes/events/sse.events.admin.ts"),
   route("admin", "routes/admin/admin.tsx"),
   route("admin/peek/:c/:q", "routes/admin/admin.peek.tsx"),
+  route("show/preview/:c/:q", "routes/show/show.preview.tsx"),
   route("show", "routes/show/show.tsx"),
   ...prefix("/api", [
     route("teams", "routes/api/teams.ts"),
