@@ -5,7 +5,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import OptionLine from "~/routes/edit/components/MultipleChoice/OptionLine";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
@@ -26,8 +26,12 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
   }, []);
 
   const removeAnswer = useCallback(() => {
-    setAnswers((prev) => prev - 1);
+    setAnswers((prev) => Math.max(prev - 1, 2));
   }, []);
+
+  const options = useMemo(() => {
+    return question?.config?.options ?? [];
+  }, [question]);
 
   return (
     <>
@@ -50,7 +54,7 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
                   answers={answers}
                   removeAnswer={removeAnswer}
                   defaultValues={
-                    question?.config?.options[i] ?? {
+                    options[i] ?? {
                       name: "",
                       checked: false,
                     }

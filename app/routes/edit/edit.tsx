@@ -11,14 +11,20 @@ import {
   getQuestionsGrid,
   initQuestionGrid,
 } from "~/utils/config.server";
-import { Link, useFetcher, useLoaderData, useRevalidator } from "react-router";
+import {
+  Link,
+  NavLink,
+  useFetcher,
+  useLoaderData,
+  useRevalidator,
+} from "react-router";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from "~/components/ui/context-menu";
-import { Trash } from "lucide-react";
+import { Trash, Tv, UserRoundSearch } from "lucide-react";
 import { useCallback, useEffect } from "react";
 import { useEventSource } from "remix-utils/sse/react";
 
@@ -157,6 +163,27 @@ export default function Edit() {
                           <Trash className={"text-destructive"} /> Delete
                           Category
                         </ContextMenuItem>
+
+                        {data.questions.get(colIndex + ":" + rowIndex) && (
+                          <>
+                            <ContextMenuItem>
+                              <NavLink
+                                className={"flex gap-2"}
+                                to={`/show/preview/${colIndex}/${rowIndex}`}
+                              >
+                                <Tv /> Preview Show
+                              </NavLink>
+                            </ContextMenuItem>
+                            <ContextMenuItem>
+                              <NavLink
+                                className={"flex gap-2"}
+                                to={`/user/preview/${colIndex}/${rowIndex}`}
+                              >
+                                <UserRoundSearch /> Preview User
+                              </NavLink>
+                            </ContextMenuItem>
+                          </>
+                        )}
                       </ContextMenuContent>
                     </ContextMenu>
                   )),
@@ -164,7 +191,6 @@ export default function Edit() {
               </div>
             </div>
           </div>
-          {/* "+" button at the right (beside grid, fills all rows) */}
           <div className="ml-4 h-full self-end">
             <addCategoryFetcher.Form method="post" className="h-full">
               <input type="hidden" name="intent" value="addCategory" />
@@ -178,7 +204,6 @@ export default function Edit() {
           </div>
         </div>
 
-        {/* "+" button at the bottom (fills all columns) */}
         <div className="mt-4">
           <addDepthFetcher.Form method="post" className="w-full">
             <input type="hidden" name="intent" value="addQuestionDepth" />
