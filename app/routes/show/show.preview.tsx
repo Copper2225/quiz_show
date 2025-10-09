@@ -7,6 +7,8 @@ import { prisma } from "~/utils/db.server";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import { useLoaderData, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
+import type { OrderQuestion } from "~/types/adminTypes";
+import _ from "lodash";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const c = Number(params.c);
@@ -16,7 +18,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     return new Response("Invalid parameters", { status: 400 });
   }
 
-  const question = (await prisma.questionEntity.findUnique({
+  let question = (await prisma.questionEntity.findUnique({
     where: {
       categoryColumn_row: {
         categoryColumn: c,
@@ -26,6 +28,17 @@ export async function loader({ params }: Route.LoaderArgs) {
   })) as Question<JsonValue>;
 
   const { config, activeMatrix, questionGrid } = AdminData;
+
+  if (question.type === QuestionType.ORDER) {
+    question = {
+      ...(question as OrderQuestion),
+      config: {
+        ...(question as OrderQuestion).config,
+        shuffledOptions: _.shuffle((question as OrderQuestion).config.options),
+      },
+    };
+  }
+
   return {
     question,
     activeMatrix,
