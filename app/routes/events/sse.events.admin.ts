@@ -38,8 +38,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     const heartbeatInterval = setInterval(() => {
       try {
         send({ event: "heartbeat", data: "1" });
-      } catch {
-      }
+      } catch {}
     }, 15000);
 
     return () => {
