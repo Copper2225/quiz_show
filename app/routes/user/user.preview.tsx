@@ -40,8 +40,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   const qConfig: any = foundQuestionEntity.config;
 
   if (
-    (qConfig.shuffle === "on" ||
-      foundQuestionEntity.type === QuestionType.ORDER) &&
+    (qConfig.shuffle || foundQuestionEntity.type === QuestionType.ORDER) &&
     Array.isArray(qConfig.options)
   ) {
     if (foundQuestionEntity.type === QuestionType.ORDER) {
@@ -99,22 +98,25 @@ export default function user() {
     if (question) {
       switch (question?.type ?? "none") {
         case QuestionType.BUZZER:
-          return <BuzzerField isLocked={false} />;
+          return <BuzzerField isLocked={false} isPreview={true} />;
         case QuestionType.MULTIPLE_CHOICE:
           return (
             <MultipleChoiceField
               locked={false}
               data={question as UserMultipleChoiceQuestion}
+              isPreview={true}
+              answer={undefined}
             />
           );
         case QuestionType.INPUT:
-          return <InputAnswerField locked={false} />;
+          return <InputAnswerField locked={false} isPreview={true} />;
         case QuestionType.ORDER:
           return (
             <OrderField
               locked={false}
               data={question as UserOrderQuestion}
               answer={undefined}
+              isPreview={true}
             />
           );
         case QuestionType.PIN:
@@ -124,6 +126,7 @@ export default function user() {
               data={question as UserPinQuestion}
               answer={undefined}
               teamColor={userColors[0]}
+              isPreview={true}
             />
           );
         default:

@@ -1,20 +1,36 @@
 import { Button } from "~/components/ui/button";
 import { useFetcher } from "react-router";
 import { FitGroup } from "./FitGroup";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { UserMultipleChoiceQuestion } from "~/types/userTypes";
 
 interface Props {
   data: UserMultipleChoiceQuestion;
   locked: boolean;
+  answer: string | undefined;
+  isPreview?: boolean;
 }
 
-const MultipleChoiceField = ({ data, locked }: Props) => {
+const MultipleChoiceField = ({
+  data,
+  locked,
+  answer,
+  isPreview = false,
+}: Props) => {
   const selectionFetcher = useFetcher();
+  const [selection, setSelection] = useState<string[]>([]);
+
+  const handlePreviewClick = useCallback((option: string) => {
+    setSelection([option]);
+  }, []);
 
   useEffect(() => {
-    selectionFetcher.load("/api/answer");
-  }, []);
+    if (answer) {
+      setSelection([answer]);
+    } else {
+      setSelection([]);
+    }
+  }, [answer]);
 
   return (
     <FitGroup texts={data.config.options}>
@@ -33,11 +49,14 @@ const MultipleChoiceField = ({ data, locked }: Props) => {
               key={index}
             >
               <Button
-                type="submit"
+                type={isPreview ? "button" : "submit"}
                 disabled={locked}
                 ref={getWrapperRef(index)}
-                className={`w-full h-full rounded-2xl outline-4 ${selectionFetcher.data?.answer === option ? "outline-purple-700" : "outline-gray-200"} outline-solid -outline-offset-12 p-2 ${
-                  data.config.trueOrFalse === "on" &&
+                onClick={
+                  isPreview ? () => handlePreviewClick(option) : undefined
+                }
+                className={`w-full h-full rounded-2xl outline-4 ${selection.includes(option) ? "outline-purple-700" : "outline-gray-200"} outline-solid -outline-offset-12 p-2 ${
+                  data.config.trueOrFalse &&
                   (index % 2 === 0
                     ? "bg-green-600 hover:bg-green-700"
                     : "bg-red-600 hover:bg-red-700")
@@ -49,7 +68,7 @@ const MultipleChoiceField = ({ data, locked }: Props) => {
                   style={{ fontSize }}
                   className={`flex-1 ps-4 pe-6 whitespace-pre-wrap overflow-hidden flex justify-start`}
                 >
-                  {data.config.showLetters === "on" && (
+                  {data.config.showLetters && (
                     <div
                       style={{ lineHeight: 1 }}
                       className={`bg-gray-700 px-5 me-3 self-center content-center rounded-3xl aspect-square`}

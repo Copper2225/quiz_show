@@ -149,8 +149,7 @@ export async function setQuestion(
   const config: any = foundQuestionEntity.config;
 
   if (
-    (config.shuffle === "on" ||
-      foundQuestionEntity.type === QuestionType.ORDER) &&
+    (config.shuffle || foundQuestionEntity.type === QuestionType.ORDER) &&
     Array.isArray(config.options)
   ) {
     if (foundQuestionEntity.type === QuestionType.ORDER) {

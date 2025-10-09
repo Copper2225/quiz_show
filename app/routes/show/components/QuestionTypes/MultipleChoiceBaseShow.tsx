@@ -6,10 +6,10 @@ interface Props {
   data: {
     options: {
       name: string;
-      checked?: "on" | "off";
+      checked?: boolean;
     }[];
-    showLetters: "on" | "off";
-    trueOrFalse: "on" | "off";
+    showLetters: boolean;
+    trueOrFalse: boolean;
     media?: MediaConfig;
   };
   showCorrect: boolean;
@@ -62,10 +62,10 @@ const MultipleChoiceBaseShow = ({ data, showCorrect }: Props) => {
         {data.options.map((choice, index) => (
           <Button
             key={index}
-            disabled={choice.checked !== "on" && showCorrect}
-            className={`flex w-full flex-1 text-5xl rounded-2xl p-3 outline-4 outline-solid -outline-offset-12 outline-gray-200 ${data.trueOrFalse === "on" && (index % 2 === 0 ? "bg-green-600" : "bg-red-600")}`}
+            disabled={!choice.checked && showCorrect}
+            className={`flex w-full flex-1 text-5xl rounded-2xl p-3 outline-4 outline-solid -outline-offset-12 outline-gray-200 ${data.trueOrFalse && (index % 2 === 0 ? "bg-green-600" : "bg-red-600")}`}
           >
-            {data.showLetters === "on" && (
+            {data.showLetters && (
               <div
                 className={
                   "bg-gray-700 px-5 ms-4 self-center content-center rounded-3xl aspect-square h-min"
@@ -79,7 +79,7 @@ const MultipleChoiceBaseShow = ({ data, showCorrect }: Props) => {
                 optionRefs.current[index] = el;
               }}
               style={{ fontSize }}
-              className={`w-full content-center px-5 whitespace-break-spaces overflow-hidden h-full ${data.showLetters === "on" ? "text-start" : "text-center"}`}
+              className={`w-full content-center px-5 whitespace-break-spaces overflow-hidden h-full ${data.showLetters ? "text-start" : "text-center"}`}
             >
               {choice.name}
             </div>

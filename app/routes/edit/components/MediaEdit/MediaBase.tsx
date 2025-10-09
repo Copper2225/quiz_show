@@ -9,7 +9,9 @@ interface Props {
 }
 
 const MediaBase = ({ defaultConfig }: Props) => {
-  const [media, setMedia] = useState(defaultConfig?.mediaChecked);
+  const [media, setMedia] = useState<boolean>(
+    defaultConfig?.mediaChecked ?? false,
+  );
 
   return (
     <div className={"flex flex-col gap-2"}>
@@ -18,8 +20,8 @@ const MediaBase = ({ defaultConfig }: Props) => {
         <Checkbox
           checked={media}
           defaultChecked={defaultConfig?.mediaChecked}
-          name={"config.media.mediaChecked"}
-          id="config.media.mediaChecked"
+          name={"_check_config.media.mediaChecked"}
+          id="_check_config.media.mediaChecked"
           onCheckedChange={(checked: boolean) => setMedia(checked)}
         />
       </div>

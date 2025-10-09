@@ -4,9 +4,10 @@ import { useFetcher } from "react-router";
 
 interface Props {
   isLocked: boolean | undefined;
+  isPreview?: boolean;
 }
 
-const BuzzerField = ({ isLocked }: Props): ReactElement => {
+const BuzzerField = ({ isLocked, isPreview = false }: Props): ReactElement => {
   const fetcher = useFetcher();
 
   return (
@@ -19,7 +20,7 @@ const BuzzerField = ({ isLocked }: Props): ReactElement => {
     >
       <input hidden name="answer" readOnly value="buzzer" />
       <Button
-        type={"submit"}
+        type={isPreview ? "button" : "submit"}
         disabled={isLocked}
         className={"h-full w-full box-border"}
       />

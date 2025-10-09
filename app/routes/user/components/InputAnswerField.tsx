@@ -12,9 +12,14 @@ import { Textarea } from "~/components/ui/textarea";
 interface Props {
   answer?: string;
   locked: boolean;
+  isPreview?: boolean;
 }
 
-const InputAnswerField = ({ answer, locked }: Props): ReactElement => {
+const InputAnswerField = ({
+  answer,
+  locked,
+  isPreview = false,
+}: Props): ReactElement => {
   const fetcher = useFetcher();
   const [isDirty, setIsDirty] = useState(false);
 
@@ -45,7 +50,7 @@ const InputAnswerField = ({ answer, locked }: Props): ReactElement => {
         defaultValue={answer}
       />
       <Button
-        type={"submit"}
+        type={isPreview ? "button" : "submit"}
         disabled={!isDirty || locked}
         className={" w-full h-[150px] text-5xl box-border"}
       >

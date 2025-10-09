@@ -49,6 +49,7 @@ export default function user() {
             <MultipleChoiceField
               locked={data.isLocked ?? false}
               data={data.question as UserMultipleChoiceQuestion}
+              answer={data.answer?.answer}
             />
           );
         case QuestionType.INPUT:

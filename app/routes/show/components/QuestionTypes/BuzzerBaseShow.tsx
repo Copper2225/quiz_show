@@ -11,7 +11,7 @@ interface Props {
 const BuzzerBaseShow = ({ question, withHeader, showAnswer }: Props) => {
   return (
     <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>
-      {(question.config as any)?.media?.mediaChecked && (
+      {question.config?.media?.mediaChecked && (
         <div
           className={
             "w-full content-center h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12"
@@ -19,7 +19,7 @@ const BuzzerBaseShow = ({ question, withHeader, showAnswer }: Props) => {
         >
           <img
             className={"h-full justify-self-center"}
-            src={(question.config as any)?.media?.mediaFile}
+            src={question.config?.media?.mediaFile}
             alt={"Media"}
           />
         </div>

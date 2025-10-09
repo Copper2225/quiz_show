@@ -3,8 +3,9 @@ import type { Question } from "~/types/question";
 
 export type UserMultipleChoiceQuestion = Question<{
   options: string[];
-  showLetters: "on" | "off";
-  trueOrFalse: "on" | "off";
+  showLetters: boolean;
+  trueOrFalse: boolean;
+  multiSelect: boolean;
 }>;
 
 export type UserOrderQuestion = Question<{

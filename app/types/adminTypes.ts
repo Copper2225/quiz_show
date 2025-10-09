@@ -1,14 +1,25 @@
 import type { Question } from "~/types/question";
 
-export type BuzzerQuestion = Question<{ answer: string }>;
+export type MediaConfig = {
+  mediaChecked: boolean;
+  mediaFile: string;
+};
 
-export type InputQuestion = Question<{ answer: string }>;
+export type BuzzerQuestion = Question<{
+  answer: string;
+  media?: MediaConfig;
+}>;
+
+export type InputQuestion = Question<{
+  answer: string;
+  media?: MediaConfig;
+}>;
 
 export type MultipleChoiceQuestion = Question<{
-  options: { name: string; checked?: "on" | "off" }[];
-  showLetters: "on" | "off";
-  trueOrFalse: "on" | "off";
-  shuffle: "on" | "off";
+  options: { name: string; checked?: boolean }[];
+  showLetters: boolean;
+  trueOrFalse: boolean;
+  shuffle: boolean;
 }>;
 
 export type OrderQuestion = Question<{
@@ -28,11 +39,6 @@ export type PinQuestion = Question<{
   image: string;
   pin: PinData;
 }>;
-
-export interface MediaConfig {
-  mediaChecked: boolean;
-  mediaFile: string;
-}
 
 export interface PlayerPoints {
   points: number;

@@ -142,7 +142,7 @@ const Answers = ({
             const correctOptions = (
               question as MultipleChoiceQuestion
             ).config.options
-              .filter((opt) => opt.checked === "on")
+              .filter((opt) => opt.checked)
               .map((opt) => opt.name)
               .sort();
 

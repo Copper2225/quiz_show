@@ -52,7 +52,7 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
                   defaultValues={
                     question?.config?.options[i] ?? {
                       name: "",
-                      checked: "off",
+                      checked: false,
                     }
                   }
                 />
@@ -74,9 +74,9 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
           Shuffle
         </Label>
         <Checkbox
-          name={"config.shuffle"}
-          id={"config.shuffle"}
-          defaultChecked={question?.config?.shuffle === "on"}
+          name={"_check_config.shuffle"}
+          id={"_check_config.shuffle"}
+          defaultChecked={question?.config?.shuffle}
         />
       </div>
       <div>
@@ -84,9 +84,9 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
           Show Letters
         </Label>
         <Checkbox
-          name={"config.showLetters"}
-          id={"config.showLetters"}
-          defaultChecked={question?.config?.showLetters === "on"}
+          name={"_check_config.showLetters"}
+          id={"_check_config.showLetters"}
+          defaultChecked={question?.config?.showLetters}
         />
       </div>
       <div>
@@ -94,9 +94,9 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
           True or False (true first)
         </Label>
         <Checkbox
-          name={"config.trueOrFalse"}
-          id={"config.trueOrFalse"}
-          defaultChecked={question?.config?.trueOrFalse === "on"}
+          name={"_check_config.trueOrFalse"}
+          id={"_check_config.trueOrFalse"}
+          defaultChecked={question?.config?.trueOrFalse}
         />
       </div>
     </>

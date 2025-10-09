@@ -11,12 +11,31 @@ import { Input } from "~/components/ui/input";
 import type { Question, QuestionType } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
 
+function formDataToObjectWithCheckboxes(formData: FormData): any {
+  const entries = Object.fromEntries(formData.entries());
+  const normalized: Record<string, any> = {};
+
+  for (const [key, value] of Object.entries(entries)) {
+    if (key.startsWith("_check_")) {
+      const realKey = key.replace(/^_check_/, "");
+
+      normalized[realKey] = value === "on";
+    } else {
+      normalized[key] = value;
+    }
+  }
+
+  console.log(normalized);
+
+  return dot.object(normalized);
+}
+
 export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
 
-  const plainForm = Object.fromEntries(formData.entries());
+  const values = formDataToObjectWithCheckboxes(formData);
 
-  const values = dot.object(plainForm) as any;
+  console.log(values);
 
   const c = Number(params.c);
   const q = Number(params.q);
@@ -27,7 +46,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   await prisma.questionEntity.upsert({
     where: {
-      categoryColumn_row: { categoryColumn: c, row: q }, // composite unique key
+      categoryColumn_row: { categoryColumn: c, row: q },
     },
     update: {
       type: values.baseType,

@@ -10,9 +10,10 @@ interface Props {
   data: UserOrderQuestion;
   locked: boolean;
   answer: string | undefined;
+  isPreview?: boolean;
 }
 
-const OrderField = ({ data, locked, answer }: Props) => {
+const OrderField = ({ data, locked, answer, isPreview = false }: Props) => {
   const [testData, setTestData] = useState<string[]>([]);
 
   const loadedOrder = useMemo(() => {
@@ -85,7 +86,7 @@ const OrderField = ({ data, locked, answer }: Props) => {
       </div>
       <div className="mt-4 shrink-0">
         <Button
-          disabled={locked}
+          disabled={locked || isPreview}
           className={"w-full text-3xl py-6"}
           onClick={submitData}
         >

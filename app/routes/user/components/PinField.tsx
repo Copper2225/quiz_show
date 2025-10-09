@@ -16,9 +16,16 @@ interface Props {
   locked: boolean;
   answer: string | undefined;
   teamColor: string;
+  isPreview: boolean;
 }
 
-const PinField = ({ data, locked, answer, teamColor }: Props) => {
+const PinField = ({
+  data,
+  locked,
+  answer,
+  teamColor,
+  isPreview = false,
+}: Props) => {
   const submitFetcher = useFetcher();
   const answerPin = useMemo(() => {
     if (answer !== undefined) {
@@ -124,7 +131,7 @@ const PinField = ({ data, locked, answer, teamColor }: Props) => {
       </div>
       <Button
         onClick={submit}
-        disabled={locked || !isDirty}
+        disabled={locked || !isDirty || isPreview}
         className={"self-bottom w-full text-3xl py-6"}
       >
         Absenden
