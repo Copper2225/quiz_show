@@ -76,7 +76,11 @@ const MultipleChoiceField = ({
                       {String.fromCharCode("A".charCodeAt(0) + index)}
                     </div>
                   )}
-                  {option}
+                  <span
+                    className={`${data.config.showLetters ? "text-start" : "text-center"} w-full`}
+                  >
+                    {option}
+                  </span>
                 </div>
               </Button>
             </selectionFetcher.Form>

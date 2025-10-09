@@ -104,7 +104,7 @@ export default function Edit() {
               {headers.map((header, i) => (
                 <setCategoryFetcher.Form method={"post"} key={i}>
                   <Input
-                    className="text-lg"
+                    className="sm:text-sm lg:text-lg"
                     name={"categoryName"}
                     defaultValue={header}
                     onBlur={(e) => {
@@ -142,7 +142,7 @@ export default function Edit() {
                         >
                           <Button
                             variant={"outline"}
-                            className={`w-full text-5xl h-full flex items-center justify-center ${data.questions.get(colIndex + ":" + rowIndex) ? "!border-emerald-500" : "!border-red-400"}`}
+                            className={`w-full xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl  h-full flex items-center justify-center ${data.questions.get(colIndex + ":" + rowIndex) ? "!border-emerald-500" : "!border-red-400"}`}
                           >
                             {data.questions.get(colIndex + ":" + rowIndex)
                               ?.points ?? (rowIndex + 1) * 100}
@@ -196,7 +196,7 @@ export default function Edit() {
               <input type="hidden" name="intent" value="addCategory" />
               <Button
                 type="submit"
-                className="h-full text-5xl flex items-center justify-center"
+                className="h-full sm:text-2xl lg:text-5xl flex items-center justify-center"
               >
                 +
               </Button>
@@ -209,7 +209,7 @@ export default function Edit() {
             <input type="hidden" name="intent" value="addQuestionDepth" />
             <Button
               type="submit"
-              className="w-full h-full text-5xl flex items-center justify-center"
+              className="w-full h-full sm:text-2xl lg:text-5xl flex items-center justify-center"
             >
               +
             </Button>
