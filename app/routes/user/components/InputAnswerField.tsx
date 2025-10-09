@@ -52,9 +52,9 @@ const InputAnswerField = ({
       <Button
         type={isPreview ? "button" : "submit"}
         disabled={!isDirty || locked}
-        className={" w-full h-[150px] text-5xl box-border"}
+        className={" w-full h-[100px] text-5xl box-border"}
       >
-        Senden
+        Absenden
       </Button>
     </fetcher.Form>
   );

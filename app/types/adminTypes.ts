@@ -20,6 +20,7 @@ export type MultipleChoiceQuestion = Question<{
   showLetters: boolean;
   trueOrFalse: boolean;
   shuffle: boolean;
+  multiSelect: boolean;
 }>;
 
 export type OrderQuestion = Question<{

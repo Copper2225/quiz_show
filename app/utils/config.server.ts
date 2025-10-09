@@ -1,5 +1,7 @@
 import { prisma } from "~/utils/db.server";
 import { initActiveMatrix } from "~/utils/playData.server";
+import path from "node:path";
+import * as fs from "node:fs";
 
 export interface Config {
   categories: string[];
@@ -94,6 +96,50 @@ export async function initQuestionGrid(): Promise<void> {
 
 export function getQuestionsGrid(): Map<string, any> {
   return questionGrid;
+}
+
+export async function importQuestionsFromJson(): Promise<void> {
+  const filePath = path.resolve(process.cwd(), "public", "config.json");
+
+  try {
+    const fileContents = fs.readFileSync(filePath, "utf-8");
+    const entries: [string, any][] = JSON.parse(fileContents);
+
+    if (!Array.isArray(entries)) {
+      return;
+    }
+
+    for (const [, question] of entries) {
+      if (!question) continue;
+
+      await prisma.questionEntity.upsert({
+        where: {
+          categoryColumn_row: {
+            categoryColumn: question.categoryColumn,
+            row: question.row,
+          },
+        },
+        update: {
+          type: question.type,
+          prompt: question.prompt,
+          config: question.config,
+          points: question.points,
+        },
+        create: {
+          type: question.type,
+          categoryColumn: question.categoryColumn,
+          row: question.row,
+          prompt: question.prompt,
+          config: question.config,
+          points: question.points,
+        },
+      });
+    }
+
+    console.log(`✅ Imported ${entries.length} questions from config.json`);
+  } catch (err) {
+    console.error("❌ Failed to import questions from JSON:", err);
+  }
 }
 
 void initConfig();

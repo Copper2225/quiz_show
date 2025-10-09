@@ -74,6 +74,16 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
         </Button>
       </div>
       <div>
+        <Label htmlFor={"multiSelect"} className={"mb-2"}>
+          Select Multiple
+        </Label>
+        <Checkbox
+          name={"_check_config.multiSelect"}
+          id={"_check_config.multiSelect"}
+          defaultChecked={question?.config?.multiSelect}
+        />
+      </div>
+      <div>
         <Label htmlFor={"shuffle"} className={"mb-2"}>
           Shuffle
         </Label>

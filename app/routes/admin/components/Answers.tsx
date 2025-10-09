@@ -14,6 +14,7 @@ import type {
   PinQuestion,
 } from "~/types/adminTypes";
 import type { JsonValue } from "@prisma/client/runtime/client";
+import { useGetSolutionString } from "~/utils/useGetAnswerString";
 
 interface Props {
   unlockOrLock: boolean;
@@ -80,33 +81,7 @@ const Answers = ({
   }, [revealedOrHidden, allAnswersRevealed]);
 
   const correctAnswerString = useMemo(() => {
-    if (question === null) {
-      return null;
-    }
-    switch (question.type) {
-      case QuestionType.BUZZER:
-        return (question as BuzzerQuestion).config.answer;
-      case QuestionType.INPUT:
-        return (question as InputQuestion).config.answer;
-      case QuestionType.PIN:
-        return JSON.stringify((question as PinQuestion).config.pin);
-      case QuestionType.ORDER:
-        return (question as OrderQuestion).config.options
-          .map(
-            (answer) =>
-              (question as OrderQuestion).config.shuffledOptions.indexOf(
-                answer,
-              ) + 1,
-          )
-          .toString();
-      case QuestionType.MULTIPLE_CHOICE:
-        return (question as MultipleChoiceQuestion).config.options
-          .filter((e) => e.checked)
-          .map((e) => e.name)
-          .toString();
-      default:
-        return null;
-    }
+    return useGetSolutionString(question);
   }, [question]);
 
   const handleLockAnswers = useCallback(() => {

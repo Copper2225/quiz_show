@@ -30,19 +30,7 @@ const PinMap = ({ correct, image, showCorrect, pins }: Props) => {
           <Pin
             xPercent={correct.xPercent}
             yPercent={correct.yPercent}
-            tilt={
-              pins.filter(
-                (p) =>
-                  Math.abs(
-                    (p.xPercent / 100) * Number(correct.imgW) -
-                      (correct.xPercent / 100) * Number(correct.imgW),
-                  ) <= 5 &&
-                  Math.abs(
-                    (p.yPercent / 100) * Number(correct.imgH) -
-                      (correct.yPercent / 100) * Number(correct.imgH),
-                  ) <= 5,
-              ).length
-            }
+            tilt={0}
             large
           />
         )}
@@ -53,7 +41,15 @@ const PinMap = ({ correct, image, showCorrect, pins }: Props) => {
                 xPercent={pin.xPercent}
                 yPercent={pin.yPercent}
                 fill={pin.teamColor}
-                tilt={pins
+                tilt={[
+                  {
+                    teamColor: "red",
+                    xPercent: correct.xPercent,
+                    yPercent: correct.yPercent,
+                    show: true,
+                  },
+                  ...pins,
+                ]
                   .filter(
                     (p) =>
                       Math.abs(

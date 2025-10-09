@@ -87,10 +87,10 @@ const OrderField = ({ data, locked, answer, isPreview = false }: Props) => {
       <div className="mt-4 shrink-0">
         <Button
           disabled={locked || isPreview}
-          className={"w-full text-3xl py-6"}
+          className={"w-full h-[100px] text-5xl"}
           onClick={submitData}
         >
-          Bestätigen
+          Absenden
         </Button>
       </div>
     </div>
