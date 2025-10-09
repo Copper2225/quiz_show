@@ -4,7 +4,7 @@ import { useFetcher, useRevalidator } from "react-router";
 import { useEventSource } from "remix-utils/sse/react";
 import HiddenText from "~/routes/admin/components/HiddenText";
 import { type Question, QuestionType } from "~/types/question";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Lock, LockOpen } from "lucide-react";
 import AnswerLine from "~/routes/admin/components/AnswerLine";
 import type {
   BuzzerQuestion,
@@ -174,7 +174,7 @@ const Answers = ({
           className={"lg:text-2xl xl:text-3xl h-full flex-1"}
           onClick={revealAnswer}
         >
-          {revealedOrHidden ? "Hide Answer" : "Reveal Answer"}
+          {revealedOrHidden ? "Lösung verbergen" : "Lösung zeigen"}
         </Button>
       </div>
       <ul className={"h-1/4 flex flex-col gap-3 overflow-y-scroll"}>
@@ -196,14 +196,21 @@ const Answers = ({
           className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
           onClick={handleLockAnswers}
         >
-          {unlockOrLock ? "Unlock Answers" : "Lock Answers"}
+          {unlockOrLock ? "Antworten unlocken" : "Antworten locken"}
+          {unlockOrLock ? (
+            <LockOpen className={"size-4 lg:size-6"} />
+          ) : (
+            <Lock className={"size-4 lg:size-6"} />
+          )}
         </Button>
         <Button
           className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
           onClick={revealAllPlayerAnswers}
         >
           <span className={"flex items-center h-full gap-2 "}>
-            Reveal All Player Answers
+            {allAnswersRevealed
+              ? "Alle Antworten verbergen"
+              : "Alle Antworten aufdecken"}
             {allAnswersRevealed ? (
               <EyeOff className={"size-4 lg:size-6"} />
             ) : (
@@ -215,7 +222,7 @@ const Answers = ({
           className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
           onClick={clearAnswers}
         >
-          Clear answers
+          Alle Antworten löschen
         </Button>
       </div>
     </>

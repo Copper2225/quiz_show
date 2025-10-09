@@ -84,12 +84,12 @@ const BaseTypeSelect = ({ defaultValue, defaultPrompt, question }: Props) => {
     <div className={"flex flex-col gap-4"}>
       <div>
         <Label className={"mb-2"} htmlFor={"baseType"}>
-          Base Type
+          Antwort-Typ
         </Label>
         <Select
           options={types}
           name={"baseType"}
-          label={"Type"}
+          label={"Typ"}
           defaultValue={defaultValue?.toString()}
           onChange={handleChange}
           className={"w-full justify-start"}
@@ -98,7 +98,7 @@ const BaseTypeSelect = ({ defaultValue, defaultPrompt, question }: Props) => {
       </div>
       <div>
         <Label className={"mb-2"} htmlFor={"prompt"}>
-          Prompt
+          Frage
         </Label>
         <Input name={"prompt"} id={"prompt"} defaultValue={defaultPrompt} />
       </div>

@@ -36,12 +36,12 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
   return (
     <>
       <div>
-        <Label>Answers</Label>
+        <Label>Antworten</Label>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[80%]">Text</TableHead>
-              <TableHead>Correct</TableHead>
+              <TableHead>Korrekt</TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
@@ -75,7 +75,7 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
       </div>
       <div>
         <Label htmlFor={"multiSelect"} className={"mb-2"}>
-          Select Multiple
+          Mehrfachauswahl
         </Label>
         <Checkbox
           name={"_check_config.multiSelect"}
@@ -85,7 +85,7 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
       </div>
       <div>
         <Label htmlFor={"shuffle"} className={"mb-2"}>
-          Shuffle
+          Mischen
         </Label>
         <Checkbox
           name={"_check_config.shuffle"}
@@ -95,7 +95,7 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
       </div>
       <div>
         <Label htmlFor={"showLetters"} className={"mb-2"}>
-          Show Letters
+          A,B,C,...
         </Label>
         <Checkbox
           name={"_check_config.showLetters"}
@@ -105,7 +105,7 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
       </div>
       <div>
         <Label htmlFor={"trueOrFalse"} className={"mb-2"}>
-          True or False (true first)
+          Wahr / Falsch (Wahr zuerst)
         </Label>
         <Checkbox
           name={"_check_config.trueOrFalse"}

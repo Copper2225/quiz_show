@@ -69,13 +69,13 @@ const MediaUploadOrSelect = ({ defaultData }: Props) => {
   return (
     <div>
       <Label className={"mb-2"} htmlFor={"mediaFile"}>
-        Upload Media
+        Media hochladen
       </Label>
 
       <div className={"flex gap-3"}>
         <Select
           name={"config.media.mediaFile"}
-          label={"Media File"}
+          label={"Media"}
           options={options}
           value={selected}
           onChange={setSelected}

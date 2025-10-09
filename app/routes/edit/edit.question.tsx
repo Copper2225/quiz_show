@@ -96,7 +96,7 @@ export default function EditQuestion() {
     <main className={"p-4"}>
       <title>Edit - Quiz</title>
       <h1 className={"text-xl"}>
-        Edit question {data.question?.points ?? (data.q + 1) * 100} of{" "}
+        Bearbeite Frage {data.question?.points ?? (data.q + 1) * 100} von{" "}
         {data.categoryName ?? data.c}
       </h1>
       <Form method={"post"} className={"p-4 gap-2 flex flex-col"}>
@@ -118,7 +118,7 @@ export default function EditQuestion() {
           defaultConfig={(data.question?.config as any)?.media ?? undefined}
         />
         <Button className={"mt-5"} type="submit">
-          Save
+          Speichern
         </Button>
       </Form>
     </main>

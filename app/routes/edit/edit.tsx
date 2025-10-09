@@ -91,7 +91,7 @@ export default function Edit() {
     <main>
       <title>Edit - Quiz</title>
       <div className="h-dvh w-dvw box-border p-4 flex flex-col">
-        <h1 className="text-2xl font-bold mb-6">Points Grid</h1>
+        <h1 className="text-2xl font-bold mb-6">Übersicht</h1>
 
         <div className={"h-full flex w-full"}>
           <div className={"w-full h-full flex flex-col"}>

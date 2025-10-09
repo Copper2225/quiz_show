@@ -10,7 +10,7 @@ const BuzzerBaseEdit = ({ question }: Props) => {
   return (
     <div>
       <Label htmlFor={"config.answer"} className={"mb-2"}>
-        Answer
+        Lösung
       </Label>
       <Input
         name={"config.answer"}

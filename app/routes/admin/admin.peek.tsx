@@ -103,17 +103,17 @@ export default function EditQuestion() {
           onClick={() => navigate(-1)}
           className={"flex flex-1 h-full lg:text-2xl xl:text-3xl"}
         >
-          <ArrowLeft /> Back
+          <ArrowLeft /> Zurück
         </Button>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className={"flex-1 h-full lg:text-2xl xl:text-3xl"}>
-              OPEN
+              Andere Frage öffnen
             </Button>
           </DialogTrigger>
           <DialogContent className={"sm:max-w-[90%] sm:max-h-[80%]"}>
             <DialogHeader>
-              <DialogTitle>Select Question</DialogTitle>
+              <DialogTitle>Frage öffnen</DialogTitle>
             </DialogHeader>
             <div
               className="grid gap-4 w-full flex-1"
@@ -166,14 +166,14 @@ export default function EditQuestion() {
       />
       <Form method={"post"} className={"py-3 flex w-full h-1/10 gap-3"}>
         <Button className={"h-full text-5xl flex-1"} type={"submit"}>
-          Use Question
+          Frage stellen
         </Button>
         <Button
           type={"button"}
           className={"h-full text-5xl flex-1"}
           onClick={triggerAnswer}
         >
-          Trigger Answer
+          Trigger Lösung
         </Button>
       </Form>
     </main>

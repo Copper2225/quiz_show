@@ -68,7 +68,7 @@ const Select = ({
           >
             {value
               ? options.find((option) => option.value === value)?.label
-              : `Select ${label}...`}
+              : `Wähle ${label}...`}
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>

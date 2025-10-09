@@ -28,7 +28,7 @@ const OrderBaseEdit = ({ question }: Props) => {
   return (
     <>
       <div>
-        <Label className={"mb-2"}>Elements</Label>
+        <Label className={"mb-2"}>Elemente</Label>
         <div className={"flex flex-col gap-2"}>
           {Array.from({ length: elements }).map((_e, index) => (
             <OrderLine
@@ -47,7 +47,7 @@ const OrderBaseEdit = ({ question }: Props) => {
           onClick={addRow}
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add new element
+          Neues Element
         </Button>
       </div>
     </>

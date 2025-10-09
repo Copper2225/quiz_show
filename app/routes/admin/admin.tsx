@@ -30,7 +30,7 @@ export default function Admin() {
       <title>Admin - Quiz</title>
       <div className={"h-full w-full box-border flex flex-col gap-4"}>
         <h1 className={"text-xl font-semibold"}>
-          Admin - <Link to={"/show"}>Navigate to Show</Link>
+          Admin - <Link to={"/show"}>Zur Show springen</Link>
         </h1>
         <QuestionSelect
           categories={data.config.categories}

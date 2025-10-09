@@ -45,7 +45,7 @@ const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
               onClick={handleOpenClick}
               className={"flex-2 h-full lg:text-2xl xl:text-3xl"}
             >
-              OPEN
+              Frage öffnen
             </Button>
             <Button
               className={"h-full aspect-square"}
@@ -75,13 +75,13 @@ const QuestionSelect = ({ categories, activeMatrix, grid }: Props) => {
             onClick={handleOpenClick}
             type={"submit"}
           >
-            Clear Question
+            Zum Board
           </Button>
         </selectFetcher.Form>
 
         <DialogContent className={"sm:max-w-[90%] sm:max-h-[80%]"}>
           <DialogHeader>
-            <DialogTitle>Select Question</DialogTitle>
+            <DialogTitle>Frage öffnen</DialogTitle>
           </DialogHeader>
           <div
             className="grid gap-4 w-full flex-1"

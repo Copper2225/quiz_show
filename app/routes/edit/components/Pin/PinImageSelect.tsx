@@ -221,7 +221,7 @@ const PinImageSelect = ({ defaultData }: Props) => {
   return (
     <div>
       <Label className={"mb-2"} htmlFor={"mediaFile"}>
-        Upload Media
+        Media hochladen
       </Label>
 
       <div className={"flex gap-3"}>
