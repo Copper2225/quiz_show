@@ -227,7 +227,7 @@ const PinImageSelect = ({ defaultData }: Props) => {
       <div className={"flex gap-3"}>
         <Select
           name={"config.image"}
-          label={"Media File"}
+          label={"Media"}
           options={options}
           value={selected}
           onChange={setSelected}
@@ -245,7 +245,7 @@ const PinImageSelect = ({ defaultData }: Props) => {
       {selected && (
         <div className={"mt-4 flex flex-col gap-3"}>
           <div className={"flex items-center gap-3"}>
-            <Label>Set Position</Label>
+            <Label>Position setzen</Label>
             <Select
               name={""}
               label={"Unit"}
@@ -263,7 +263,7 @@ const PinImageSelect = ({ defaultData }: Props) => {
               variant="secondary"
               onClick={() => setDialogOpen(true)}
             >
-              Open Fullscreen
+              Fullscreen öffnen
             </Button>
           </div>
 
@@ -348,7 +348,6 @@ const PinImageSelect = ({ defaultData }: Props) => {
         </div>
       )}
 
-      {/* Fullscreen dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
           <span />
@@ -360,7 +359,7 @@ const PinImageSelect = ({ defaultData }: Props) => {
           showCloseButton
         >
           <DialogHeader className={"px-6 pt-6"}>
-            <DialogTitle>Click to set marker</DialogTitle>
+            <DialogTitle>Klicken um Marker zu setzen</DialogTitle>
           </DialogHeader>
           <div className={"p-2 md:p-4 flex items-center justify-center"}>
             <div className={"relative inline-block"}>
