@@ -52,7 +52,7 @@ const MultipleChoiceBaseShow = ({ data, showCorrect }: Props) => {
           }
         >
           <img
-            className={"h-full justify-self-center"}
+            className={"h-full justify-self-center object-contain"}
             src={data.media.mediaFile}
             alt={"Media"}
           />

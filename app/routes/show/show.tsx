@@ -6,6 +6,7 @@ import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useMemo } from "react";
 import BaseQuestionShow from "~/routes/show/components/QuestionTypes/BaseQuestionShow";
 import { QuestionType } from "~/types/question";
+import type { BuzzerQuestion, InputQuestion } from "~/types/adminTypes";
 
 export async function loader() {
   return ShowData;
@@ -34,9 +35,10 @@ export default function Show() {
   const withHeader = useMemo(() => {
     if (question) {
       if (
-        (question.type === QuestionType.BUZZER ||
-          question.type === QuestionType.INPUT) &&
-        (question.config as any)?.media === undefined
+        (question.type === QuestionType.BUZZER &&
+          !(question as BuzzerQuestion).config.media?.mediaChecked) ||
+        (question.type === QuestionType.INPUT &&
+          !(question as InputQuestion).config.media?.mediaChecked)
       )
         return data.answerRevealed;
       return question.type !== QuestionType.NONE;

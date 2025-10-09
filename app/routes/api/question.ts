@@ -4,13 +4,11 @@ import {
   setQuestion,
   disableActiveMatrix,
   clearUserAnswers,
-  setAnswerType,
   resetActiveMatrix,
   AdminData,
   setAllLocked,
 } from "~/utils/playData.server";
 import dot from "dot-object";
-import type { MultipleChoiceQuestion } from "~/types/adminTypes";
 import { prisma } from "~/utils/db.server";
 import { broadcast } from "../events/sse.events";
 import { redirect } from "react-router";
@@ -40,9 +38,7 @@ export async function action({ request }: Route.ActionArgs) {
       setAllLocked(false);
     }
 
-    const data = quest ? answerData(quest) : { type: "none" };
-    setAnswerType(data);
-    broadcast("answerType", { data });
+    broadcast("answerType", { quest });
 
     return { quest };
   } else if (requestValues.mode === "switch") {
@@ -72,22 +68,5 @@ export async function action({ request }: Route.ActionArgs) {
     const categoryColumn = JSON.parse(requestValues.data).col;
     const row = JSON.parse(requestValues.data).row;
     return redirect(`/admin/peek/${categoryColumn}/${row}`);
-  }
-}
-
-function answerData(question: any) {
-  switch (question.type) {
-    case "multipleChoice":
-      const mcQuestion = question as MultipleChoiceQuestion;
-      return {
-        options: mcQuestion.config.options.map((option) => option.name),
-        showLetters: mcQuestion.config.showLetters,
-        trueOrFalse: mcQuestion.config.trueOrFalse,
-        type: "multipleChoice",
-      };
-    default:
-      return {
-        type: question.type,
-      };
   }
 }

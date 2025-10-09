@@ -1,5 +1,11 @@
 import type { Route } from "./+types/admin.peek";
-import { NavLink, redirect, useLoaderData } from "react-router";
+import {
+  Form,
+  NavLink,
+  redirect,
+  useLoaderData,
+  useNavigate,
+} from "react-router";
 import { prisma } from "~/utils/db.server";
 import { QuestionType, type Question } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
@@ -14,9 +20,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import { AdminData } from "~/utils/playData.server";
+import {
+  AdminData,
+  clearUserAnswers,
+  disableActiveMatrix,
+  setAllLocked,
+  setQuestion,
+} from "~/utils/playData.server";
+import { broadcast } from "~/routes/events/sse.events";
 
-export async function action({}: Route.ActionArgs) {
+export async function action({ params }: Route.ActionArgs) {
+  const quest = await setQuestion(Number(params.q), Number(params.c));
+
+  clearUserAnswers();
+  if (quest) {
+    disableActiveMatrix(Number(params.c), Number(params.q));
+  } else {
+    setAllLocked(false);
+  }
+
+  broadcast("answerType", { quest });
+
   return redirect("/admin");
 }
 
@@ -70,17 +94,17 @@ export default function EditQuestion() {
     setAnswerRevealed((prevState) => !prevState);
   }, []);
 
+  const navigate = useNavigate();
+
   return (
     <main className="h-dvh w-dvw box-border px-4 pt-4 flex flex-col">
       <div className={"flex gap-3 mb-3"}>
-        <NavLink
-          to={"/admin"}
-          className={
-            "flex flex-1 h-full bg-primary rounded-lg justify-center items-center"
-          }
+        <Button
+          onClick={() => navigate(-1)}
+          className={"flex flex-1 h-full lg:text-2xl xl:text-3xl"}
         >
           <ArrowLeft /> Back
-        </NavLink>
+        </Button>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className={"flex-1 h-full lg:text-2xl xl:text-3xl"}>
@@ -140,9 +164,18 @@ export default function EditQuestion() {
         answers={new Map()}
         playerReveals={new Map()}
       />
-      <Button className={"my-3 h-1/10 text-5xl"} onClick={triggerAnswer}>
-        Trigger Answer
-      </Button>
+      <Form method={"post"} className={"py-3 flex w-full h-1/10 gap-3"}>
+        <Button className={"h-full text-5xl flex-1"} type={"submit"}>
+          Use Question
+        </Button>
+        <Button
+          type={"button"}
+          className={"h-full text-5xl flex-1"}
+          onClick={triggerAnswer}
+        >
+          Trigger Answer
+        </Button>
+      </Form>
     </main>
   );
 }

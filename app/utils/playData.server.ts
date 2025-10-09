@@ -11,7 +11,6 @@ import { type Question, QuestionType } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
 
 interface PlayerData {
-  answerType: any | null;
   question: Question<JsonValue> | null;
 }
 
@@ -36,7 +35,6 @@ interface SpecificUserData {
 }
 
 export const playerData: PlayerData = {
-  answerType: null,
   question: null,
 };
 
@@ -90,10 +88,6 @@ export function getUserData(user: string): SpecificUserData {
     userName: user,
     userColor: userColors[Array.from(AdminData.teams.keys()).indexOf(user)],
   };
-}
-
-export function setAnswerType(newAnswerType: object) {
-  playerData.answerType = newAnswerType;
 }
 
 export function initActiveMatrix(categories: number, questions: number) {
