@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Label } from "~/components/ui/label";
 import { Plus } from "lucide-react";
 import { Button } from "~/components/ui/button";
@@ -21,6 +21,10 @@ const OrderBaseEdit = ({ question }: Props) => {
     setElements((prevElements) => prevElements + 1);
   }, []);
 
+  const options = useMemo(() => {
+    return question?.config?.options ?? [];
+  }, [question]);
+
   return (
     <>
       <div>
@@ -31,7 +35,7 @@ const OrderBaseEdit = ({ question }: Props) => {
               index={index}
               deleteRow={deleteRow}
               elements={elements}
-              defaultConfig={question?.config}
+              defaultValue={options[index] ?? ""}
             />
           ))}
         </div>
