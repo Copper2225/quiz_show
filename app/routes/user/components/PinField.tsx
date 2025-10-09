@@ -16,7 +16,7 @@ interface Props {
   locked: boolean;
   answer: string | undefined;
   teamColor: string;
-  isPreview: boolean;
+  isPreview?: boolean;
 }
 
 const PinField = ({
