@@ -35,7 +35,15 @@ export async function loader({ request }: Route.LoaderArgs) {
 
     clients.set(clientId, client);
 
+    const heartbeatInterval = setInterval(() => {
+      try {
+        send({ event: "heartbeat", data: "1" });
+      } catch {
+      }
+    }, 15000);
+
     return () => {
+      clearInterval(heartbeatInterval);
       clients.delete(clientId);
     };
   });
