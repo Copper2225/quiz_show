@@ -4,17 +4,21 @@ import { useFetcher, useRevalidator } from "react-router";
 import { useEventSource } from "remix-utils/sse/react";
 import HiddenText from "~/routes/admin/components/HiddenText";
 import { type Question, QuestionType } from "~/types/question";
-import { Eye, EyeOff, Lock, LockOpen } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Lock,
+  LockOpen,
+  SquareCheckBig,
+  Trash,
+} from "lucide-react";
 import AnswerLine from "~/routes/admin/components/AnswerLine";
-import type {
-  BuzzerQuestion,
-  InputQuestion,
-  MultipleChoiceQuestion,
-  OrderQuestion,
-  PinQuestion,
-} from "~/types/adminTypes";
+import type { PinQuestion } from "~/types/adminTypes";
 import type { JsonValue } from "@prisma/client/runtime/client";
-import { useGetSolutionString } from "~/utils/useGetAnswerString";
+import {
+  useGetAnswerString,
+  useGetSolutionString,
+} from "~/utils/useGetAnswerString";
 
 interface Props {
   unlockOrLock: boolean;
@@ -37,7 +41,7 @@ const Answers = ({
   teams,
   questionRevealTime,
 }: Props) => {
-  const answersFetcher = useFetcher();
+  const fetcher = useFetcher();
   const [correctAnswers, setCorrectAnswers] = useState<Map<string, boolean>>(
     new Map(),
   );
@@ -51,20 +55,20 @@ const Answers = ({
   }, [clearEvent, revealEvent, answerEvent]);
 
   const clearAnswers = useCallback(async () => {
-    await answersFetcher.submit("clear", {
+    await fetcher.submit("clear", {
       method: "post",
       action: "/api/clearAnswers",
     });
-  }, [answersFetcher]);
+  }, [fetcher]);
 
   const revealAnswer = useCallback(() => {
     const formData = new FormData();
     formData.set("revealed", (!revealedOrHidden).toString());
-    answersFetcher.submit(formData, {
+    fetcher.submit(formData, {
       method: "post",
       action: "/api/reveal",
     });
-  }, [revealedOrHidden, answersFetcher]);
+  }, [revealedOrHidden, fetcher]);
 
   const allAnswersRevealed = useMemo(() => {
     return Array.from(userReveals.values()).every((revealed) => revealed);
@@ -74,11 +78,11 @@ const Answers = ({
     const formData = new FormData();
     formData.append("all", JSON.stringify(true));
     formData.append("reveal", JSON.stringify(!allAnswersRevealed));
-    answersFetcher.submit(formData, {
+    fetcher.submit(formData, {
       method: "post",
       action: "/api/userReveal",
     });
-  }, [revealedOrHidden, allAnswersRevealed]);
+  }, [allAnswersRevealed]);
 
   const correctAnswerString = useMemo(() => {
     return useGetSolutionString(question);
@@ -88,11 +92,31 @@ const Answers = ({
     const formData = new FormData();
     formData.append("setAll", "true");
     formData.append("locked", unlockOrLock ? "false" : "true");
-    answersFetcher.submit(formData, {
+    fetcher.submit(formData, {
       method: "post",
       action: "/api/lockAnswers",
     });
   }, [unlockOrLock]);
+
+  const onAddClick = useCallback(async () => {
+    if (question) {
+      const formData = new FormData();
+      formData.append(
+        "teams",
+        JSON.stringify(
+          Array.from(correctAnswers.keys()).filter((team) =>
+            correctAnswers.get(team),
+          ),
+        ),
+      );
+      formData.append("points", question.points.toString());
+
+      await fetcher.submit(formData, {
+        method: "POST",
+        action: "/api/teams",
+      });
+    }
+  }, [question, correctAnswers]);
 
   useEffect(() => {
     if (!answers || !question) return;
@@ -104,39 +128,12 @@ const Answers = ({
 
       switch (question.type) {
         case QuestionType.INPUT:
-        case QuestionType.BUZZER: {
-          const correctAnswer = (question as InputQuestion | BuzzerQuestion)
-            .config.answer;
-          isCorrect =
-            correctAnswer.trim().toLowerCase() ===
-            answer.answer.trim().toLowerCase();
-          break;
-        }
-        case QuestionType.MULTIPLE_CHOICE: {
-          try {
-            const correctOptions = (
-              question as MultipleChoiceQuestion
-            ).config.options
-              .filter((opt) => opt.checked)
-              .map((opt) => opt.name)
-              .sort();
-
-            isCorrect = correctOptions.includes(answer.answer);
-          } catch {
-            isCorrect = false;
-          }
-          break;
-        }
-
+        case QuestionType.BUZZER:
+        case QuestionType.MULTIPLE_CHOICE:
         case QuestionType.ORDER: {
-          try {
-            const correctOrder = (question as OrderQuestion).config.options;
-            const teamOrder = JSON.parse(answer.answer) as string[];
-            isCorrect =
-              JSON.stringify(correctOrder) === JSON.stringify(teamOrder);
-          } catch {
-            isCorrect = false;
-          }
+          isCorrect =
+            useGetAnswerString(answer, question, questionRevealTime) ===
+            useGetSolutionString(question);
           break;
         }
 
@@ -177,7 +174,7 @@ const Answers = ({
           {revealedOrHidden ? "Lösung verbergen" : "Lösung zeigen"}
         </Button>
       </div>
-      <ul className={"h-1/4 flex flex-col gap-3 overflow-y-scroll"}>
+      <ul className={"h-3/10 flex flex-col gap-3 overflow-y-scroll"}>
         {Array.from(teams.keys()).map((name) => (
           <AnswerLine
             key={name}
@@ -186,8 +183,9 @@ const Answers = ({
             answerRevealed={userReveals.get(name) ?? false}
             userLocked={userLocks.get(name) ?? false}
             question={question}
-            correct={correctAnswers.get(name) ?? false}
+            correct={correctAnswers}
             questionRevealTime={questionRevealTime}
+            setCorrectAnswers={setCorrectAnswers}
           />
         ))}
       </ul>
@@ -196,7 +194,6 @@ const Answers = ({
           className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
           onClick={handleLockAnswers}
         >
-          {unlockOrLock ? "Antworten unlocken" : "Antworten locken"}
           {unlockOrLock ? (
             <LockOpen className={"size-4 lg:size-6"} />
           ) : (
@@ -208,9 +205,6 @@ const Answers = ({
           onClick={revealAllPlayerAnswers}
         >
           <span className={"flex items-center h-full gap-2 "}>
-            {allAnswersRevealed
-              ? "Alle Antworten verbergen"
-              : "Alle Antworten aufdecken"}
             {allAnswersRevealed ? (
               <EyeOff className={"size-4 lg:size-6"} />
             ) : (
@@ -222,7 +216,13 @@ const Answers = ({
           className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
           onClick={clearAnswers}
         >
-          Alle Antworten löschen
+          <Trash className={"size-4 lg:size-6"} />
+        </Button>
+        <Button
+          className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
+          onClick={onAddClick}
+        >
+          <SquareCheckBig className={"size-4 lg:size-6"} />
         </Button>
       </div>
     </>

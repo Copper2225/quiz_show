@@ -5,6 +5,7 @@ import { GripHorizontal } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { useFetcher } from "react-router";
 import type { UserOrderQuestion } from "~/types/userTypes";
+import _ from "lodash";
 
 interface Props {
   data: UserOrderQuestion;
@@ -14,13 +15,15 @@ interface Props {
 }
 
 const OrderField = ({ data, locked, answer, isPreview = false }: Props) => {
-  const [testData, setTestData] = useState<string[]>([]);
+  const [userOrder, setUserOrder] = useState<string[] | null>([]);
 
   const loadedOrder = useMemo(() => {
     const options = data.config.shuffledOptions as string[];
     if (answer !== undefined) {
       const parsed = JSON.parse(answer) as number[];
-      return parsed.map((idx) => options[idx - 1]);
+      const answerOrder = parsed.map((idx) => options[idx - 1]);
+      setUserOrder(answerOrder);
+      return answerOrder;
     }
     return options;
   }, []);
@@ -28,7 +31,7 @@ const OrderField = ({ data, locked, answer, isPreview = false }: Props) => {
   const submitFetcher = useFetcher();
 
   const handleDragChange = useCallback((values: string[]) => {
-    return setTestData(values);
+    return setUserOrder(values);
   }, []);
 
   const submitData = useCallback(() => {
@@ -36,14 +39,24 @@ const OrderField = ({ data, locked, answer, isPreview = false }: Props) => {
     formData.append(
       "answer",
       JSON.stringify(
-        testData.map((e) => data.config.shuffledOptions.indexOf(e) + 1),
+        userOrder?.map((e) => data.config.shuffledOptions.indexOf(e) + 1),
       ),
     );
     submitFetcher.submit(formData, {
       method: "POST",
       action: "/api/answer",
     });
-  }, [testData]);
+  }, [userOrder]);
+
+  const isDirty = useMemo(() => {
+    const options = data.config.shuffledOptions as string[];
+    if (answer !== undefined) {
+      const parsed = JSON.parse(answer) as number[];
+      const answerOrder = parsed.map((idx) => options[idx - 1]);
+      return !_.isEqual(answerOrder, userOrder);
+    }
+    return true;
+  }, [answer, userOrder]);
 
   return (
     <div className={"h-full flex flex-col"}>
@@ -86,7 +99,7 @@ const OrderField = ({ data, locked, answer, isPreview = false }: Props) => {
       </div>
       <div className="mt-4 shrink-0">
         <Button
-          disabled={locked || isPreview}
+          disabled={locked || isPreview || !isDirty}
           className={"w-full h-[100px] text-5xl"}
           onClick={submitData}
         >

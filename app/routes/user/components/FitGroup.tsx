@@ -93,8 +93,6 @@ const FitGroup = ({
         bestSize = Math.min(bestSize, best);
       });
 
-      console.log(isCancelled);
-
       if (!isCancelled) {
         setFontSize(bestSize * 0.99);
       }

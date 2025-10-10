@@ -13,8 +13,8 @@ export function useGetAnswerString(
   valueAnswer: { answer: string; time: Date } | undefined,
   question: Question<JsonValue> | null,
   questionRevealTime: Date | null,
-) {
-  if (!valueAnswer) return undefined;
+): string {
+  if (!valueAnswer) return "";
   if (question?.type === QuestionType.BUZZER && questionRevealTime !== null) {
     return (
       (
@@ -27,7 +27,7 @@ export function useGetAnswerString(
     const correctPin = (question as PinQuestion).config.pin;
 
     if (!correctPin.imgW || !correctPin.imgH) {
-      return undefined;
+      return "";
     }
 
     const x1 = (correctPin.xPercent / 100) * correctPin.imgW;
@@ -54,6 +54,7 @@ export function useGetAnswerString(
           if (index === -1) return "?";
           return String.fromCharCode("A".charCodeAt(0) + index);
         })
+        .sort()
         .join(", ");
     }
 

@@ -10,6 +10,13 @@ export async function action({ request }: Route.ActionArgs) {
 
   if (requestValues.kick === "true") {
     AdminData.teams.delete(requestValues.name);
+  } else if (requestValues.teams) {
+    (JSON.parse(requestValues.teams) as string[]).forEach((team) => {
+      setTeamPoints(
+        team,
+        (AdminData.teams.get(team) ?? 0) + Number(requestValues.points),
+      );
+    });
   } else {
     setTeamPoints(requestValues.name, Number(requestValues.points));
   }

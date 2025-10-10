@@ -2,7 +2,12 @@ import { Button } from "~/components/ui/button";
 import { Ban, Eye, EyeOff, LockOpen, Trash } from "lucide-react";
 import { format } from "date-fns";
 import { useFetcher } from "react-router";
-import { useCallback, useMemo } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useCallback,
+  useMemo,
+} from "react";
 import { type Question } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -15,7 +20,8 @@ interface Props {
   questionRevealTime: Date | null;
   answerRevealed: boolean;
   userLocked: boolean;
-  correct: boolean;
+  correct: Map<string, boolean>;
+  setCorrectAnswers: Dispatch<SetStateAction<Map<string, boolean>>>;
 }
 
 const AnswerLine = ({
@@ -26,6 +32,7 @@ const AnswerLine = ({
   answerRevealed,
   userLocked,
   correct,
+  setCorrectAnswers,
 }: Props) => {
   const fetcher = useFetcher();
   const blockFetcher = useFetcher();
@@ -64,9 +71,22 @@ const AnswerLine = ({
     return useGetAnswerString(valueAnswer, question, questionRevealTime);
   }, [question, valueAnswer, questionRevealTime]);
 
+  const handleCheckChange = useCallback(() => {
+    setCorrectAnswers((prev) => {
+      const newCorrectAnswers = new Map(prev);
+      const newValue = !(prev.get(name) ?? false);
+      newCorrectAnswers.set(name, newValue);
+      return newCorrectAnswers;
+    });
+  }, [name]);
+
+  const checked = useMemo(() => {
+    return correct.get(name) ?? false;
+  }, [correct, name]);
+
   return (
     <li key={name} className={"flex gap-3 items-center"}>
-      <Checkbox checked={correct} />
+      <Checkbox onCheckedChange={handleCheckChange} checked={checked} />
       <Button onClick={revealAnswer}>
         {answerRevealed ? <EyeOff /> : <Eye />}
       </Button>

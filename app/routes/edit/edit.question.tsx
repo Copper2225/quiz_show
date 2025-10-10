@@ -25,8 +25,6 @@ function formDataToObjectWithCheckboxes(formData: FormData): any {
     }
   }
 
-  console.log(normalized);
-
   return dot.object(normalized);
 }
 
@@ -34,8 +32,6 @@ export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
 
   const values = formDataToObjectWithCheckboxes(formData);
-
-  console.log(values);
 
   const c = Number(params.c);
   const q = Number(params.q);

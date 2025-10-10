@@ -25,9 +25,7 @@ import {
   ContextMenuTrigger,
 } from "~/components/ui/context-menu";
 import { Trash, Tv, UserRoundSearch } from "lucide-react";
-import { useCallback, useEffect } from "react";
-import { useEventSource } from "remix-utils/sse/react";
-
+import { useCallback } from "react";
 type LoaderData = {
   config: Config;
   questions: Map<string, any>;
@@ -61,9 +59,6 @@ export default function Edit() {
   const data = useLoaderData<LoaderData>();
   const headers = data.config.categories.map((cate) => cate);
   const depth = data.config.questionDepth;
-  const deleteEvent = useEventSource("/sse/events/admin", {
-    event: "deleteQuestion",
-  });
   const addCategoryFetcher = useFetcher();
   const addDepthFetcher = useFetcher();
   const setCategoryFetcher = useFetcher();
@@ -71,21 +66,18 @@ export default function Edit() {
 
   const deleteFetcher = useFetcher();
 
-  const deleteQuestion = useCallback((c: number, q?: number) => {
+  const deleteQuestion = useCallback(async (c: number, q?: number) => {
     const formData = new FormData();
     formData.append("c", c.toString());
     if (q) {
       formData.append("q", q.toString());
     }
-    deleteFetcher.submit(formData, {
+    await deleteFetcher.submit(formData, {
       method: "POST",
       action: "/api/delete",
     });
+    await revalidator.revalidate();
   }, []);
-
-  useEffect(() => {
-    revalidator.revalidate();
-  }, [deleteEvent]);
 
   return (
     <main>

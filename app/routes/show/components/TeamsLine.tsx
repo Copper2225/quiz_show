@@ -14,6 +14,8 @@ interface Props {
   questionRevealTime: Date | null;
 }
 
+const PLAY_SOUND = false;
+
 const TeamsLine = ({
   teams,
   answers,
@@ -66,11 +68,11 @@ const TeamsLine = ({
   const prevBuzzerTeamRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    if (!prevBuzzerTeamRef.current && firstBuzzerTeam) {
+    if (!prevBuzzerTeamRef.current && firstBuzzerTeam && PLAY_SOUND) {
       audioRef.current?.play();
     }
     prevBuzzerTeamRef.current = firstBuzzerTeam;
-  }, [firstBuzzerTeam]);
+  }, [firstBuzzerTeam, PLAY_SOUND]);
 
   return (
     <div

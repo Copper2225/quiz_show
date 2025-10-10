@@ -7,7 +7,6 @@ export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const plainForm = Object.fromEntries(formData.entries());
   const requestValues = dot.object(plainForm) as any;
-  console.log(requestValues);
   if (requestValues.block) {
     setUserLocked(requestValues.user, requestValues.block === "true");
     broadcast("lockAnswers", {
