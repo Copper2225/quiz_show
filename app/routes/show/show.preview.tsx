@@ -7,7 +7,11 @@ import { prisma } from "~/utils/db.server";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import { useLoaderData, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
-import type { OrderQuestion } from "~/types/adminTypes";
+import type {
+  BuzzerQuestion,
+  InputQuestion,
+  OrderQuestion,
+} from "~/types/adminTypes";
 import _ from "lodash";
 
 export async function loader({ params }: Route.LoaderArgs) {
@@ -55,9 +59,10 @@ export default function Show() {
   const withHeader = useMemo(() => {
     if (question) {
       if (
-        (question.type === QuestionType.BUZZER ||
-          question.type === QuestionType.INPUT) &&
-        (question.config as any)?.media === undefined
+        (question.type === QuestionType.BUZZER &&
+          !(question as BuzzerQuestion).config.media?.mediaChecked) ||
+        (question.type === QuestionType.INPUT &&
+          !(question as InputQuestion).config.media?.mediaChecked)
       )
         return showCorrect;
       return question.type !== QuestionType.NONE;
