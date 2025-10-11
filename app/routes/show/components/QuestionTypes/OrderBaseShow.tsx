@@ -66,11 +66,11 @@ const OrderBaseShow = ({ data, showCorrect }: Props) => {
         {options.map((choice, index) => (
           <Button
             key={index}
-            className={`flex w-full flex-1 text-5xl rounded-2xl p-3 outline-4 outline-solid -outline-offset-12 outline-gray-200`}
+            className={`flex w-full flex-1 text-5xl rounded-2xl p-5 outline-4 outline-solid -outline-offset-12 outline-gray-200`}
           >
             <div
               style={{ fontSize }}
-              className={`${showCorrect ? "bg-purple-600" : "bg-gray-700"} ms-4 px-5 self-center content-center text-3xl rounded-3xl aspect-square h-[1.5em]`}
+              className={`${showCorrect ? "bg-purple-600" : "bg-gray-700"} ms-4 px-5 self-center content-center text-3xl rounded-3xl aspect-square h-full max-h-[1.5em]`}
             >
               {showCorrect
                 ? data.shuffledOptions.indexOf(options[index]) + 1
