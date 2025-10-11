@@ -31,7 +31,7 @@ const ShowCurrent = ({
   showCurrentSelector,
 }: Props) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(teamNames[currentTeam] ?? "");
   const fetcher = useFetcher();
 
   useEffect(() => {

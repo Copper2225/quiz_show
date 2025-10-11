@@ -51,7 +51,7 @@ export const AdminData: AdminDataShape = {
   playerReveal: new Map<string, boolean>(),
   userLocks: new Map<string, boolean>(),
   questionRevealTime: null,
-  currentSelector: 0,
+  currentSelector: -1,
   showCurrentSelector: false,
 };
 
