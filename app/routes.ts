@@ -30,5 +30,6 @@ export default [
     route("userReveal", "routes/api/userReveal.ts"),
     route("userBlock", "routes/api/userBlock.ts"),
     route("delete", "routes/api/delete.ts"),
+    route("selector", "routes/api/selector.ts"),
   ]),
 ] satisfies RouteConfig;

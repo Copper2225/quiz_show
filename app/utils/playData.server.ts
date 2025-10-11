@@ -25,6 +25,8 @@ interface AdminDataShape {
   playerReveal: Map<string, boolean>;
   userLocks: Map<string, boolean>;
   questionRevealTime: Date | null;
+  currentSelector: number;
+  showCurrentSelector: boolean;
 }
 
 interface SpecificUserData {
@@ -49,6 +51,8 @@ export const AdminData: AdminDataShape = {
   playerReveal: new Map<string, boolean>(),
   userLocks: new Map<string, boolean>(),
   questionRevealTime: null,
+  currentSelector: 0,
+  showCurrentSelector: false,
 };
 
 export const ShowData = {
@@ -79,6 +83,12 @@ export const ShowData = {
   get questionRevealTime() {
     return AdminData.questionRevealTime;
   },
+  get showCurrentSelector() {
+    return AdminData.showCurrentSelector;
+  },
+  get currentSelector() {
+    return AdminData.currentSelector;
+  },
 };
 
 export function getUserData(user: string): SpecificUserData {
@@ -102,9 +112,19 @@ export function disableActiveMatrix(
   question: number,
   switching: boolean = false,
 ) {
+  if (
+    AdminData.showCurrentSelector &&
+    AdminData.activeMatrix[category][question]
+  ) {
+    AdminData.currentSelector =
+      (AdminData.currentSelector + 1) % Array.from(AdminData.teams).length;
+  }
+
   AdminData.activeMatrix[category][question] = switching
     ? !AdminData.activeMatrix[category][question]
     : false;
+
+  console.log(AdminData.activeMatrix[category][question]);
 }
 
 export function resetActiveMatrix() {

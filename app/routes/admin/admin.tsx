@@ -8,6 +8,7 @@ import {
 } from "~/utils/playData.server";
 import PointsSection from "~/routes/admin/components/PointsSection";
 import Answers from "~/routes/admin/components/Answers";
+import ShowCurrent from "~/routes/admin/components/ShowCurrent";
 
 export async function loader() {
   const config = getConfig();
@@ -29,9 +30,16 @@ export default function Admin() {
     <main className={"h-dvh w-dvw box-border p-4"}>
       <title>Admin - Quiz</title>
       <div className={"h-full w-full box-border flex flex-col gap-4"}>
-        <h1 className={"text-xl font-semibold"}>
-          Admin - <Link to={"/show"}>Zur Show springen</Link>
-        </h1>
+        <div className={"flex justify-between"}>
+          <h1 className={"text-xl font-semibold"}>
+            Admin - <Link to={"/show"}>Zur Show springen</Link>
+          </h1>
+          <ShowCurrent
+            teamNames={Array.from(data.teams.keys())}
+            currentTeam={data.currentSelector}
+            showCurrentSelector={data.showCurrentSelector}
+          />
+        </div>
         <QuestionSelect
           categories={data.config.categories}
           activeMatrix={data.activeMatrix}

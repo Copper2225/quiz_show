@@ -12,6 +12,8 @@ interface Props {
   question: Question<JsonValue> | null;
   userReveals: Map<string, boolean>;
   questionRevealTime: Date | null;
+  showSelector: boolean;
+  currentSelector: number;
 }
 
 const PLAY_SOUND = false;
@@ -22,6 +24,8 @@ const TeamsLine = ({
   question,
   userReveals,
   questionRevealTime,
+  showSelector,
+  currentSelector,
 }: Props) => {
   const pointsEvent = useEventSource("/sse/events", {
     event: "pointsUpdate",
@@ -31,6 +35,9 @@ const TeamsLine = ({
   });
   const answerUserEvent = useEventSource("/sse/events/admin", {
     event: "answer",
+  });
+  const selectorEvent = useEventSource("/sse/events/admin", {
+    event: "selector",
   });
   const clearEvent = useEventSource("/sse/events", { event: "clearAnswers" });
   const answerTypeEvent = useEventSource("/sse/events", {
@@ -51,6 +58,7 @@ const TeamsLine = ({
     pointsEvent,
     userRevealEvent,
     lockEvent,
+    selectorEvent,
   ]);
 
   const firstBuzzerTeam = useMemo(() => {
@@ -83,7 +91,7 @@ const TeamsLine = ({
       }}
     >
       <audio ref={audioRef} src={"/buzzer.mp3"} muted={false} />
-      {Array.from(teams).map(([name, points]) => (
+      {Array.from(teams).map(([name, points], index) => (
         <TeamTile
           key={name}
           name={name}
@@ -92,7 +100,9 @@ const TeamsLine = ({
           question={question}
           answer={(answers as Map<string, any>).get(name)}
           highlighted={
-            question?.type === QuestionType.BUZZER && firstBuzzerTeam === name
+            (question?.type === QuestionType.BUZZER &&
+              firstBuzzerTeam === name) ||
+            (showSelector && currentSelector === index && question === null)
           }
           questionRevealTime={questionRevealTime}
           color={

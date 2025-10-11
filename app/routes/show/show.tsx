@@ -74,6 +74,8 @@ export default function Show() {
         answers={data.answers}
         userReveals={data.playerReveal}
         questionRevealTime={data.questionRevealTime}
+        showSelector={data.showCurrentSelector}
+        currentSelector={data.currentSelector}
       />
     </main>
   );
