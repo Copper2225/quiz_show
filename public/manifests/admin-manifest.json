@@ -2,7 +2,7 @@
   "name": "Quiz Show - Admin",
   "short_name": "Quiz",
   "description": "Host and play the Quiz Show.",
-  "id": "/",
+  "id": "/admin",
   "start_url": "/admin",
   "scope": "/",
   "display": "standalone",
