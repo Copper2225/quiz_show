@@ -59,6 +59,9 @@ export function useGetAnswerString(
     }
 
     return JSON.parse(valueAnswer.answer).join(", ");
+  } else if (question?.type === QuestionType.ORDER) {
+    const userAnswers: string[] = JSON.parse(valueAnswer.answer);
+    return userAnswers.toString();
   }
   return valueAnswer?.answer;
 }

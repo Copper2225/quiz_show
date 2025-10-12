@@ -84,7 +84,7 @@ const OrderField = ({ data, locked, answer, isPreview = false }: Props) => {
                       <div
                         ref={getRef(index)}
                         className={`w-full h-full content-center px-5 whitespace-pre-wrap overflow-hidden`}
-                        style={{ fontSize }}
+                        style={{ fontSize, lineHeight: 1 }}
                       >
                         {choice}
                       </div>
