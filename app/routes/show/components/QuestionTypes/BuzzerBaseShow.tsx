@@ -13,9 +13,7 @@ const BuzzerBaseShow = ({ question, withHeader, showAnswer }: Props) => {
     <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>
       {question.config?.media?.mediaChecked && (
         <div
-          className={
-            "w-full content-center h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12"
-          }
+          className={`${showAnswer ? "min-w-3/5" : "w-full"} content-center h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12`}
         >
           <img
             className={"h-full justify-self-center object-contain"}

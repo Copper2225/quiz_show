@@ -45,7 +45,7 @@ const OrderBaseShow = ({ data, showCorrect }: Props) => {
     } else {
       setFontSize("4rem");
     }
-  }, [options]);
+  }, []);
 
   return (
     <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>

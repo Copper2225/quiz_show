@@ -140,7 +140,7 @@ export default function user() {
   return (
     <main
       className={
-        "max-h-dvh h-dvh box-border p-2 aspect-9/19 border-gray-400 justify-self-center"
+        "max-h-dvh h-dvh box-border p-2 md:w-full xl:aspect-9/19 xl:w-auto border-gray-400 justify-self-center"
       }
     >
       <div className={"h-full w-full box-border flex flex-col gap-3"}>
