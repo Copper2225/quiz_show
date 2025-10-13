@@ -1,7 +1,7 @@
-import { type Question, QuestionType } from "~/types/question";
+import { type Question } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import { useMemo } from "react";
-import type { PinData, PinQuestion } from "~/types/adminTypes";
+import { useGetAnswerString } from "~/utils/useGetAnswerString";
 
 interface Props {
   name: string;
@@ -26,32 +26,7 @@ const TeamTile = ({
 }: Props) => {
   const answerString = useMemo(() => {
     if (!answer) return undefined;
-    if (question?.type === QuestionType.BUZZER && questionRevealTime !== null) {
-      return (
-        (
-          Math.abs(questionRevealTime.getTime() - answer.time.getTime()) / 1000
-        ).toString() + " s"
-      );
-    } else if (question?.type === QuestionType.PIN) {
-      const answerPin = JSON.parse(answer.answer) as PinData;
-      const correctPin = (question as PinQuestion).config.pin;
-
-      if (!correctPin.imgW || !correctPin.imgH) {
-        return undefined;
-      }
-
-      const x1 = (correctPin.xPercent / 100) * correctPin.imgW;
-      const y1 = (correctPin.yPercent / 100) * correctPin.imgH;
-      const x2 = (answerPin.xPercent / 100) * correctPin.imgW;
-      const y2 = (answerPin.yPercent / 100) * correctPin.imgH;
-
-      const dx = x2 - x1;
-      const dy = y2 - y1;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      return (Math.round(dist * 100) / 100).toString() + " px";
-    }
-    return answer?.answer;
+    return useGetAnswerString(answer, question, questionRevealTime);
   }, [question, answer, questionRevealTime]);
 
   return (
@@ -64,7 +39,7 @@ const TeamTile = ({
       }}
     >
       {answerString && showAnswer && (
-        <div className={"mb-2 p-2 bg-white/20 rounded text-2xl"}>
+        <div className={"mb-2 p-2 bg-white/20 rounded text-3xl"}>
           {answerString}
         </div>
       )}
