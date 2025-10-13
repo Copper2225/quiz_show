@@ -9,11 +9,14 @@ interface Props {
     media?: MediaConfig;
   };
   showCorrect: boolean;
+  playerReveals: Map<string, boolean>;
 }
 
-const OrderBaseShow = ({ data, showCorrect }: Props) => {
+const OrderBaseShow = ({ data, showCorrect, playerReveals }: Props) => {
   const [fontSize, setFontSize] = useState("3rem");
   const optionRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  console.log(playerReveals);
 
   const options = useMemo(() => {
     if (showCorrect) {
@@ -24,6 +27,7 @@ const OrderBaseShow = ({ data, showCorrect }: Props) => {
   }, [showCorrect]);
 
   useEffect(() => {
+    console.log("UPDATE");
     let smallestScale = 1;
 
     optionRefs.current = optionRefs.current.slice(0, options.length);
@@ -43,9 +47,9 @@ const OrderBaseShow = ({ data, showCorrect }: Props) => {
     if (smallestScale < 1) {
       setFontSize(`${smallestScale * 3}rem`);
     } else {
-      setFontSize("4rem");
+      setFontSize("3rem");
     }
-  }, []);
+  }, [options, playerReveals]);
 
   return (
     <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>
@@ -69,7 +73,7 @@ const OrderBaseShow = ({ data, showCorrect }: Props) => {
             className={`flex w-full flex-1 text-5xl rounded-2xl p-5 outline-4 outline-solid -outline-offset-12 outline-gray-200`}
           >
             <div
-              style={{ fontSize }}
+              style={{ fontSize, lineHeight: 1 }}
               className={`${showCorrect ? "bg-purple-600" : "bg-gray-700"} ms-4 px-5 self-center content-center text-3xl rounded-3xl aspect-square h-full max-h-[1.5em]`}
             >
               {showCorrect
@@ -80,7 +84,7 @@ const OrderBaseShow = ({ data, showCorrect }: Props) => {
               ref={(el) => {
                 optionRefs.current[index] = el;
               }}
-              style={{ fontSize }}
+              style={{ fontSize, lineHeight: 1 }}
               className={`w-full content-center px-5 whitespace-break-spaces overflow-hidden h-full`}
             >
               {choice}

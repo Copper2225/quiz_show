@@ -62,6 +62,7 @@ const BaseQuestionShow = ({
           <OrderBaseShow
             data={(question as OrderQuestion).config}
             showCorrect={answerRevealed}
+            playerReveals={playerReveals}
           />
         );
       case QuestionType.PIN:
