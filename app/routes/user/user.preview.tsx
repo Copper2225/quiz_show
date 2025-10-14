@@ -91,7 +91,9 @@ export default function user() {
   const revalidator = useRevalidator();
 
   useEffect(() => {
-    revalidator.revalidate();
+    if (answerTypeEvent || lockAnswersEvent) {
+      revalidator.revalidate();
+    }
   }, [answerTypeEvent, lockAnswersEvent]);
 
   const renderAnswerComponents = useMemo(() => {

@@ -1,7 +1,7 @@
 import type { Route } from "./+types/question";
 import {
   clearQuestion,
-  setQuestion,
+  setQuestionWithRowAndCat,
   disableActiveMatrix,
   clearUserAnswers,
   resetActiveMatrix,
@@ -22,7 +22,7 @@ export async function action({ request }: Route.ActionArgs) {
   if (requestValues.mode === "open") {
     const quest =
       requestValues.data !== undefined
-        ? await setQuestion(
+        ? await setQuestionWithRowAndCat(
             JSON.parse(requestValues.data).row,
             JSON.parse(requestValues.data).col,
           )

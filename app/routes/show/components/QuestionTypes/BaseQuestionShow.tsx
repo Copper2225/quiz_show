@@ -37,7 +37,9 @@ const BaseQuestionShow = ({
   const revalidator = useRevalidator();
 
   useEffect(() => {
-    revalidator.revalidate();
+    if (questionEvent) {
+      revalidator.revalidate();
+    }
   }, [questionEvent]);
 
   const detailed = useMemo(() => {

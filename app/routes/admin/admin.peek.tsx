@@ -6,9 +6,7 @@ import {
   useLoaderData,
   useNavigate,
 } from "react-router";
-import { prisma } from "~/utils/db.server";
-import { QuestionType, type Question } from "~/types/question";
-import type { JsonValue } from "@prisma/client/runtime/client";
+import { QuestionType } from "~/types/question";
 import BaseQuestionShow from "~/routes/show/components/QuestionTypes/BaseQuestionShow";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -24,13 +22,21 @@ import {
   AdminData,
   clearUserAnswers,
   disableActiveMatrix,
+  loadQuestion,
   setAllLocked,
   setQuestion,
 } from "~/utils/playData.server";
 import { broadcast } from "~/routes/events/sse.events";
+import dot from "dot-object";
 
-export async function action({ params }: Route.ActionArgs) {
-  const quest = await setQuestion(Number(params.q), Number(params.c));
+export async function action({ params, request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const plainForm = Object.fromEntries(formData.entries());
+  const requestValues = dot.object(plainForm) as any;
+
+  console.log(JSON.parse(requestValues.question));
+
+  const quest = await setQuestion(JSON.parse(requestValues.question));
 
   clearUserAnswers();
   if (quest) {
@@ -52,14 +58,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     return new Response("Invalid parameters", { status: 400 });
   }
 
-  const question = (await prisma.questionEntity.findUnique({
-    where: {
-      categoryColumn_row: {
-        categoryColumn: c,
-        row: q,
-      },
-    },
-  })) as Question<JsonValue>;
+  const question = await loadQuestion(q, c);
 
   const { config, activeMatrix, questionGrid } = AdminData;
   return {
@@ -100,7 +99,7 @@ export default function EditQuestion() {
     <main className="h-dvh w-dvw box-border px-4 pt-4 flex flex-col">
       <div className={"flex gap-3 mb-3"}>
         <Button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/admin")}
           className={"flex flex-1 h-full lg:text-2xl xl:text-3xl"}
         >
           <ArrowLeft /> Zurück
@@ -157,14 +156,22 @@ export default function EditQuestion() {
           </DialogContent>
         </Dialog>
       </div>
-      <BaseQuestionShow
-        question={question}
-        withHeader={withHeader}
-        answerRevealed={answerRevealed}
-        answers={new Map()}
-        playerReveals={new Map()}
-      />
+      {question && (
+        <BaseQuestionShow
+          question={question}
+          withHeader={withHeader}
+          answerRevealed={answerRevealed}
+          answers={new Map()}
+          playerReveals={new Map()}
+        />
+      )}
       <Form method={"post"} className={"py-3 flex w-full h-1/10 gap-3"}>
+        <input
+          hidden
+          readOnly
+          name={"question"}
+          value={JSON.stringify(question)}
+        />
         <Button className={"h-full text-5xl flex-1"} type={"submit"}>
           Frage stellen
         </Button>

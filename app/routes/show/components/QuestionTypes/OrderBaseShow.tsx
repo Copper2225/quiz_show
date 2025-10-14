@@ -16,8 +16,6 @@ const OrderBaseShow = ({ data, showCorrect, playerReveals }: Props) => {
   const [fontSize, setFontSize] = useState("3rem");
   const optionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  console.log(playerReveals);
-
   const options = useMemo(() => {
     if (showCorrect) {
       return data.options;
@@ -27,7 +25,6 @@ const OrderBaseShow = ({ data, showCorrect, playerReveals }: Props) => {
   }, [showCorrect]);
 
   useEffect(() => {
-    console.log("UPDATE");
     let smallestScale = 1;
 
     optionRefs.current = optionRefs.current.slice(0, options.length);

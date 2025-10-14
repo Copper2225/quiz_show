@@ -50,7 +50,17 @@ const TeamsLine = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    revalidate.revalidate();
+    if (
+      answerUserEvent ||
+      clearEvent ||
+      answerTypeEvent ||
+      pointsEvent ||
+      userRevealEvent ||
+      lockEvent ||
+      selectorEvent
+    ) {
+      revalidate.revalidate();
+    }
   }, [
     answerUserEvent,
     clearEvent,

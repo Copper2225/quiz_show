@@ -51,7 +51,7 @@ const Answers = ({
   const revalidator = useRevalidator();
 
   useEffect(() => {
-    revalidator.revalidate();
+    if (clearEvent || revealEvent || answerEvent) revalidator.revalidate();
   }, [clearEvent, revealEvent, answerEvent]);
 
   const clearAnswers = useCallback(async () => {

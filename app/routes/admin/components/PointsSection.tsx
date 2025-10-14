@@ -15,7 +15,9 @@ const PointsSection = ({ points, teams }: Props) => {
   const revalidate = useRevalidator();
 
   useEffect(() => {
-    revalidate.revalidate().then();
+    if (pointsEvent) {
+      revalidate.revalidate().then();
+    }
   }, [pointsEvent]);
 
   return (

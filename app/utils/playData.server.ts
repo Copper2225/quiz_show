@@ -144,7 +144,45 @@ export function setTeamPoints(team: string, points: number) {
   AdminData.teams.set(team, points);
 }
 
-export async function setQuestion(
+export async function setQuestion(question: Question<JsonValue>) {
+  const config = question.config as any;
+
+  AdminData.questionRevealTime = new Date();
+
+  AdminData.currentQuestion = question;
+
+  playerData.question = {
+    ...question,
+    config: {
+      ...config,
+      answer: undefined,
+      options:
+        question.type !== QuestionType.ORDER
+          ? config.options?.map((o: { name: string }) => o.name)
+          : undefined,
+    },
+  };
+
+  if (question.type === QuestionType.PIN) {
+    (playerData.question.config as any).pin = undefined;
+  }
+
+  return AdminData.currentQuestion;
+}
+
+export async function setQuestionWithRowAndCat(
+  question: number,
+  category: number,
+) {
+  const foundQuestion = await loadQuestion(question, category);
+  if (foundQuestion) {
+    return await setQuestion(foundQuestion);
+  } else {
+    return null;
+  }
+}
+
+export async function loadQuestion(
   question: number,
   category: number,
 ): Promise<Question<JsonValue> | null> {
@@ -173,32 +211,10 @@ export async function setQuestion(
     }
   }
 
-  const foundQuestion: Question<JsonValue> = {
+  return {
     ...foundQuestionEntity,
     config,
   };
-
-  AdminData.currentQuestion = foundQuestion;
-
-  playerData.question = {
-    ...foundQuestion,
-    config: {
-      ...config,
-      answer: undefined,
-      options:
-        foundQuestion.type !== QuestionType.ORDER
-          ? config.options?.map((o: { name: string }) => o.name)
-          : undefined,
-    },
-  };
-
-  if (foundQuestion.type === QuestionType.PIN) {
-    (playerData.question.config as any).pin = undefined;
-  }
-
-  AdminData.questionRevealTime = new Date();
-
-  return AdminData.currentQuestion;
 }
 
 export function clearQuestion() {
