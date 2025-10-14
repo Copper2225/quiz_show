@@ -97,7 +97,7 @@ const TeamPointTile = ({
           name={"points"}
           value={pointsValue}
           onChange={handleChange}
-          className={"w-[300px]"}
+          className={"min-w-[300px] max-w-[300px]"}
           type={"number"}
           onBlur={onBlur}
         />
