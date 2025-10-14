@@ -132,7 +132,9 @@ const PinField = ({
       <Button
         onClick={submit}
         disabled={locked || !isDirty || isPreview}
-        className={"self-bottom w-full h-[100px] text-5xl"}
+        className={
+          "self-bottom w-full h-[100px] text-5xl bg-purple-700 hover:bg-purple-900"
+        }
       >
         Absenden
       </Button>

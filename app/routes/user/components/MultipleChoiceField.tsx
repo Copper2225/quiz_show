@@ -112,7 +112,9 @@ const MultipleChoiceField = ({
       <div className="mt-4 shrink-0">
         <Button
           disabled={locked || isPreview || !isDirty}
-          className={"w-full h-[100px] text-5xl"}
+          className={
+            "w-full h-[100px] text-5xl bg-purple-700 hover:bg-purple-900"
+          }
           onClick={handleSubmit}
         >
           Absenden

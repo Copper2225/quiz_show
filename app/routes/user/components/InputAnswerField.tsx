@@ -52,7 +52,9 @@ const InputAnswerField = ({
       <Button
         type={isPreview ? "button" : "submit"}
         disabled={!isDirty || locked}
-        className={" w-full h-[100px] text-5xl box-border"}
+        className={
+          " w-full h-[100px] text-5xl box-border bg-purple-700 hover:bg-purple-900"
+        }
       >
         Absenden
       </Button>
