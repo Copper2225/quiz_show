@@ -13,5 +13,5 @@ export async function action({ request }: Route.ActionArgs) {
   } else {
     setUserRevealed(requestValues.user, requestValues.reveal === "true");
   }
-  broadcast("revealUser", requestValues.reveal);
+  broadcast("revealUser", { ...requestValues.reveal, date: new Date() });
 }
