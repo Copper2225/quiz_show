@@ -89,6 +89,9 @@ export const ShowData = {
   get currentSelector() {
     return AdminData.currentSelector;
   },
+  get questionGrid() {
+    return AdminData.questionGrid;
+  },
 };
 
 export function getUserData(user: string): SpecificUserData {

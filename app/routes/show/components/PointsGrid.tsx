@@ -3,15 +3,19 @@ import { Button } from "~/components/ui/button";
 import React from "react";
 import { useNavigate } from "react-router";
 import { FitGroup } from "~/routes/user/components/FitGroup";
+import type { Question } from "~/types/question";
+import type { JsonValue } from "@prisma/client/runtime/client";
 
 interface Props {
   categories: string[];
-  questions: number;
+  questionDepth: number;
+  questions: Map<string, Question<JsonValue>>;
   activeMatrix: boolean[][];
 }
 
 const PointsGrid = ({
   categories,
+  questionDepth,
   questions,
   activeMatrix,
 }: Props): ReactElement => {
@@ -26,7 +30,7 @@ const PointsGrid = ({
           className="grid gap-4 h-full flex-1 self-center overflow-hidden"
           style={{
             gridTemplateColumns: `repeat(${categories.length}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(${questions + 1}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${questionDepth + 1}, minmax(0, 1fr))`,
             gridAutoFlow: "column dense",
           }}
         >
@@ -48,13 +52,14 @@ const PointsGrid = ({
                     {categories[colIndex]}
                   </div>
                 </Button>
-                {Array.from({ length: questions }, (_, rowIndex) => (
+                {Array.from({ length: questionDepth }, (_, rowIndex) => (
                   <Button
                     className={`w-full text-5xl h-full flex items-center justify-center ${!activeMatrix[colIndex][rowIndex] && "bg-teal-950 hover:bg-teal-950"}`}
                     type={"submit"}
                     key={rowIndex}
                   >
-                    {(rowIndex + 1) * 100}
+                    {questions.get(colIndex + ":" + rowIndex)?.points ??
+                      (rowIndex + 1) * 100}
                   </Button>
                 ))}
               </React.Fragment>

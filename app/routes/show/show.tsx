@@ -64,7 +64,8 @@ export default function Show() {
       ) : (
         <PointsGrid
           categories={data.config.categories}
-          questions={data.config.questionDepth}
+          questionDepth={data.config.questionDepth}
+          questions={data.questionGrid}
           activeMatrix={activeMatrix}
         />
       )}
