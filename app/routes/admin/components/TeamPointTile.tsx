@@ -18,6 +18,9 @@ const TeamPointTile = ({
 }: Props): ReactElement => {
   const setPointsFetcher = useFetcher();
   const [pointsValue, setPointsValue] = useState<number>(points);
+  const [addDisable, setAddDisable] = useState(false);
+  const [halfDisable, setHalfDisable] = useState(false);
+  const [minusDisable, setMinusDisable] = useState(false);
 
   const onBlur = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,6 +54,7 @@ const TeamPointTile = ({
 
   const onAddClick = useCallback(async () => {
     if (questionPoints !== undefined) {
+      setAddDisable(true);
       const formData = new FormData();
       formData.append("name", name);
       formData.append("points", (points + questionPoints).toString());
@@ -58,11 +62,13 @@ const TeamPointTile = ({
         method: "POST",
         action: "/api/teams",
       });
+      setTimeout(() => setAddDisable(false), 1000);
     }
   }, [name, setPointsFetcher, questionPoints, points]);
 
   const onHalfClick = useCallback(async () => {
     if (questionPoints !== undefined) {
+      setHalfDisable(true);
       const formData = new FormData();
       formData.append("name", name);
       formData.append("points", (points - questionPoints / 2).toString());
@@ -70,11 +76,13 @@ const TeamPointTile = ({
         method: "POST",
         action: "/api/teams",
       });
+      setTimeout(() => setHalfDisable(false), 1000);
     }
   }, [name, setPointsFetcher, questionPoints, points]);
 
   const onMinusClick = useCallback(async () => {
     if (questionPoints !== undefined) {
+      setMinusDisable(true);
       const formData = new FormData();
       formData.append("name", name);
       formData.append("points", (points - questionPoints).toString());
@@ -82,6 +90,7 @@ const TeamPointTile = ({
         method: "POST",
         action: "/api/teams",
       });
+      setTimeout(() => setMinusDisable(false), 1000);
     }
   }, [name, setPointsFetcher, questionPoints, points]);
 
@@ -92,7 +101,7 @@ const TeamPointTile = ({
   return (
     <div key={name} className={"flex justify-between"}>
       <div className={"flex gap-3 items-center"}>
-        <div className={"min-w-1/2 max-w-1/2"}>{name}:</div>
+        <div className={"min-w-[14em] max-w-[14em]"}>{name}:</div>
         <Input
           name={"points"}
           value={pointsValue}
@@ -101,11 +110,14 @@ const TeamPointTile = ({
           type={"number"}
           onBlur={onBlur}
         />
-        <Button onClick={onAddClick}>
+        <Button disabled={addDisable} onClick={onAddClick}>
           <Plus strokeWidth={4} />
         </Button>
         <Button
-          className={"p-0! aspect-square bg-destructive"}
+          className={
+            "p-0! aspect-square bg-destructive hover:bg-destructive hover:opacity-75"
+          }
+          disabled={halfDisable}
           onClick={onHalfClick}
         >
           <MinusHalfIcon
@@ -115,7 +127,10 @@ const TeamPointTile = ({
           />
         </Button>
         <Button
-          className={"p-0! aspect-square bg-destructive"}
+          className={
+            "p-0! aspect-square bg-destructive hover:bg-destructive hover:opacity-75"
+          }
+          disabled={minusDisable}
           onClick={onMinusClick}
         >
           <Minus strokeWidth={4} />

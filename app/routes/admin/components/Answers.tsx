@@ -19,6 +19,7 @@ import {
   useGetAnswerString,
   useGetSolutionString,
 } from "~/utils/useGetAnswerString";
+import { toast } from "sonner";
 
 interface Props {
   unlockOrLock: boolean;
@@ -115,6 +116,8 @@ const Answers = ({
         method: "POST",
         action: "/api/teams",
       });
+
+      toast.success("Punkte wurden hinzugefügt");
     }
   }, [question, correctAnswers]);
 

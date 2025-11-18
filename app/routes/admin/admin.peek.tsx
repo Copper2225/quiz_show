@@ -156,6 +156,7 @@ export default function EditQuestion() {
           </DialogContent>
         </Dialog>
       </div>
+      <div className={"w-full text-center text-3xl mb-3"}>{question?.type}</div>
       {question && (
         <BaseQuestionShow
           question={question}

@@ -40,11 +40,13 @@ export default function Admin() {
             showCurrentSelector={data.showCurrentSelector}
           />
         </div>
-        <QuestionSelect
-          categories={data.config.categories}
-          activeMatrix={data.activeMatrix}
-          grid={data.questionGrid}
-        />
+        <div>
+          <QuestionSelect
+            categories={data.config.categories}
+            activeMatrix={data.activeMatrix}
+            grid={data.questionGrid}
+          />
+        </div>
         <Answers
           unlockOrLock={data.unlockOrLock}
           revealedOrHidden={data.answerRevealed}
