@@ -13,12 +13,7 @@ const OrderLine = ({ index, deleteRow, defaultValue }: Props) => {
     <div className={"flex items-center gap-3"}>
       <Input name={`config.options.${index}`} defaultValue={defaultValue} />
 
-      <Button
-        variant="ghost"
-        size="icon"
-        type={"button"}
-        onClick={deleteRow}
-      >
+      <Button variant="ghost" size="icon" type={"button"} onClick={deleteRow}>
         <Trash2 className="h-4 w-4 text-red-500" />
       </Button>
     </div>

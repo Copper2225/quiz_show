@@ -10,10 +10,17 @@ interface Props {
   answers: Map<string, { answer: string; time: Date }>;
 }
 
-const BuzzerBaseShow = ({ question, withHeader, showAnswer, answers }: Props) => {
+const BuzzerBaseShow = ({
+  question,
+  withHeader,
+  showAnswer,
+  answers,
+}: Props) => {
   const hasOneBuzzered = useMemo(() => {
     if (!(question?.type === QuestionType.BUZZER)) return false;
-    return Array.from(answers.values()).some((answer) => answer.answer === "buzzer")
+    return Array.from(answers.values()).some(
+      (answer) => answer.answer === "buzzer",
+    );
   }, [answers, question?.type]);
 
   console.log(answers);
@@ -25,9 +32,7 @@ const BuzzerBaseShow = ({ question, withHeader, showAnswer, answers }: Props) =>
           className={`${showAnswer ? "min-w-3/5" : "w-full"} content-center h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12`}
         >
           <img
-            className={
-              `h-full justify-self-center object-contain ${hasOneBuzzered ? "blur-3xl" : ""}`
-            }
+            className={`h-full justify-self-center object-contain ${hasOneBuzzered ? "blur-3xl" : ""}`}
             src={question.config?.media?.mediaFile}
             alt={"Media"}
           />

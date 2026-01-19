@@ -2,7 +2,10 @@ import { useCallback, useMemo, useState } from "react";
 import { Label } from "~/components/ui/label";
 import { GripVertical, Plus } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import type { HigherLowerOption, HigherLowerQuestion } from "~/types/adminTypes";
+import type {
+  HigherLowerOption,
+  HigherLowerQuestion,
+} from "~/types/adminTypes";
 import HigherLowerLine from "~/routes/edit/components/HigherLower/HigherLowerLine";
 import { Input } from "~/components/ui/input";
 import { Reorder, ReorderItem } from "@yamada-ui/reorder";

@@ -38,12 +38,7 @@ const HigherLowerLine = ({
         id={"config.options.${index}.showText"}
         defaultChecked={defaultShowText}
       />
-      <Button
-        variant="ghost"
-        size="icon"
-        type={"button"}
-        onClick={deleteRow}
-      >
+      <Button variant="ghost" size="icon" type={"button"} onClick={deleteRow}>
         <Trash2 className="h-4 w-4 text-red-500" />
       </Button>
     </div>

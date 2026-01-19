@@ -42,7 +42,9 @@ export const HigherLowerOperationsWrapper: React.FC<Props> = ({
       <DynamicAxisAdmin items={question.config.options} />
       <Button onClick={handleWrongAnswer}>Wrong</Button>
       <div>
-        <Label className={"mb-1"} htmlFor={"selector"}>Wer ist dran:</Label>
+        <Label className={"mb-1"} htmlFor={"selector"}>
+          Wer ist dran:
+        </Label>
         <Input
           className={"w-[50px]"}
           defaultValue={question.config.selector}
