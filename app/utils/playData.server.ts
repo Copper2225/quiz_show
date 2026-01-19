@@ -5,10 +5,12 @@ import {
   getConfig,
   getQuestionsGrid,
 } from "~/utils/config.server";
-import _ from "lodash";
 import { userColors } from "~/routes/show/userColors";
 import { type Question, QuestionType } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
+import type { HigherLowerQuestion } from "~/types/adminTypes";
+import _ from "lodash";
+const { random } = _;
 
 interface PlayerData {
   question: Question<JsonValue> | null;
@@ -170,6 +172,15 @@ export async function setQuestion(question: Question<JsonValue>) {
     (playerData.question.config as any).pin = undefined;
   }
 
+  if (question.type === QuestionType.HIGHER_LOWER) {
+    Array.from(AdminData.teams.keys()).map((team) => {
+      setUserAnswer(team, "♥︎♥︎♥︎", new Date());
+    });
+    setAllPlayerReveal(true);
+    (AdminData.currentQuestion as HigherLowerQuestion).config.selector = random(AdminData.teams.size - 1)
+    console.log(AdminData.currentQuestion)
+  }
+
   return AdminData.currentQuestion;
 }
 
@@ -204,10 +215,15 @@ export async function loadQuestion(
   const config: any = foundQuestionEntity.config;
 
   if (
-    (config.shuffle || foundQuestionEntity.type === QuestionType.ORDER) &&
+    (config.shuffle ||
+      foundQuestionEntity.type === QuestionType.ORDER ||
+      foundQuestionEntity.type === QuestionType.HIGHER_LOWER) &&
     Array.isArray(config.options)
   ) {
-    if (foundQuestionEntity.type === QuestionType.ORDER) {
+    if (
+      foundQuestionEntity.type === QuestionType.ORDER ||
+      foundQuestionEntity.type === QuestionType.HIGHER_LOWER
+    ) {
       config.shuffledOptions = _.shuffle(config.options);
     } else {
       config.options = _.shuffle(config.options);

@@ -20,6 +20,8 @@ export async function action({ request }: Route.ActionArgs) {
   const requestValues = dot.object(plainForm) as any;
 
   if (requestValues.mode === "open") {
+    clearUserAnswers();
+
     const quest =
       requestValues.data !== undefined
         ? await setQuestionWithRowAndCat(
@@ -28,7 +30,6 @@ export async function action({ request }: Route.ActionArgs) {
           )
         : clearQuestion();
 
-    clearUserAnswers();
     if (quest) {
       disableActiveMatrix(
         JSON.parse(requestValues.data).col,

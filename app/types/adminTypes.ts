@@ -5,6 +5,13 @@ export type MediaConfig = {
   mediaFile: string;
 };
 
+export type HigherLowerOption = {
+  imgSrc?: string;
+  text: string;
+  show: boolean;
+  showText: boolean;
+};
+
 export type BuzzerQuestion = Question<{
   answer: string;
   media?: MediaConfig;
@@ -26,6 +33,12 @@ export type MultipleChoiceQuestion = Question<{
 export type OrderQuestion = Question<{
   options: string[];
   shuffledOptions: string[];
+}>;
+
+export type HigherLowerQuestion = Question<{
+  options: HigherLowerOption[];
+  shuffledOptions: HigherLowerOption[];
+  selector: number;
 }>;
 
 export type PinData = {

@@ -20,10 +20,16 @@ const HiddenText = ({ text }: Props) => {
   };
 
   return (
-    <div className={"flex gap-3"}>
-      <Label className={"text-nowrap"}>Correct Answer</Label>
-      <Input disabled value={isHeld ? text : "**********"} readOnly />
+    <div className={"flex gap-3 flex-1"}>
+      <Label className={"text-nowrap"}>Lösung</Label>
+      <Input
+        className={"h-full"}
+        disabled
+        value={isHeld ? text : "**********"}
+        readOnly
+      />
       <Button
+        className={"lg:text-2xl xl:text-3xl h-full"}
         variant={"outline"}
         onMouseDown={handlePressIn}
         onMouseUp={handlePressOut}

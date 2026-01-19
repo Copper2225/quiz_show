@@ -14,11 +14,13 @@ import { type Question, QuestionType } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import type {
   BuzzerQuestion,
+  HigherLowerQuestion,
   InputQuestion,
   MultipleChoiceQuestion,
   OrderQuestion,
   PinQuestion,
 } from "~/types/adminTypes";
+import HigherLowerBaseEdit from "~/routes/edit/components/HigherLower/HigherLowerBaseEdit";
 
 interface Props {
   defaultValue?: QuestionType;
@@ -48,6 +50,10 @@ const types = [
     label: "Order",
   },
   {
+    value: QuestionType.HIGHER_LOWER,
+    label: "Higher/Lower",
+  },
+  {
     value: QuestionType.NONE,
     label: "None",
   },
@@ -73,6 +79,10 @@ const BaseTypeSelect = ({ defaultValue, defaultPrompt, question }: Props) => {
         return <OrderBaseEdit question={question as OrderQuestion} />;
       case QuestionType.PIN:
         return <PinBaseEdit question={question as PinQuestion} />;
+      case QuestionType.HIGHER_LOWER:
+        return (
+          <HigherLowerBaseEdit question={question as HigherLowerQuestion} />
+        );
     }
   }, [type, question]);
 

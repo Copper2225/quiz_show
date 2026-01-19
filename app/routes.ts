@@ -31,5 +31,10 @@ export default [
     route("userBlock", "routes/api/userBlock.ts"),
     route("delete", "routes/api/delete.ts"),
     route("selector", "routes/api/selector.ts"),
+    route("wrongAnswer", "routes/api/wrongAnswer.ts"),
+    ...prefix("/higherLower", [
+      route("reveal", "routes/api/higherLower/reveal.ts"),
+      route("selector", "routes/api/higherLower/selector.ts"),
+    ]),
   ]),
 ] satisfies RouteConfig;

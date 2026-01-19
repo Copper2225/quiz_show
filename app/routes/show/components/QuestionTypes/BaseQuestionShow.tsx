@@ -3,6 +3,7 @@ import { useEffect, useMemo } from "react";
 import BuzzerBaseShow from "~/routes/show/components/QuestionTypes/BuzzerBaseShow";
 import type {
   BuzzerQuestion,
+  HigherLowerQuestion,
   InputQuestion,
   MultipleChoiceQuestion,
   OrderQuestion,
@@ -15,6 +16,7 @@ import OrderBaseShow from "~/routes/show/components/QuestionTypes/OrderBaseShow"
 import PinQuestionShow from "~/routes/show/components/QuestionTypes/PinQuestion/PinQuestionShow";
 import { type Question, QuestionType } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
+import { HigherLowerBaseShow } from "~/routes/show/components/QuestionTypes/HigherLowerQuestions/HigherLowerBaseShow";
 
 interface Props {
   question: Question<JsonValue>;
@@ -42,6 +44,10 @@ const BaseQuestionShow = ({
     }
   }, [questionEvent]);
 
+  const frame = useMemo(() => {
+    return question.type !== QuestionType.HIGHER_LOWER;
+  }, []);
+
   const detailed = useMemo(() => {
     switch (question.type) {
       case QuestionType.MULTIPLE_CHOICE:
@@ -66,6 +72,10 @@ const BaseQuestionShow = ({
             showCorrect={answerRevealed}
             playerReveals={playerReveals}
           />
+        );
+      case QuestionType.HIGHER_LOWER:
+        return (
+          <HigherLowerBaseShow question={question as HigherLowerQuestion} />
         );
       case QuestionType.PIN:
         return (
@@ -94,7 +104,7 @@ const BaseQuestionShow = ({
   return (
     <div
       className={
-        "bg-gray-800 border-teal-700 border-4 rounded-3xl w-[95%] flex-1 min-h-0 self-center flex flex-col text-5xl"
+        "bg-gray-800 border-teal-700 border-4 rounded-3xl w-full flex-1 min-h-0 self-center flex flex-col text-5xl"
       }
     >
       {withHeader && (

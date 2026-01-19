@@ -6,15 +6,21 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import type { MediaConfig } from "~/types/adminTypes";
 
 interface Props {
-  defaultData?: MediaConfig;
+  defaultData?: string;
+  withLabel?: boolean;
+  name: string;
+  uploadName: string;
 }
 
-const MediaUploadOrSelect = ({ defaultData }: Props) => {
+const MediaUploadOrSelect = ({
+  defaultData,
+  withLabel,
+  name,
+  uploadName,
+}: Props) => {
   const listFetcher = useFetcher();
   const uploadFetcher = useFetcher();
-  const [selected, setSelected] = useState<string>(
-    defaultData?.mediaFile ?? "",
-  );
+  const [selected, setSelected] = useState<string>(defaultData ?? "");
   const [uploaded, setUploaded] = useState<
     { value: string; label: string } | undefined
   >();
@@ -67,14 +73,16 @@ const MediaUploadOrSelect = ({ defaultData }: Props) => {
   );
 
   return (
-    <div>
-      <Label className={"mb-2"} htmlFor={"mediaFile"}>
-        Media hochladen
-      </Label>
+    <div className={"flex-1"}>
+      {withLabel && (
+        <Label className={"mb-2"} htmlFor={"mediaFile"}>
+          Media hochladen
+        </Label>
+      )}
 
       <div className={"flex gap-3"}>
         <Select
-          name={"config.media.mediaFile"}
+          name={name}
           label={"Media"}
           options={options}
           value={selected}
@@ -83,7 +91,7 @@ const MediaUploadOrSelect = ({ defaultData }: Props) => {
           className={"w-3/4 justify-start"}
         />
         <Input
-          name={"mediaFileUpload"}
+          name={uploadName}
           id={"mediaFileUpload"}
           type={"file"}
           accept={"image/*"}

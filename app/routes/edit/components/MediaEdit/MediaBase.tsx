@@ -25,7 +25,13 @@ const MediaBase = ({ defaultConfig }: Props) => {
           onCheckedChange={(checked: boolean) => setMedia(checked)}
         />
       </div>
-      {media && <MediaUploadOrSelect defaultData={defaultConfig} />}
+      {media && (
+        <MediaUploadOrSelect
+          defaultData={defaultConfig?.mediaFile}
+          name={"config.media.mediaFile"}
+          uploadName={"mediaFileUpload"}
+        />
+      )}
     </div>
   );
 };

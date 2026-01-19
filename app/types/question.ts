@@ -6,6 +6,7 @@ export const QuestionType = {
   INPUT: "INPUT",
   PIN: "PIN",
   ORDER: "ORDER",
+  HIGHER_LOWER: "HIGHER_LOWER",
   NONE: "NONE",
 } as const;
 

@@ -13,13 +13,14 @@ import {
   Trash,
 } from "lucide-react";
 import AnswerLine from "~/routes/admin/components/AnswerLine";
-import type { PinQuestion } from "~/types/adminTypes";
+import type { HigherLowerQuestion, PinQuestion } from "~/types/adminTypes";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import {
   useGetAnswerString,
   useGetSolutionString,
 } from "~/utils/useGetAnswerString";
 import { toast } from "sonner";
+import { HigherLowerOperations } from "~/routes/admin/components/QuestionOperations/HigherLowerOperations";
 
 interface Props {
   unlockOrLock: boolean;
@@ -168,7 +169,11 @@ const Answers = ({
 
   return (
     <>
-      {correctAnswerString && <HiddenText text={correctAnswerString} />}
+      <div className={"flex gap-3"}>
+        {correctAnswerString && <HiddenText text={correctAnswerString} />}
+        <HigherLowerOperations question={question as HigherLowerQuestion} teamAnswers={answers} />
+      </div>
+
       <div className={"flex gap-2"}>
         <Button
           className={"lg:text-2xl xl:text-3xl h-full flex-1"}

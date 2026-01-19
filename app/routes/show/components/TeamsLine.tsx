@@ -5,6 +5,7 @@ import { type Question, QuestionType } from "~/types/question";
 import { useRevalidator } from "react-router";
 import { userColors } from "~/routes/show/userColors";
 import type { JsonValue } from "@prisma/client/runtime/client";
+import type { HigherLowerQuestion } from "~/types/adminTypes";
 
 interface Props {
   teams: Map<string, number>;
@@ -92,6 +93,8 @@ const TeamsLine = ({
     prevBuzzerTeamRef.current = firstBuzzerTeam;
   }, [firstBuzzerTeam, PLAY_SOUND]);
 
+  console.log()
+
   return (
     <div
       className="grid gap-4 mt-10"
@@ -112,7 +115,9 @@ const TeamsLine = ({
           highlighted={
             (question?.type === QuestionType.BUZZER &&
               firstBuzzerTeam === name) ||
-            (showSelector && currentSelector === index && question === null)
+            (showSelector && currentSelector === index && question === null) ||
+            (question?.type === QuestionType.HIGHER_LOWER &&
+              (question as HigherLowerQuestion).config.selector === index)
           }
           questionRevealTime={questionRevealTime}
           color={

@@ -1,4 +1,4 @@
-import { type Question } from "~/types/question";
+import { type Question, QuestionType } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import { useMemo } from "react";
 import { useGetAnswerString } from "~/utils/useGetAnswerString";
@@ -39,7 +39,9 @@ const TeamTile = ({
       }}
     >
       {answerString && showAnswer && (
-        <div className={"mb-2 p-2 bg-white/20 rounded text-3xl"}>
+        <div
+          className={`mb-2 p-2 bg-white/20 rounded text-3xl ${question?.type === QuestionType.HIGHER_LOWER ? "text-red-500" : ""}`}
+        >
           {answerString}
         </div>
       )}
