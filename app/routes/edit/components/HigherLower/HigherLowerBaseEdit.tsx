@@ -97,7 +97,6 @@ const HigherLowerBaseEdit = ({ question }: Props) => {
                   <HigherLowerLine
                     index={index}
                     deleteRow={() => deleteRow(element.id)}
-                    elements={elements.length}
                     defaultFile={element.imgSrc ?? ""}
                     defaultValue={element.text ?? ""}
                     defaultShowText={element.showText ?? false}

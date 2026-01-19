@@ -1,5 +1,4 @@
 import React from "react";
-import { HigherLowerTile } from "~/routes/show/components/QuestionTypes/HigherLowerQuestions/HigherLowerTile";
 import type { HigherLowerOption } from "~/types/adminTypes";
 import { HigherLowerTileAdmin } from "~/routes/admin/components/QuestionOperations/HigherLowerOperations/HigherLowerTileAdmin";
 

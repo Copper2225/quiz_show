@@ -44,10 +44,6 @@ const BaseQuestionShow = ({
     }
   }, [questionEvent]);
 
-  const frame = useMemo(() => {
-    return question.type !== QuestionType.HIGHER_LOWER;
-  }, []);
-
   const detailed = useMemo(() => {
     switch (question.type) {
       case QuestionType.MULTIPLE_CHOICE:

@@ -7,7 +7,6 @@ import { Checkbox } from "~/components/ui/checkbox";
 interface Props {
   index: number;
   deleteRow: () => void;
-  elements: number;
   defaultValue: string;
   defaultFile: string;
   defaultShowText: boolean;
@@ -16,7 +15,6 @@ interface Props {
 const HigherLowerLine = ({
   index,
   deleteRow,
-  elements,
   defaultValue,
   defaultShowText,
   defaultFile,

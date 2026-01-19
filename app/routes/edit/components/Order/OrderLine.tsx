@@ -5,11 +5,10 @@ import { Button } from "~/components/ui/button";
 interface Props {
   index: number;
   deleteRow: () => void;
-  elements: number;
   defaultValue: string;
 }
 
-const OrderLine = ({ index, deleteRow, elements, defaultValue }: Props) => {
+const OrderLine = ({ index, deleteRow, defaultValue }: Props) => {
   return (
     <div className={"flex items-center gap-3"}>
       <Input name={`config.options.${index}`} defaultValue={defaultValue} />

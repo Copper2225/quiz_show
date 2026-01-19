@@ -3,7 +3,6 @@ import { Input } from "~/components/ui/input";
 import Select from "~/components/Select";
 import { useFetcher } from "react-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import type { MediaConfig } from "~/types/adminTypes";
 
 interface Props {
   defaultData?: string;

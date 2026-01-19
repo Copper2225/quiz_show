@@ -61,7 +61,6 @@ const OrderBaseEdit = ({ question }: Props) => {
                   <OrderLine
                     index={index}
                     deleteRow={() => deleteRow(element.id)}
-                    elements={elements.length}
                     defaultValue={element.text}
                   />
                 </div>
