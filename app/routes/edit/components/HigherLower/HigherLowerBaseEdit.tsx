@@ -1,49 +1,112 @@
 import { useCallback, useMemo, useState } from "react";
 import { Label } from "~/components/ui/label";
-import { Plus } from "lucide-react";
+import { GripVertical, Plus } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import OrderLine from "~/routes/edit/components/Order/OrderLine";
-import type { HigherLowerQuestion, OrderQuestion } from "~/types/adminTypes";
+import type { HigherLowerOption, HigherLowerQuestion } from "~/types/adminTypes";
 import HigherLowerLine from "~/routes/edit/components/HigherLower/HigherLowerLine";
+import { Input } from "~/components/ui/input";
+import { Reorder, ReorderItem } from "@yamada-ui/reorder";
 
 interface Props {
   question?: HigherLowerQuestion;
 }
 
+type DraggableOption = HigherLowerOption & { id: string };
+
 const HigherLowerBaseEdit = ({ question }: Props) => {
-  const [elements, setElements] = useState<number>(
-    question?.config.options?.length ?? 2,
-  );
-
-  const deleteRow = useCallback(() => {
-    setElements((prevElements) => prevElements - 1);
-  }, []);
-  const addRow = useCallback(() => {
-    setElements((prevElements) => prevElements + 1);
-  }, []);
-
-  const options = useMemo(() => {
-    return question?.config?.options ?? [];
+  const initialOptions = useMemo(() => {
+    return (
+      question?.config?.options?.map((o, i) => ({
+        ...o,
+        id: `option-${i}-${Date.now()}`,
+      })) ?? [
+        {
+          text: "",
+          imgSrc: "",
+          show: false,
+          showText: false,
+          id: `option-0-${Date.now()}`,
+        },
+        {
+          text: "",
+          imgSrc: "",
+          show: false,
+          showText: false,
+          id: `option-1-${Date.now()}`,
+        },
+      ]
+    );
   }, [question]);
 
-  console.log(options);
+  const [elements, setElements] = useState<DraggableOption[]>(initialOptions);
+
+  const deleteRow = useCallback((id: string) => {
+    setElements((prev) => prev.filter((el) => el.id !== id));
+  }, []);
+
+  const addRow = useCallback(() => {
+    setElements((prev) => [
+      ...prev,
+      {
+        text: "",
+        imgSrc: "",
+        show: false,
+        showText: false,
+        id: `option-${prev.length}-${Date.now()}`,
+      },
+    ]);
+  }, []);
+
+  const handleDragChange = useCallback((values: DraggableOption[]) => {
+    setElements(values);
+  }, []);
 
   return (
     <>
       <div>
+        <Label htmlFor={"config.lowLabel"} className={"mb-2"}>
+          Low-Label
+        </Label>
+        <Input
+          name={"config.lowLabel"}
+          id={"config.lowLabel"}
+          defaultValue={question?.config?.lowLabel}
+        />
+      </div>
+      <div>
+        <Label htmlFor={"config.highLabel"} className={"mb-2"}>
+          High-Label
+        </Label>
+        <Input
+          name={"config.highLabel"}
+          id={"config.highLabel"}
+          defaultValue={question?.config?.highLabel}
+        />
+      </div>
+      <div>
         <Label className={"mb-2"}>Elemente</Label>
-        <div className={"flex flex-col gap-2"}>
-          {Array.from({ length: elements }).map((_e, index) => (
-            <HigherLowerLine
-              index={index}
-              deleteRow={deleteRow}
-              elements={elements}
-              defaultFile={options[index]?.imgSrc ?? ""}
-              defaultValue={options[index]?.text ?? ""}
-              defaultShowText={options[index]?.showText ?? false}
-            />
+        <Reorder
+          className={"flex flex-col gap-2"}
+          onCompleteChange={handleDragChange}
+        >
+          {elements.map((element, index) => (
+            <ReorderItem key={element.id} value={element}>
+              <div className="flex items-center gap-2">
+                <GripVertical className="h-5 w-5 text-muted-foreground cursor-grab active:cursor-grabbing" />
+                <div className="flex-1">
+                  <HigherLowerLine
+                    index={index}
+                    deleteRow={() => deleteRow(element.id)}
+                    elements={elements.length}
+                    defaultFile={element.imgSrc ?? ""}
+                    defaultValue={element.text ?? ""}
+                    defaultShowText={element.showText ?? false}
+                  />
+                </div>
+              </div>
+            </ReorderItem>
           ))}
-        </div>
+        </Reorder>
 
         <Button
           variant="outline"

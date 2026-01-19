@@ -9,6 +9,8 @@ export async function action({ request }: ActionFunctionArgs) {
   const plainForm = Object.fromEntries(formData.entries());
   const requestValues = dot.object(plainForm) as any;
 
-  (AdminData.currentQuestion as HigherLowerQuestion).config.selector = Number(requestValues.selector);
+  (AdminData.currentQuestion as HigherLowerQuestion).config.selector = Number(
+    requestValues.selector,
+  );
   broadcast("reveal", new Date());
-} 
+}

@@ -81,21 +81,30 @@ const MediaUploadOrSelect = ({
       )}
 
       <div className={"flex gap-3"}>
-        <Select
-          name={name}
-          label={"Media"}
-          options={options}
-          value={selected}
-          onChange={setSelected}
-          align={"start"}
-          className={"w-3/4 justify-start"}
-        />
+        <div className="flex-1 flex gap-2">
+          <Select
+            name={name}
+            label={"Media"}
+            options={options}
+            value={selected}
+            onChange={setSelected}
+            align={"start"}
+            className={"flex-1 justify-start overflow-hidden"}
+          />
+          <Input
+            placeholder="Oder URL eingeben..."
+            value={selected}
+            onChange={(e) => setSelected(e.target.value)}
+            className="flex-1"
+          />
+        </div>
         <Input
           name={uploadName}
           id={"mediaFileUpload"}
           type={"file"}
           accept={"image/*"}
           onChange={upload}
+          className="w-1/4"
         />
       </div>
     </div>

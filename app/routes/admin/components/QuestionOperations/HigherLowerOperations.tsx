@@ -12,10 +12,13 @@ import type { HigherLowerQuestion } from "~/types/adminTypes";
 
 interface Props {
   question: HigherLowerQuestion | null;
-  teamAnswers: Map<string, { answer: string; time: Date; }>;
+  teamAnswers: Map<string, { answer: string; time: Date }>;
 }
 
-export const HigherLowerOperations: React.FC<Props> = ({ question, teamAnswers }) => {
+export const HigherLowerOperations: React.FC<Props> = ({
+  question,
+  teamAnswers,
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -25,11 +28,18 @@ export const HigherLowerOperations: React.FC<Props> = ({ question, teamAnswers }
           Fragen Operationen
         </Button>
       </DialogTrigger>
-      <DialogContent className={"sm:max-w-[90%] sm:max-h-[80%] h-full flex flex-col"}>
+      <DialogContent
+        className={"sm:max-w-[90%] sm:max-h-[80%] h-full flex flex-col"}
+      >
         <DialogHeader>
           <DialogTitle>Fragen Operation</DialogTitle>
         </DialogHeader>
-        {question && <HigherLowerOperationsWrapper question={question} teamAnswers={teamAnswers} />}
+        {question && (
+          <HigherLowerOperationsWrapper
+            question={question}
+            teamAnswers={teamAnswers}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

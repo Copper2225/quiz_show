@@ -177,8 +177,10 @@ export async function setQuestion(question: Question<JsonValue>) {
       setUserAnswer(team, "♥︎♥︎♥︎", new Date());
     });
     setAllPlayerReveal(true);
-    (AdminData.currentQuestion as HigherLowerQuestion).config.selector = random(AdminData.teams.size - 1)
-    console.log(AdminData.currentQuestion)
+    (AdminData.currentQuestion as HigherLowerQuestion).config.selector = random(
+      AdminData.teams.size - 1,
+    );
+    console.log(AdminData.currentQuestion);
   }
 
   return AdminData.currentQuestion;

@@ -19,7 +19,6 @@ const OrderLine = ({ index, deleteRow, elements, defaultValue }: Props) => {
         size="icon"
         type={"button"}
         onClick={deleteRow}
-        disabled={elements - 1 !== index}
       >
         <Trash2 className="h-4 w-4 text-red-500" />
       </Button>

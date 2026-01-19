@@ -24,15 +24,17 @@ const HigherLowerLine = ({
   return (
     <div className={"flex items-center gap-3"}>
       <Input
-        className={"w-1/4"}
+        className={"w-1/6"}
         name={`config.options.${index}.text`}
         defaultValue={defaultValue}
       />
-      <MediaUploadOrSelect
-        name={`config.options.${index}.imgSrc`}
-        uploadName={`mediaFileUpload.${index}`}
-        defaultData={defaultFile}
-      />
+      <div className="flex-1 min-w-0">
+        <MediaUploadOrSelect
+          name={`config.options.${index}.imgSrc`}
+          uploadName={`mediaFileUpload.${index}`}
+          defaultData={defaultFile}
+        />
+      </div>
       <Checkbox
         name={`config.options.${index}.showText`}
         id={"config.options.${index}.showText"}
@@ -43,7 +45,6 @@ const HigherLowerLine = ({
         size="icon"
         type={"button"}
         onClick={deleteRow}
-        disabled={elements - 1 !== index}
       >
         <Trash2 className="h-4 w-4 text-red-500" />
       </Button>

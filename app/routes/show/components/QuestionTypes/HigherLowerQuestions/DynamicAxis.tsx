@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HigherLowerTile } from "~/routes/show/components/QuestionTypes/HigherLowerQuestions/HigherLowerTile";
 import type { HigherLowerOption } from "~/types/adminTypes";
 
@@ -15,21 +15,31 @@ export const DynamicAxis: React.FC<Props> = ({
   highLabel = "high",
   items,
 }) => {
+  const [screenWidth, setScreenWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1920,
+  );
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const points = Array.from({ length: max }, (_, i) => i + 1);
 
   const intervalWidthPercent = (1 / (max - 1)) * 100;
 
-  const size = Math.max(32, Math.min(96, (1 / max) * 1000));
-  const axisLabelSize = Math.max(8, Math.min(20, (1 / max) * 300));
-  const axisLabelTop = Math.max(24, Math.min(32, (1 / max) * 400));
+  const size = Math.max(32, Math.min(96, (screenWidth / max) * 0.5));
+  const axisLabelSize = Math.max(8, Math.min(26, (screenWidth / max) * 0.3));
+  const axisLabelTop = Math.max(24, Math.min(32, (screenWidth / max) * 0.4));
 
   return (
     <div className={`w-full py-12 px-4 font-sans`}>
       <div className="relative w-full">
         <div className="flex items-center">
-          <span className="text-white text-xs font-bold uppercase mr-4 tracking-tighter shrink-0">
+          <div className="text-white text-xs font-bold uppercase mr-4 tracking-tighter shrink-0">
             {lowLabel}
-          </span>
+          </div>
 
           <div className="relative flex-1 flex justify-between items-center h-10">
             <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-white/80" />
@@ -53,17 +63,17 @@ export const DynamicAxis: React.FC<Props> = ({
             ))}
           </div>
 
-          <span className="text-white text-xs font-bold uppercase ml-4 tracking-tighter shrink-0">
+          <div className="text-white text-xs font-bold uppercase ml-4 tracking-tighter shrink-0">
             {highLabel}
-          </span>
+          </div>
         </div>
 
         <div className="relative">
           <div className="flex w-full items-start">
             <div className="invisible mr-4 shrink-0">
-              <span className="text-xs font-bold uppercase tracking-tighter">
+              <div className="text-xs font-bold uppercase tracking-tighter">
                 {lowLabel}
-              </span>
+              </div>
             </div>
 
             <div className={`relative flex-1`} style={{ height: `${size}px` }}>
@@ -91,9 +101,9 @@ export const DynamicAxis: React.FC<Props> = ({
             </div>
 
             <div className="invisible ml-4 shrink-0">
-              <span className="text-xs font-bold uppercase tracking-tighter">
+              <div className="text-xs font-bold uppercase tracking-tighter">
                 {highLabel}
-              </span>
+              </div>
             </div>
           </div>
         </div>

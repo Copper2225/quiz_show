@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 
 interface Props {
@@ -16,9 +16,19 @@ export const HigherLowerTileAdmin: React.FC<Props> = ({
 }) => {
   const fetcher = useFetcher();
 
-  const size = Math.max(32, Math.min(96, (1 / max) * 1000));
-  const textSize = Math.max(10, Math.min(16, (1 / max) * 200));
-  const bottomOffset = Math.max(16, Math.min(25, (1 / max) * 300));
+  const [screenWidth, setScreenWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1920,
+  );
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const size = Math.max(32, Math.min(96, (screenWidth / max) * 0.75));
+  const textSize = Math.max(10, Math.min(16, (screenWidth / max) * 0.1));
+  const bottomOffset = Math.max(16, Math.min(25, (screenWidth / max) * 0.15));
 
   const revealTile = useCallback(() => {
     const formData = new FormData();
@@ -36,7 +46,7 @@ export const HigherLowerTileAdmin: React.FC<Props> = ({
       onClick={revealTile}
     >
       <div
-        className={`border-6 flex-1 ${isRevealed ? "border-green-600" : "border-gray-400"} aspect-square content-center text-center`}
+        className={`border-4 flex-1 ${isRevealed ? "border-green-600" : "border-gray-400"} aspect-square overflow-x-hidden content-center text-center`}
         style={{ height: `${size}px`, maxHeight: `${size}px` }}
       >
         {imgSrc ? (
@@ -46,7 +56,13 @@ export const HigherLowerTileAdmin: React.FC<Props> = ({
             alt={"Bild"}
           />
         ) : (
-          <span className={"text-center"}>{text}</span>
+          <div
+            className={
+              "text-center text-sm overflow-hidden overflow-ellipsis text-nowrap"
+            }
+          >
+            {text}
+          </div>
         )}
       </div>
       <span

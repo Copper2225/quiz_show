@@ -94,12 +94,13 @@ const BaseQuestionShow = ({
             question={question as BuzzerQuestion}
             withHeader={withHeader}
             showAnswer={answerRevealed}
+            answers={answers}
           />
         );
       default:
         return <div></div>;
     }
-  }, [question, withHeader, answerRevealed, playerReveals]);
+  }, [question, withHeader, answerRevealed, playerReveals, answers]);
 
   return (
     <div

@@ -35,6 +35,7 @@ export default [
     ...prefix("/higherLower", [
       route("reveal", "routes/api/higherLower/reveal.ts"),
       route("selector", "routes/api/higherLower/selector.ts"),
+      route("userLives", "routes/api/higherLower/userLives.ts"),
     ]),
   ]),
 ] satisfies RouteConfig;

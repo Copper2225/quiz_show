@@ -38,6 +38,8 @@ export type OrderQuestion = Question<{
 export type HigherLowerQuestion = Question<{
   options: HigherLowerOption[];
   shuffledOptions: HigherLowerOption[];
+  lowLabel: string;
+  highLabel: string;
   selector: number;
 }>;
 

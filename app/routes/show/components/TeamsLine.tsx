@@ -93,8 +93,6 @@ const TeamsLine = ({
     prevBuzzerTeamRef.current = firstBuzzerTeam;
   }, [firstBuzzerTeam, PLAY_SOUND]);
 
-  console.log()
-
   return (
     <div
       className="grid gap-4 mt-10"

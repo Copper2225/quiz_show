@@ -171,7 +171,10 @@ const Answers = ({
     <>
       <div className={"flex gap-3"}>
         {correctAnswerString && <HiddenText text={correctAnswerString} />}
-        <HigherLowerOperations question={question as HigherLowerQuestion} teamAnswers={answers} />
+        <HigherLowerOperations
+          question={question as HigherLowerQuestion}
+          teamAnswers={answers}
+        />
       </div>
 
       <div className={"flex gap-2"}>

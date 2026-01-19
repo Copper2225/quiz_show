@@ -21,7 +21,8 @@ export async function action({ request }: ActionFunctionArgs) {
       const teamKeys = Array.from(AdminData.teams.keys());
       let nextSelector = question.config.selector;
       for (let i = 1; i <= AdminData.teams.size; i++) {
-        const candidateIndex = (question.config.selector + i) % AdminData.teams.size;
+        const candidateIndex =
+          (question.config.selector + i) % AdminData.teams.size;
         const candidateTeam = teamKeys[candidateIndex];
         const answer = getUserAnswer(candidateTeam)?.answer;
         if (answer && answer.length > 0) {

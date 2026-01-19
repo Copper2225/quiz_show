@@ -31,9 +31,14 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
   }, [updateEvent]);
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center justify-around h-full w-full">
       <div className="w-full">
-        <DynamicAxis max={question.config.options.length} items={items} />
+        <DynamicAxis
+          max={question.config.options.length}
+          items={items}
+          lowLabel={question.config.lowLabel}
+          highLabel={question.config.highLabel}
+        />
       </div>
       <div className={"flex gap-5 mt-4 justify-center flex-wrap"}>
         {leftItems.map((item, index) => (
