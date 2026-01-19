@@ -1,4 +1,3 @@
-import type { JsonValue } from "@prisma/client/runtime/client";
 import type { Question } from "~/types/question";
 
 export type UserMultipleChoiceQuestion = Question<{
