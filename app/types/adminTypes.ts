@@ -56,6 +56,13 @@ export type PinQuestion = Question<{
   pin: PinData;
 }>;
 
+export type WavelengthQuestion = Question<{
+  useNumber: boolean;
+  random: boolean;
+  answer?: string;
+  numberAnswer?: number[];
+}>;
+
 export interface PlayerPoints {
   points: number;
   pointsLog: Map<string, number>;

@@ -34,8 +34,8 @@ const HigherLowerLine = ({
         />
       </div>
       <Checkbox
-        name={`config.options.${index}.showText`}
-        id={"config.options.${index}.showText"}
+        name={`_check_config.options.${index}.showText`}
+        id={"_check_config.options.${index}.showText"}
         defaultChecked={defaultShowText}
       />
       <Button variant="ghost" size="icon" type={"button"} onClick={deleteRow}>

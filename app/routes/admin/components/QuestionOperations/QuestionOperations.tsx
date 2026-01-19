@@ -8,16 +8,22 @@ import {
 import { Button } from "~/components/ui/button";
 import { useState } from "react";
 import { HigherLowerOperationsWrapper } from "~/routes/admin/components/QuestionOperations/HigherLowerOperations/HigherLowerOperationsWrapper";
-import type { HigherLowerQuestion } from "~/types/adminTypes";
+import { type Question, QuestionType } from "~/types/question";
+import type { MediaConfig } from "~/types/adminTypes";
+import { MediaOperationsWrapper } from "~/routes/admin/components/QuestionOperations/MediaOperations/MediaOperationsWrapper";
+import { WavelengthOperations } from "~/routes/admin/components/QuestionOperations/WavelengthOperations/WavelengthOperations";
+import type { UserHint } from "~/types/userTypes";
 
 interface Props {
-  question: HigherLowerQuestion | null;
+  question: Question<any>;
   teamAnswers: Map<string, { answer: string; time: Date }>;
+  userShowHints: Map<string, UserHint>;
 }
 
-export const HigherLowerOperations: React.FC<Props> = ({
+export const QuestionOperations: React.FC<Props> = ({
   question,
   teamAnswers,
+  userShowHints,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -34,11 +40,17 @@ export const HigherLowerOperations: React.FC<Props> = ({
         <DialogHeader>
           <DialogTitle>Fragen Operation</DialogTitle>
         </DialogHeader>
-        {question && (
+        {question?.type === QuestionType.HIGHER_LOWER && (
           <HigherLowerOperationsWrapper
             question={question}
             teamAnswers={teamAnswers}
           />
+        )}
+        {question?.type === QuestionType.WAVELENGTH && (
+          <WavelengthOperations userShowHints={userShowHints} />
+        )}
+        {(question?.config?.media as MediaConfig)?.mediaChecked && (
+          <MediaOperationsWrapper />
         )}
       </DialogContent>
     </Dialog>

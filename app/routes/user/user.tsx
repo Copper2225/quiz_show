@@ -13,9 +13,11 @@ import type {
   UserMultipleChoiceQuestion,
   UserOrderQuestion,
   UserPinQuestion,
+  UserWaveLengthQuestion,
 } from "~/types/userTypes";
 import PinField from "~/routes/user/components/PinField";
 import { QuestionType } from "~/types/question";
+import { WavelengthWrapper } from "~/routes/user/components/Wavelength/WavelengthWrapper";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const userName = await getUserNameFromRequest(request);
@@ -40,6 +42,8 @@ export default function user() {
       revalidator.revalidate();
     }
   }, [answerTypeEvent, lockAnswersEvent]);
+
+  console.log(data);
 
   const renderAnswerComponents = useMemo(() => {
     if (data.question) {
@@ -76,6 +80,16 @@ export default function user() {
               data={data.question as UserPinQuestion}
               answer={data.answer?.answer}
               teamColor={data.userColor}
+            />
+          );
+        case QuestionType.WAVELENGTH:
+          return (
+            <WavelengthWrapper
+              isLocked={data.isLocked ?? false}
+              input={
+                (data.question as UserWaveLengthQuestion).config.showSlider
+              }
+              hint={data.userHint}
             />
           );
         default:

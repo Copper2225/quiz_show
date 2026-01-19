@@ -84,6 +84,7 @@ const BaseQuestionShow = ({
           />
         );
       case QuestionType.BUZZER:
+      case QuestionType.WAVELENGTH:
       case QuestionType.NONE:
         return (
           <BuzzerBaseShow

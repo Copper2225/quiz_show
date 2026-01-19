@@ -8,8 +8,12 @@ import {
 import { userColors } from "~/routes/show/userColors";
 import { type Question, QuestionType } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
-import type { HigherLowerQuestion } from "~/types/adminTypes";
+import type {
+  HigherLowerQuestion,
+  WavelengthQuestion,
+} from "~/types/adminTypes";
 import _ from "lodash";
+import type { UserHint, UserWaveLengthQuestion } from "~/types/userTypes";
 const { random } = _;
 
 interface PlayerData {
@@ -26,6 +30,7 @@ interface AdminDataShape {
   questionGrid: Map<string, Question<JsonValue>>;
   playerReveal: Map<string, boolean>;
   userLocks: Map<string, boolean>;
+  userHints: Map<string, UserHint>;
   questionRevealTime: Date | null;
   currentSelector: number;
   showCurrentSelector: boolean;
@@ -36,6 +41,7 @@ interface SpecificUserData {
   answer: { answer: string; time: Date } | undefined;
   userName: string;
   userColor: string;
+  userHint: UserHint | undefined;
 }
 
 export const playerData: PlayerData = {
@@ -52,6 +58,7 @@ export const AdminData: AdminDataShape = {
   questionGrid: getQuestionsGrid(),
   playerReveal: new Map<string, boolean>(),
   userLocks: new Map<string, boolean>(),
+  userHints: new Map<string, UserHint>(),
   questionRevealTime: null,
   currentSelector: -1,
   showCurrentSelector: false,
@@ -102,6 +109,7 @@ export function getUserData(user: string): SpecificUserData {
     answer: getUserAnswer(user),
     userName: user,
     userColor: userColors[Array.from(AdminData.teams.keys()).indexOf(user)],
+    userHint: getUserShowHint(user),
   };
 }
 
@@ -180,7 +188,27 @@ export async function setQuestion(question: Question<JsonValue>) {
     (AdminData.currentQuestion as HigherLowerQuestion).config.selector = random(
       AdminData.teams.size - 1,
     );
-    console.log(AdminData.currentQuestion);
+  }
+
+  if (question.type === QuestionType.WAVELENGTH) {
+    const config = question.config as any;
+    if (config.random) {
+      const answer = random(10);
+      (playerData.question as UserWaveLengthQuestion).config.showSlider = false;
+      (
+        AdminData.currentQuestion as any as WavelengthQuestion
+      ).config.numberAnswer = [answer];
+      (playerData.question as UserWaveLengthQuestion).config.showSlider = false;
+      (AdminData.currentQuestion as any as WavelengthQuestion).config.answer =
+        answer.toString();
+      setAllHints(answer.toString());
+    } else if (config.useNumber) {
+      setAllHints(config.numberAnswer.toString());
+      (AdminData.currentQuestion as any as WavelengthQuestion).config.answer =
+        config.numberAnswer.toString();
+    } else {
+      setAllHints(config.answer);
+    }
   }
 
   return AdminData.currentQuestion;
@@ -258,6 +286,20 @@ export function setUserLocked(user: string, lock: boolean) {
 
 export function getIsUserLocked(user: string): boolean | undefined {
   return AdminData.userLocks.get(user);
+}
+
+export function setAllHints(hint: string) {
+  for (const key of AdminData.teams.keys()) {
+    AdminData.userHints.set(key, { isInit: true, hint });
+  }
+}
+
+export function setUserShowHint(user: string, isInit: boolean, hint: string) {
+  AdminData.userHints.set(user, { isInit, hint });
+}
+
+export function getUserShowHint(user: string): UserHint | undefined {
+  return AdminData.userHints.get(user);
 }
 
 export function isAnyLocked(): boolean {

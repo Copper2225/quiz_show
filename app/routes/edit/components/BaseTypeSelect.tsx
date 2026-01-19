@@ -19,8 +19,10 @@ import type {
   MultipleChoiceQuestion,
   OrderQuestion,
   PinQuestion,
+  WavelengthQuestion,
 } from "~/types/adminTypes";
 import HigherLowerBaseEdit from "~/routes/edit/components/HigherLower/HigherLowerBaseEdit";
+import WavelengthBaseEdit from "~/routes/edit/components/Wavelength/WavelengthBaseEdit";
 
 interface Props {
   defaultValue?: QuestionType;
@@ -54,6 +56,10 @@ const types = [
     label: "Higher/Lower",
   },
   {
+    value: QuestionType.WAVELENGTH,
+    label: "Wavelength",
+  },
+  {
     value: QuestionType.NONE,
     label: "None",
   },
@@ -83,6 +89,8 @@ const BaseTypeSelect = ({ defaultValue, defaultPrompt, question }: Props) => {
         return (
           <HigherLowerBaseEdit question={question as HigherLowerQuestion} />
         );
+      case QuestionType.WAVELENGTH:
+        return <WavelengthBaseEdit question={question as WavelengthQuestion} />;
     }
   }, [type, question]);
 

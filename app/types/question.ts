@@ -7,6 +7,7 @@ export const QuestionType = {
   PIN: "PIN",
   ORDER: "ORDER",
   HIGHER_LOWER: "HIGHER_LOWER",
+  WAVELENGTH: "WAVELENGTH",
   NONE: "NONE",
 } as const;
 

@@ -16,8 +16,11 @@ export type UserPinQuestion = Question<{
   image: string;
 }>;
 
-export interface PlayerData {
-  answerType: any | null;
-  userLocks: Map<string, boolean>;
-  question: Question<JsonValue> | null;
-}
+export type UserWaveLengthQuestion = Question<{
+  showSlider: boolean;
+}>;
+
+export type UserHint = {
+  isInit: boolean;
+  hint: string;
+};

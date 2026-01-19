@@ -20,7 +20,8 @@ import {
   useGetSolutionString,
 } from "~/utils/useGetAnswerString";
 import { toast } from "sonner";
-import { HigherLowerOperations } from "~/routes/admin/components/QuestionOperations/HigherLowerOperations";
+import { QuestionOperations } from "~/routes/admin/components/QuestionOperations/QuestionOperations";
+import type { UserHint } from "~/types/userTypes";
 
 interface Props {
   unlockOrLock: boolean;
@@ -31,6 +32,7 @@ interface Props {
   userLocks: Map<string, boolean>;
   teams: Map<string, number>;
   questionRevealTime: Date | null;
+  userShowHints: Map<string, UserHint>;
 }
 
 const Answers = ({
@@ -42,6 +44,7 @@ const Answers = ({
   userLocks,
   teams,
   questionRevealTime,
+  userShowHints,
 }: Props) => {
   const fetcher = useFetcher();
   const [correctAnswers, setCorrectAnswers] = useState<Map<string, boolean>>(
@@ -171,8 +174,9 @@ const Answers = ({
     <>
       <div className={"flex gap-3"}>
         {correctAnswerString && <HiddenText text={correctAnswerString} />}
-        <HigherLowerOperations
+        <QuestionOperations
           question={question as HigherLowerQuestion}
+          userShowHints={userShowHints}
           teamAnswers={answers}
         />
       </div>

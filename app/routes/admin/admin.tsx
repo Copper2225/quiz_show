@@ -56,6 +56,7 @@ export default function Admin() {
           userLocks={data.userLocks}
           teams={data.teams}
           questionRevealTime={data.questionRevealTime}
+          userShowHints={data.userHints}
         />
         <PointsSection
           points={data.currentQuestion?.points}

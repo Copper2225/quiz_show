@@ -37,5 +37,9 @@ export default [
       route("selector", "routes/api/higherLower/selector.ts"),
       route("userLives", "routes/api/higherLower/userLives.ts"),
     ]),
+    ...prefix("/wavelength", [
+      route("checked", "routes/api/wavelength/targetChecked.ts"),
+      route("trigger", "routes/api/wavelength/triggerInput.ts"),
+    ]),
   ]),
 ] satisfies RouteConfig;
