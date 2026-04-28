@@ -9,7 +9,6 @@ import type { HigherLowerQuestion } from "~/types/adminTypes";
 import { sendToAdmin } from "~/routes/events/sse.events.admin";
 
 export async function action() {
-  console.log(AdminData.currentQuestion?.type);
   if (AdminData.currentQuestion?.type === QuestionType.HIGHER_LOWER) {
     const question = AdminData.currentQuestion as HigherLowerQuestion;
     const teamKeys = Array.from(AdminData.teams.keys());

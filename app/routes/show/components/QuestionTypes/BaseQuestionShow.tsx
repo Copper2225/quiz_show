@@ -8,6 +8,7 @@ import type {
   MultipleChoiceQuestion,
   OrderQuestion,
   PinQuestion,
+  WavelengthQuestion,
 } from "~/types/adminTypes";
 import { useEventSource } from "remix-utils/sse/react";
 import InputBaseShow from "~/routes/show/components/QuestionTypes/InputBaseShow";
@@ -17,6 +18,7 @@ import PinQuestionShow from "~/routes/show/components/QuestionTypes/PinQuestion/
 import { type Question, QuestionType } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import { HigherLowerBaseShow } from "~/routes/show/components/QuestionTypes/HigherLowerQuestions/HigherLowerBaseShow";
+import WavelengthShow from "~/routes/show/components/QuestionTypes/WavelengthQuestion/WavelengthShow";
 
 interface Props {
   question: Question<JsonValue>;
@@ -84,7 +86,6 @@ const BaseQuestionShow = ({
           />
         );
       case QuestionType.BUZZER:
-      case QuestionType.WAVELENGTH:
       case QuestionType.NONE:
         return (
           <BuzzerBaseShow
@@ -92,6 +93,14 @@ const BaseQuestionShow = ({
             withHeader={withHeader}
             showAnswer={answerRevealed}
             answers={answers}
+          />
+        );
+      case QuestionType.WAVELENGTH:
+        return (
+          <WavelengthShow
+            withHeader={withHeader}
+            question={question as WavelengthQuestion}
+            show={answerRevealed}
           />
         );
       default:

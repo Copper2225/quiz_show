@@ -19,8 +19,9 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
       question.config.shuffledOptions.filter(
         (item) => !item.show && !item.showText,
       ),
-    [question.config.options],
+    [question.config.shuffledOptions],
   );
+
   const revalidator = useRevalidator();
   const updateEvent = useEventSource("/sse/events", { event: "reveal" });
 
@@ -29,6 +30,8 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
       revalidator.revalidate();
     }
   }, [updateEvent]);
+
+  console.log(question);
 
   return (
     <div className="flex flex-col items-center justify-around h-full w-full">

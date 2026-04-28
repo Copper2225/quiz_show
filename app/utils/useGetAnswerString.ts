@@ -6,6 +6,7 @@ import type {
   OrderQuestion,
   PinData,
   PinQuestion,
+  WavelengthQuestion,
 } from "~/types/adminTypes";
 import type { JsonValue } from "@prisma/client/runtime/client";
 
@@ -101,6 +102,11 @@ export function useGetSolutionString(question: Question<JsonValue> | null) {
         .filter((opt) => opt.checked)
         .map((opt) => opt.name)
         .join(", ");
+
+    case QuestionType.WAVELENGTH:
+      const wavelengthQuestion = question as WavelengthQuestion;
+
+      return wavelengthQuestion.config.answer ?? "";
 
     default:
       return null;

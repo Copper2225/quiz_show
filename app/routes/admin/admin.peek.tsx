@@ -34,11 +34,10 @@ export async function action({ params, request }: Route.ActionArgs) {
   const plainForm = Object.fromEntries(formData.entries());
   const requestValues = dot.object(plainForm) as any;
 
-  console.log(JSON.parse(requestValues.question));
+  clearUserAnswers();
 
   const quest = await setQuestion(JSON.parse(requestValues.question));
 
-  clearUserAnswers();
   if (quest) {
     disableActiveMatrix(Number(params.c), Number(params.q));
   } else {

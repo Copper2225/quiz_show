@@ -18,6 +18,15 @@ export async function action({ request }: ActionFunctionArgs) {
     if (option) {
       option.show = !option.show;
 
+      if (Array.isArray(question.config.shuffledOptions)) {
+        const shuffledOption = question.config.shuffledOptions.find(
+          (item) => item.text === requestValues.text,
+        );
+        if (shuffledOption) {
+          shuffledOption.show = option.show;
+        }
+      }
+
       const teamKeys = Array.from(AdminData.teams.keys());
       let nextSelector = question.config.selector;
       for (let i = 1; i <= AdminData.teams.size; i++) {

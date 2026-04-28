@@ -40,6 +40,7 @@ export default [
     ...prefix("/wavelength", [
       route("checked", "routes/api/wavelength/targetChecked.ts"),
       route("trigger", "routes/api/wavelength/triggerInput.ts"),
+      route("show", "routes/api/wavelength/showHint.ts"),
     ]),
   ]),
 ] satisfies RouteConfig;

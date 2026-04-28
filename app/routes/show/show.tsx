@@ -6,7 +6,11 @@ import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useMemo, useState } from "react";
 import BaseQuestionShow from "~/routes/show/components/QuestionTypes/BaseQuestionShow";
 import { QuestionType } from "~/types/question";
-import type { BuzzerQuestion, InputQuestion } from "~/types/adminTypes";
+import type {
+  BuzzerQuestion,
+  InputQuestion,
+  WavelengthQuestion,
+} from "~/types/adminTypes";
 
 export async function loader() {
   return ShowData;
@@ -47,19 +51,23 @@ export default function Show() {
   const activeMatrix = data.activeMatrix;
 
   const withHeader = useMemo(() => {
-    if (question) {
-      if (
-        (question.type === QuestionType.BUZZER &&
-          !(question as BuzzerQuestion).config.media?.mediaChecked) ||
-        (question.type === QuestionType.INPUT &&
-          !(question as InputQuestion).config.media?.mediaChecked)
-      )
-        return data.answerRevealed;
-      return question.type !== QuestionType.NONE;
-    } else {
-      return false;
+    if (!question) return false;
+
+    const hasUncheckedMedia =
+      (question.type === QuestionType.BUZZER &&
+        !(question as BuzzerQuestion).config.media?.mediaChecked) ||
+      (question.type === QuestionType.INPUT &&
+        !(question as InputQuestion).config.media?.mediaChecked) ||
+      (question.type === QuestionType.WAVELENGTH &&
+        !(question as WavelengthQuestion).config.media?.mediaChecked);
+
+    if (hasUncheckedMedia) {
+      return data.answerRevealed;
     }
+
+    return question.type !== QuestionType.NONE;
   }, [question, data.answerRevealed]);
+
 
   return (
     <>

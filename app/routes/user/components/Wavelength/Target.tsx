@@ -2,14 +2,16 @@ import { type ReactElement } from "react";
 import { Button } from "~/components/ui/button";
 import { useFetcher } from "react-router";
 import { Label } from "~/components/ui/label";
+import { EmojiInput } from "~/routes/user/components/Wavelength/EmojiInput";
 import { Input } from "~/components/ui/input";
 
 interface Props {
   show: boolean;
   target: string;
+  emoji: boolean;
 }
 
-const Target = ({ show = true, target }: Props): ReactElement => {
+const Target = ({ show = true, target, emoji }: Props): ReactElement => {
   const fetcher = useFetcher();
 
   if (!show) {
@@ -25,7 +27,15 @@ const Target = ({ show = true, target }: Props): ReactElement => {
       }
     >
       <Label className={"flex-2 self-center text-9xl"}>{target}</Label>
-      <Input name={"hint"} className={"flex-2 mb-3 !text-6xl"} />
+      {emoji ? (
+        <EmojiInput />
+      ) : (
+        <Input
+          autoComplete={"off"}
+          name={"hint"}
+          className={"flex-2 mb-3 !text-6xl"}
+        />
+      )}
       <Button type={"submit"} className={"w-full flex-1 text-5xl box-border"}>
         Bestätigen
       </Button>

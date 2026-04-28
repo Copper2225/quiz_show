@@ -14,8 +14,6 @@ export const TeamSetLives: React.FC<Props> = ({ teamAnswers }) => {
       const form = event.currentTarget.form;
       if (!form) return;
 
-      console.log(form);
-
       fetcher.submit(form, {
         action: "/api/higherLower/userLives",
         method: "post",

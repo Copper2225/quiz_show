@@ -43,8 +43,6 @@ export default function user() {
     }
   }, [answerTypeEvent, lockAnswersEvent]);
 
-  console.log(data);
-
   const renderAnswerComponents = useMemo(() => {
     if (data.question) {
       switch (data.question?.type ?? "none") {
@@ -86,10 +84,9 @@ export default function user() {
           return (
             <WavelengthWrapper
               isLocked={data.isLocked ?? false}
-              input={
-                (data.question as UserWaveLengthQuestion).config.showSlider
-              }
+              question={data.question as UserWaveLengthQuestion}
               hint={data.userHint}
+              answer={data.answer?.answer}
             />
           );
         default:

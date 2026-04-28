@@ -17,6 +17,8 @@ const WavelengthBaseEdit = ({ question }: Props) => {
     question?.config?.random === true,
   );
 
+  console.log(question?.config);
+
   return (
     <div className="space-y-4">
       <div className="flex items-end gap-6">
@@ -31,7 +33,6 @@ const WavelengthBaseEdit = ({ question }: Props) => {
           />
         </div>
 
-        {/* Option: Toggle Random (Only if 1-10 is active) */}
         {useNumber && (
           <div className="flex flex-col gap-2">
             <Label htmlFor="_check_config.random">Zufall</Label>
@@ -57,15 +58,25 @@ const WavelengthBaseEdit = ({ question }: Props) => {
       )}
 
       {!useNumber && (
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="config.answer">Lösung</Label>
-          <Input
-            name="config.answer"
-            id="config.answer"
-            placeholder="Antwort eingeben..."
-            defaultValue={question?.config.answer}
-          />
-        </div>
+        <>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="config.answer">Emoji</Label>
+            <Checkbox
+              id="_check_config.emoji"
+              name="_check_config.emoji"
+              defaultChecked={question?.config.emoji}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="config.answer">Lösung</Label>
+            <Input
+              name="config.answer"
+              id="config.answer"
+              placeholder="Antwort eingeben..."
+              defaultValue={question?.config.answer}
+            />
+          </div>
+        </>
       )}
     </div>
   );

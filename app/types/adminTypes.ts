@@ -3,6 +3,7 @@ import type { Question } from "~/types/question";
 export type MediaConfig = {
   mediaChecked: boolean;
   mediaFile: string;
+  blur: boolean;
 };
 
 export type HigherLowerOption = {
@@ -59,8 +60,10 @@ export type PinQuestion = Question<{
 export type WavelengthQuestion = Question<{
   useNumber: boolean;
   random: boolean;
+  emoji: boolean;
   answer?: string;
   numberAnswer?: number[];
+  media?: MediaConfig;
 }>;
 
 export interface PlayerPoints {

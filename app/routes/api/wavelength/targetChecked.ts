@@ -15,6 +15,7 @@ export async function action({ request }: ActionFunctionArgs) {
       requestValues.user,
       true,
       (AdminData.currentQuestion as WavelengthQuestion).config.answer ?? "",
+      true,
     );
     broadcast("answerType", new Date());
   } else {

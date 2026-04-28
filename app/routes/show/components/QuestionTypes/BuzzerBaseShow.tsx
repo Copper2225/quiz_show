@@ -30,7 +30,7 @@ const BuzzerBaseShow = ({
           className={`${showAnswer ? "min-w-3/5" : "w-full"} content-center h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12`}
         >
           <img
-            className={`h-full justify-self-center object-contain ${hasOneBuzzered ? "blur-[80px]" : ""}`}
+            className={`h-full justify-self-center object-contain ${hasOneBuzzered && question.config.media.blur ? "blur-[80px]" : ""}`}
             src={question.config?.media?.mediaFile}
             alt={"Media"}
           />

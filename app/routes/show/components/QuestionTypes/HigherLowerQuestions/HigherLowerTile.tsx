@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 interface Props {
   imgSrc?: string;
@@ -15,19 +15,20 @@ export const HigherLowerTile: React.FC<Props> = ({
   max,
   inAxis = false,
 }) => {
-  const [screenWidth, setScreenWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 1920,
-  );
+  const [screenWidth, setScreenWidth] = useState<number | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  if (screenWidth === null) return null;
+
   const size = inAxis
     ? Math.max(32, Math.min(120, (screenWidth / max) * 0.87))
-    : screenWidth * 0.09;
+    : screenWidth * 0.07;
   const textSize = inAxis
     ? Math.max(10, Math.min(16, (screenWidth / max) * 0.1))
     : screenWidth * 0.015;

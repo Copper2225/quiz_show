@@ -17,9 +17,13 @@ export type UserPinQuestion = Question<{
 
 export type UserWaveLengthQuestion = Question<{
   showSlider: boolean;
+  useNumber: boolean;
+  emoji: boolean;
 }>;
 
 export type UserHint = {
   isInit: boolean;
+  showInit: boolean;
   hint: string;
+  emojis: string[];
 };

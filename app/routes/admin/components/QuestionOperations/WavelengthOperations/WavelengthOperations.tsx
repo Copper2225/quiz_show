@@ -20,12 +20,20 @@ export const WavelengthOperations: React.FC<Props> = ({ userShowHints }) => {
     });
   }, []);
 
+  const handleTriggerHint = useCallback(() => {
+    fetcher.submit(new FormData(), {
+      method: "post",
+      action: "/api/wavelength/show",
+    });
+  }, []);
+
   useEffect(() => {
     revalidate.revalidate();
   }, [answerEvent]);
 
   return (
     <>
+      <Button onClick={handleTriggerHint}>Show hint</Button>
       <Button onClick={handleTrigger}>Trigger</Button>
       {Array.from(userShowHints.entries()).map(([name, showHint]) => (
         <fetcher.Form

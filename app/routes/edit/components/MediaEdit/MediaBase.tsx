@@ -26,11 +26,21 @@ const MediaBase = ({ defaultConfig }: Props) => {
         />
       </div>
       {media && (
-        <MediaUploadOrSelect
-          defaultData={defaultConfig?.mediaFile}
-          name={"config.media.mediaFile"}
-          uploadName={"mediaFileUpload"}
-        />
+        <>
+          <MediaUploadOrSelect
+            defaultData={defaultConfig?.mediaFile}
+            name={"config.media.mediaFile"}
+            uploadName={"mediaFileUpload"}
+          />
+          <div>
+            <Label className={"mb-2"}>Blur</Label>
+            <Checkbox
+              defaultChecked={defaultConfig?.blur}
+              name={"_check_config.media.blur"}
+              id="_check_config.media.blur"
+            />
+          </div>
+        </>
       )}
     </div>
   );

@@ -15,15 +15,16 @@ export const DynamicAxis: React.FC<Props> = ({
   highLabel = "high",
   items,
 }) => {
-  const [screenWidth, setScreenWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 1920,
-  );
+  const [screenWidth, setScreenWidth] = useState<number | null>(null);
 
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  if (screenWidth === null) return null;
 
   const points = Array.from({ length: max }, (_, i) => i + 1);
 

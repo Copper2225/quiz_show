@@ -136,8 +136,6 @@ export function disableActiveMatrix(
   AdminData.activeMatrix[category][question] = switching
     ? !AdminData.activeMatrix[category][question]
     : false;
-
-  console.log(AdminData.activeMatrix[category][question]);
 }
 
 export function resetActiveMatrix() {
@@ -180,6 +178,37 @@ export async function setQuestion(question: Question<JsonValue>) {
     (playerData.question.config as any).pin = undefined;
   }
 
+  if (
+    question.type === QuestionType.HIGHER_LOWER ||
+    question.type === QuestionType.ORDER
+  ) {
+    if (!config.shuffledOptions && Array.isArray(config.options)) {
+      config.shuffledOptions = _.shuffle(config.options);
+    } else if (
+      Array.isArray(config.shuffledOptions) &&
+      Array.isArray(config.options)
+    ) {
+      config.shuffledOptions.forEach((shuffledItem: any) => {
+        const originalItem = config.options.find(
+          (o: any) => o.text === shuffledItem.text,
+        );
+        if (originalItem) {
+          shuffledItem.show = originalItem.show;
+          shuffledItem.showText = originalItem.showText;
+        }
+      });
+    }
+  }
+
+  if (
+    config.shuffle &&
+    question.type !== QuestionType.HIGHER_LOWER &&
+    question.type !== QuestionType.ORDER &&
+    Array.isArray(config.options)
+  ) {
+    config.options = _.shuffle(config.options);
+  }
+
   if (question.type === QuestionType.HIGHER_LOWER) {
     Array.from(AdminData.teams.keys()).map((team) => {
       setUserAnswer(team, "♥︎♥︎♥︎", new Date());
@@ -192,6 +221,10 @@ export async function setQuestion(question: Question<JsonValue>) {
 
   if (question.type === QuestionType.WAVELENGTH) {
     const config = question.config as any;
+    (playerData.question as UserWaveLengthQuestion).config.emoji =
+      config.emoji ?? false;
+    (playerData.question as UserWaveLengthQuestion).config.useNumber =
+      config.useNumber ?? false;
     if (config.random) {
       const answer = random(10);
       (playerData.question as UserWaveLengthQuestion).config.showSlider = false;
@@ -254,7 +287,19 @@ export async function loadQuestion(
       foundQuestionEntity.type === QuestionType.ORDER ||
       foundQuestionEntity.type === QuestionType.HIGHER_LOWER
     ) {
-      config.shuffledOptions = _.shuffle(config.options);
+      if (!config.shuffledOptions) {
+        config.shuffledOptions = _.shuffle(config.options);
+      } else {
+        config.shuffledOptions.forEach((shuffledItem: any) => {
+          const originalItem = config.options.find(
+            (o: any) => o.text === shuffledItem.text,
+          );
+          if (originalItem) {
+            shuffledItem.show = originalItem.show;
+            shuffledItem.showText = originalItem.showText;
+          }
+        });
+      }
     } else {
       config.options = _.shuffle(config.options);
     }
@@ -288,14 +333,19 @@ export function getIsUserLocked(user: string): boolean | undefined {
   return AdminData.userLocks.get(user);
 }
 
-export function setAllHints(hint: string) {
+export function setAllHints(hint: string, showInit: boolean = false) {
   for (const key of AdminData.teams.keys()) {
-    AdminData.userHints.set(key, { isInit: true, hint });
+    AdminData.userHints.set(key, { isInit: true, showInit: showInit, hint });
   }
 }
 
-export function setUserShowHint(user: string, isInit: boolean, hint: string) {
-  AdminData.userHints.set(user, { isInit, hint });
+export function setUserShowHint(
+  user: string,
+  isInit: boolean,
+  hint: string,
+  showInit = false,
+) {
+  AdminData.userHints.set(user, { isInit, showInit, hint });
 }
 
 export function getUserShowHint(user: string): UserHint | undefined {

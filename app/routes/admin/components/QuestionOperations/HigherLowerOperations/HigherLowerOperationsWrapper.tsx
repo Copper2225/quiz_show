@@ -3,7 +3,6 @@ import { DynamicAxisAdmin } from "~/routes/admin/components/QuestionOperations/H
 import { useFetcher } from "react-router";
 import React, { useCallback } from "react";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import { TeamSetLives } from "~/routes/admin/components/QuestionOperations/HigherLowerOperations/TeamSetLives";
 import { Label } from "~/components/ui/label";
 
@@ -26,7 +25,7 @@ export const HigherLowerOperationsWrapper: React.FC<Props> = ({
   }, []);
 
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
       const formData = new FormData();
       formData.append("selector", event.currentTarget.value);
       fetcher.submit(formData, {
@@ -45,11 +44,15 @@ export const HigherLowerOperationsWrapper: React.FC<Props> = ({
         <Label className={"mb-1"} htmlFor={"selector"}>
           Wer ist dran:
         </Label>
-        <Input
-          className={"w-[50px]"}
-          defaultValue={question.config.selector}
-          onChange={handleChange}
-        />
+        <select defaultValue={question.config.selector} onChange={handleChange}>
+          {Array.from(teamAnswers.keys()).map((team, index) => {
+            return (
+              <option key={team} value={index}>
+                {team}
+              </option>
+            );
+          })}
+        </select>
       </div>
       <TeamSetLives teamAnswers={teamAnswers} />
     </div>

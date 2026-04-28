@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 import { cn } from "~/lib/utils";
 
@@ -7,6 +7,7 @@ interface Props {
   defaultValue?: number[];
   className?: string;
   disabled?: boolean;
+  onChange?: (value: number[]) => void;
 }
 
 const StepSlider: React.FC<Props> = ({
@@ -14,9 +15,26 @@ const StepSlider: React.FC<Props> = ({
   className,
   disabled,
   defaultValue,
+  onChange,
 }) => {
-  const [value, setValue] = React.useState<number[]>([0]);
+  const [value, setValue] = React.useState<number[]>(
+    Array.isArray(defaultValue) ? defaultValue : [1],
+  );
   const steps = Array.from({ length: 10 }, (_, i) => i + 1);
+
+  React.useEffect(() => {
+    if (
+      defaultValue &&
+      JSON.stringify(defaultValue) !== JSON.stringify(value)
+    ) {
+      setValue(Array.isArray(defaultValue) ? defaultValue : [defaultValue]);
+    }
+  }, [defaultValue]);
+
+  const handleChange = useCallback((value: number[]) => {
+    if (onChange) onChange(value);
+    setValue(value);
+  }, []);
 
   return (
     <div className={`min-w-full max-w-md py-10 ${className}`}>
@@ -41,7 +59,7 @@ const StepSlider: React.FC<Props> = ({
         <SliderPrimitive.Root
           className="relative flex items-center select-none touch-none w-full h-5"
           value={value}
-          onValueChange={setValue}
+          onValueChange={handleChange}
           name={name}
           defaultValue={defaultValue}
           max={10}
