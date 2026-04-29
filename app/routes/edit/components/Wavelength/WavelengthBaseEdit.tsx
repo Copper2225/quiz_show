@@ -17,8 +17,6 @@ const WavelengthBaseEdit = ({ question }: Props) => {
     question?.config?.random === true,
   );
 
-  console.log(question?.config);
-
   return (
     <div className="space-y-4">
       <div className="flex items-end gap-6">
@@ -34,16 +32,36 @@ const WavelengthBaseEdit = ({ question }: Props) => {
         </div>
 
         {useNumber && (
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="_check_config.random">Zufall</Label>
-            <Checkbox
-              id="_check_config.random"
-              name="_check_config.random"
-              defaultChecked={question?.config.random}
-              checked={useRandom}
-              onCheckedChange={(checked) => setUseRandom(!!checked)}
-            />
-          </div>
+          <>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="_check_config.random">Zufall</Label>
+              <Checkbox
+                id="_check_config.random"
+                name="_check_config.random"
+                defaultChecked={question?.config.random}
+                checked={useRandom}
+                onCheckedChange={(checked) => setUseRandom(!!checked)}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="config.lowLabel">LowLabel</Label>
+              <Input
+                name="config.lowLabel"
+                id="config.lowLabel"
+                placeholder="Low"
+                defaultValue={question?.config.lowLabel}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="config.highLabel">HighLabel</Label>
+              <Input
+                name="config.highLabel"
+                id="config.highLabel"
+                placeholder="High"
+                defaultValue={question?.config.highLabel}
+              />
+            </div>
+          </>
         )}
       </div>
 

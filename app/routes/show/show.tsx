@@ -9,7 +9,6 @@ import { QuestionType } from "~/types/question";
 import type {
   BuzzerQuestion,
   InputQuestion,
-  WavelengthQuestion,
 } from "~/types/adminTypes";
 
 export async function loader() {
@@ -57,9 +56,7 @@ export default function Show() {
       (question.type === QuestionType.BUZZER &&
         !(question as BuzzerQuestion).config.media?.mediaChecked) ||
       (question.type === QuestionType.INPUT &&
-        !(question as InputQuestion).config.media?.mediaChecked) ||
-      (question.type === QuestionType.WAVELENGTH &&
-        !(question as WavelengthQuestion).config.media?.mediaChecked);
+        !(question as InputQuestion).config.media?.mediaChecked);
 
     if (hasUncheckedMedia) {
       return data.answerRevealed;

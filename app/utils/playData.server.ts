@@ -336,7 +336,7 @@ export function getIsUserLocked(user: string): boolean | undefined {
 
 export function setAllHints(hint: string, showInit: boolean = false) {
   for (const key of AdminData.teams.keys()) {
-    AdminData.userHints.set(key, { isInit: true, showInit: showInit, hint, emojis: [] });
+    AdminData.userHints.set(key, { isInit: true, showInit: showInit, hint });
   }
 }
 
@@ -346,7 +346,7 @@ export function setUserShowHint(
   hint: string,
   showInit = false,
 ) {
-  AdminData.userHints.set(user, { isInit, showInit, hint, emojis: [] });
+  AdminData.userHints.set(user, { isInit, showInit, hint });
 }
 
 export function getUserShowHint(user: string): UserHint | undefined {

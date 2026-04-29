@@ -62,6 +62,8 @@ export type WavelengthQuestion = Question<{
   useNumber: boolean;
   random: boolean;
   emoji: boolean;
+  lowLabel?: string;
+  highLabel?: string;
   answer?: string;
   numberAnswer?: number[];
   media?: MediaConfig;

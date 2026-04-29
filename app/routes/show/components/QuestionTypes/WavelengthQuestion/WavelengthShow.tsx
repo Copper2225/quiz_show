@@ -1,6 +1,6 @@
 import { cn } from "~/lib/utils";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import React from "react";
+import React, { useMemo } from "react";
 import type { WavelengthQuestion } from "~/types/adminTypes";
 import ShowText from "~/routes/show/components/ShowText";
 
@@ -35,16 +35,14 @@ const WavelengthShow: React.FC<Props> = ({ question, show, withHeader }) => {
     </div>
   );
 
-  const numberAnswer = Array.isArray(question.config.numberAnswer)
-    ? question.config.numberAnswer
-    : [1];
+  const numberAnswer = useMemo(() => {
+    return Array.isArray(question.config.numberAnswer)
+      ? question.config.numberAnswer
+      : [question.config.numberAnswer ?? 1];
+    }, [question.config.numberAnswer])
 
   return (
     <div className={`min-w-full max-w-md px-10 content-center h-full`}>
-      <div className={"flex justify-between text-7xl"}>
-        <div>test</div>
-        <div>hai</div>
-      </div>
       <div className="relative w-full">
         <div className="flex justify-between w-full px-[20px] mb-2">
           {steps.map((step) => (
@@ -81,6 +79,10 @@ const WavelengthShow: React.FC<Props> = ({ question, show, withHeader }) => {
             />
           )}
         </SliderPrimitive.Root>
+      </div>
+      <div className={"flex justify-between text-4xl mt-8"}>
+        <div>{question.config.lowLabel}</div>
+        <div>{question.config.highLabel}</div>
       </div>
     </div>
   );

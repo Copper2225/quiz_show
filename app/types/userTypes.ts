@@ -25,5 +25,5 @@ export type UserHint = {
   isInit: boolean;
   showInit: boolean;
   hint: string;
-  emojis: string[];
+  emojis?: string[];
 };
