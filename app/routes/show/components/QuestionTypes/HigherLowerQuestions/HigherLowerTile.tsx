@@ -2,7 +2,8 @@ import React, { useLayoutEffect, useState } from "react";
 
 interface Props {
   imgSrc?: string;
-  text?: string;
+  value?: string;
+  label: string;
   showText: boolean;
   max: number;
   inAxis?: boolean;
@@ -10,7 +11,8 @@ interface Props {
 
 export const HigherLowerTile: React.FC<Props> = ({
   imgSrc,
-  text,
+  value,
+  label,
   showText,
   max,
   inAxis = false,
@@ -38,7 +40,7 @@ export const HigherLowerTile: React.FC<Props> = ({
 
   return (
     <div
-      className={`text-center items-center flex flex-col`}
+      className={`text-center items-center flex flex-col relative`}
       style={{ height: `${size}px` }}
     >
       <div
@@ -46,11 +48,14 @@ export const HigherLowerTile: React.FC<Props> = ({
         style={{ height: `${size}px`, maxHeight: `${size}px` }}
       >
         {imgSrc ? (
-          <img
-            className={"w-full h-full object-cover"}
-            src={imgSrc}
-            alt={"Bild"}
-          />
+          <>
+            <img
+              className={"w-full h-full object-cover"}
+              src={imgSrc}
+              alt={"Bild"}
+            />
+            <span style={{top: inAxis ? -20 : -30, fontFamily: "monospace", margin: "0 -1000%" }} className={`absolute left-0 right-0 ${inAxis ? "text-xs" : "text-lg"} text-nowrap`}>{label}</span>
+          </>
         ) : (
           <div
             className={
@@ -60,7 +65,7 @@ export const HigherLowerTile: React.FC<Props> = ({
               fontSize: `${textSize}px`,
             }}
           >
-            {text}
+            {label}
           </div>
         )}
       </div>
@@ -72,7 +77,7 @@ export const HigherLowerTile: React.FC<Props> = ({
             bottom: `-${bottomOffset}px`,
           }}
         >
-          {text}
+          {value}
         </span>
       )}
     </div>

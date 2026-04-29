@@ -35,7 +35,7 @@ export const DynamicAxis: React.FC<Props> = ({
   const axisLabelTop = Math.max(24, Math.min(32, (screenWidth / max) * 0.4));
 
   return (
-    <div className={`w-full py-12 px-4 font-sans`}>
+    <div className={`w-full pb-12 pt-4 px-4 font-sans`}>
       <div className="relative w-full">
         <div className="flex items-center">
           <div className="text-white text-xs font-bold uppercase mr-4 tracking-tighter shrink-0">
@@ -87,13 +87,14 @@ export const DynamicAxis: React.FC<Props> = ({
                     key={i}
                     className="relative flex justify-center w-0 overflow-visible"
                   >
-                    <div className="absolute top-0">
+                    <div className="absolute top-5">
                       <HigherLowerTile
                         showText={item.showText}
                         imgSrc={item.imgSrc}
-                        text={item.text}
+                        value={item.value}
                         max={max}
                         inAxis={true}
+                        label={item.label}
                       />
                     </div>
                   </div>

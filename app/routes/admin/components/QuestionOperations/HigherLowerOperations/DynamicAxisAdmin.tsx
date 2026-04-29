@@ -95,7 +95,8 @@ export const DynamicAxisAdmin: React.FC<Props> = ({
                       <div className="absolute top-0">
                         <HigherLowerTileAdmin
                           imgSrc={item.imgSrc}
-                          text={item.text}
+                          value={item.value}
+                          label={item.label}
                           isRevealed={item.show || item.showText}
                           max={items.length}
                         />

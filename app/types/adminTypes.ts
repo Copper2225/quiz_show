@@ -8,9 +8,10 @@ export type MediaConfig = {
 
 export type HigherLowerOption = {
   imgSrc?: string;
-  text: string;
+  value: string;
   show: boolean;
   showText: boolean;
+  label: string;
 };
 
 export type BuzzerQuestion = Question<{

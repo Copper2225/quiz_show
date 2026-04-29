@@ -109,12 +109,16 @@ export default function EditQuestion() {
               Andere Frage öffnen
             </Button>
           </DialogTrigger>
-          <DialogContent className={"sm:max-w-[90%] sm:max-h-[80%]"}>
+          <DialogContent
+            className={
+              "sm:max-w-[90%] sm:max-h-[80%] flex flex-col overflow-hidden"
+            }
+          >
             <DialogHeader>
               <DialogTitle>Frage öffnen</DialogTitle>
             </DialogHeader>
             <div
-              className="grid gap-4 w-full flex-1"
+              className="grid gap-4 w-full flex-1 overflow-auto"
               style={{
                 gridTemplateColumns: `repeat(${categories.length}, minmax(0, 1fr))`,
                 gridTemplateRows: `repeat(${activeMatrix[0]?.length + 1}, minmax(0, 1fr))`,

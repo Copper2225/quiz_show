@@ -13,14 +13,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (question && question.config && Array.isArray(question.config.options)) {
     const option = question.config.options.find(
-      (item) => item.text === requestValues.text,
+      (item) => item.value === requestValues.value,
     );
     if (option) {
       option.show = !option.show;
 
       if (Array.isArray(question.config.shuffledOptions)) {
         const shuffledOption = question.config.shuffledOptions.find(
-          (item) => item.text === requestValues.text,
+          (item) => item.value === requestValues.value,
         );
         if (shuffledOption) {
           shuffledOption.show = option.show;

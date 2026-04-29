@@ -3,14 +3,16 @@ import { useFetcher } from "react-router";
 
 interface Props {
   imgSrc?: string;
-  text: string;
+  value: string;
+  label: string;
   isRevealed?: boolean;
   max: number;
 }
 
 export const HigherLowerTileAdmin: React.FC<Props> = ({
   imgSrc,
-  text,
+  value,
+  label,
   isRevealed = false,
   max,
 }) => {
@@ -32,12 +34,12 @@ export const HigherLowerTileAdmin: React.FC<Props> = ({
 
   const revealTile = useCallback(() => {
     const formData = new FormData();
-    formData.append("text", text);
+    formData.append("value", value);
     fetcher.submit(formData, {
       method: "post",
       action: "/api/higherLower/reveal",
     });
-  }, [fetcher, text]);
+  }, [fetcher, value]);
 
   return (
     <div
@@ -52,7 +54,7 @@ export const HigherLowerTileAdmin: React.FC<Props> = ({
         {imgSrc ? (
           <img
             className={"w-full h-full object-cover"}
-            src={imgSrc}
+            src={"https://quizshow.copperdev.de" + imgSrc}
             alt={"Bild"}
           />
         ) : (
@@ -61,7 +63,7 @@ export const HigherLowerTileAdmin: React.FC<Props> = ({
               "text-center text-sm overflow-hidden overflow-ellipsis text-nowrap"
             }
           >
-            {text}
+            {label}
           </div>
         )}
       </div>
@@ -72,7 +74,7 @@ export const HigherLowerTileAdmin: React.FC<Props> = ({
           bottom: `-${bottomOffset}px`,
         }}
       >
-        {text}
+        {value}
       </span>
     </div>
   );

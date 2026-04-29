@@ -186,11 +186,11 @@ export async function setQuestion(question: Question<JsonValue>) {
       config.shuffledOptions = _.shuffle(config.options);
     } else if (
       Array.isArray(config.shuffledOptions) &&
-      Array.isArray(config.options)
+      Array.isArray(config.options) && question.type === QuestionType.HIGHER_LOWER
     ) {
       config.shuffledOptions.forEach((shuffledItem: any) => {
         const originalItem = config.options.find(
-          (o: any) => o.text === shuffledItem.text,
+          (o: any) => o.value === shuffledItem.value,
         );
         if (originalItem) {
           shuffledItem.show = originalItem.show;
@@ -213,6 +213,7 @@ export async function setQuestion(question: Question<JsonValue>) {
     Array.from(AdminData.teams.keys()).map((team) => {
       setUserAnswer(team, "♥︎♥︎♥︎", new Date());
     });
+    config.options = config.options.reverse();
     setAllPlayerReveal(true);
     (AdminData.currentQuestion as HigherLowerQuestion).config.selector = random(
       AdminData.teams.size - 1,
@@ -292,7 +293,7 @@ export async function loadQuestion(
       } else {
         config.shuffledOptions.forEach((shuffledItem: any) => {
           const originalItem = config.options.find(
-            (o: any) => o.text === shuffledItem.text,
+            (o: any) => o.value === shuffledItem.value,
           );
           if (originalItem) {
             shuffledItem.show = originalItem.show;
@@ -335,7 +336,7 @@ export function getIsUserLocked(user: string): boolean | undefined {
 
 export function setAllHints(hint: string, showInit: boolean = false) {
   for (const key of AdminData.teams.keys()) {
-    AdminData.userHints.set(key, { isInit: true, showInit: showInit, hint });
+    AdminData.userHints.set(key, { isInit: true, showInit: showInit, hint, emojis: [] });
   }
 }
 
@@ -345,7 +346,7 @@ export function setUserShowHint(
   hint: string,
   showInit = false,
 ) {
-  AdminData.userHints.set(user, { isInit, showInit, hint });
+  AdminData.userHints.set(user, { isInit, showInit, hint, emojis: [] });
 }
 
 export function getUserShowHint(user: string): UserHint | undefined {

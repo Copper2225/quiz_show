@@ -24,18 +24,20 @@ const HigherLowerBaseEdit = ({ question }: Props) => {
         id: `option-${i}-${Date.now()}`,
       })) ?? [
         {
-          text: "",
+          value: "",
           imgSrc: "",
           show: false,
           showText: false,
           id: `option-0-${Date.now()}`,
+          label: "",
         },
         {
-          text: "",
+          value: "",
           imgSrc: "",
           show: false,
           showText: false,
           id: `option-1-${Date.now()}`,
+          label: "",
         },
       ]
     );
@@ -51,11 +53,12 @@ const HigherLowerBaseEdit = ({ question }: Props) => {
     setElements((prev) => [
       ...prev,
       {
-        text: "",
+        value: "",
         imgSrc: "",
         show: false,
         showText: false,
         id: `option-${prev.length}-${Date.now()}`,
+        label: "",
       },
     ]);
   }, []);
@@ -101,8 +104,9 @@ const HigherLowerBaseEdit = ({ question }: Props) => {
                     index={index}
                     deleteRow={() => deleteRow(element.id)}
                     defaultFile={element.imgSrc ?? ""}
-                    defaultValue={element.text ?? ""}
+                    defaultValue={element.value ?? ""}
                     defaultShowText={element.showText ?? false}
+                    defaultLabel={element.label ?? ""}
                   />
                 </div>
               </div>

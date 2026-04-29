@@ -43,13 +43,14 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
           highLabel={question.config.highLabel}
         />
       </div>
-      <div className={"flex gap-5 mt-4 justify-center flex-wrap"}>
+      <div className={"flex gap-10 mt-4 justify-center flex-wrap"}>
         {leftItems.map((item, index) => (
           <HigherLowerTile
             key={index}
             showText={false}
             imgSrc={item.imgSrc}
-            text={item.text}
+            value={item.value}
+            label={item.label}
             max={question.config.options.length}
             inAxis={false}
           />
