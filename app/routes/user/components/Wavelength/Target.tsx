@@ -26,7 +26,7 @@ const Target = ({ show = true, target, emoji }: Props): ReactElement => {
         "h-full w-full box-border p-3 flex flex-col items-stretch justify-center"
       }
     >
-      <Label className={"flex-2 self-center text-9xl"}>{target}</Label>
+      <Label className={"flex-2 self-center text-4xl"}>{target}</Label>
       {emoji ? (
         <EmojiInput />
       ) : (
