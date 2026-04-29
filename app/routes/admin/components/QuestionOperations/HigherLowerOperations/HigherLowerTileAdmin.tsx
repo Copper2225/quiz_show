@@ -54,7 +54,7 @@ export const HigherLowerTileAdmin: React.FC<Props> = ({
         {imgSrc ? (
           <img
             className={"w-full h-full object-cover"}
-            src={"https://quizshow.copperdev.de" + imgSrc}
+            src={imgSrc}
             alt={"Bild"}
           />
         ) : (
