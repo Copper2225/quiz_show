@@ -9,6 +9,7 @@ import type {
 import HigherLowerLine from "~/routes/edit/components/HigherLower/HigherLowerLine";
 import { Input } from "~/components/ui/input";
 import { Reorder, ReorderItem } from "@yamada-ui/reorder";
+import { Checkbox } from "~/components/ui/checkbox";
 
 interface Props {
   question?: HigherLowerQuestion;
@@ -42,6 +43,10 @@ const HigherLowerBaseEdit = ({ question }: Props) => {
       ]
     );
   }, [question]);
+
+  const [forceSquare, setForceSquare] = useState<boolean>(
+    question?.config?.forceSquare === true,
+  );
 
   const [elements, setElements] = useState<DraggableOption[]>(initialOptions);
 
@@ -87,6 +92,16 @@ const HigherLowerBaseEdit = ({ question }: Props) => {
           name={"config.highLabel"}
           id={"config.highLabel"}
           defaultValue={question?.config?.highLabel}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="_check_config.forceSquare">Quadrat</Label>
+        <Checkbox
+          id="_check_config.forceSquare"
+          name="_check_config.forceSquare"
+          defaultChecked={question?.config.forceSquare}
+          checked={forceSquare}
+          onCheckedChange={(checked) => setForceSquare(!!checked)}
         />
       </div>
       <div>

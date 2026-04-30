@@ -43,6 +43,7 @@ export type HigherLowerQuestion = Question<{
   lowLabel: string;
   highLabel: string;
   selector: number;
+  forceSquare: boolean;
 }>;
 
 export type PinData = {

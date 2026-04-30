@@ -7,6 +7,7 @@ interface Props {
   highLabel?: string;
   max: number;
   items: HigherLowerOption[];
+  forceSquare: boolean;
 }
 
 export const DynamicAxis: React.FC<Props> = ({
@@ -14,6 +15,7 @@ export const DynamicAxis: React.FC<Props> = ({
   lowLabel = "low",
   highLabel = "high",
   items,
+  forceSquare,
 }) => {
   const [screenWidth, setScreenWidth] = useState<number | null>(null);
 
@@ -92,6 +94,7 @@ export const DynamicAxis: React.FC<Props> = ({
                         showText={item.showText}
                         imgSrc={item.imgSrc}
                         value={item.value}
+                        forceSquare={forceSquare}
                         max={max}
                         inAxis={true}
                         label={item.label}

@@ -5,6 +5,7 @@ interface Props {
   value?: string;
   label: string;
   showText: boolean;
+  forceSquare: boolean
   max: number;
   inAxis?: boolean;
 }
@@ -14,6 +15,7 @@ export const HigherLowerTile: React.FC<Props> = ({
   value,
   label,
   showText,
+  forceSquare,
   max,
   inAxis = false,
 }) => {
@@ -44,7 +46,7 @@ export const HigherLowerTile: React.FC<Props> = ({
       style={{ height: `${size}px` }}
     >
       <div
-        className={`border-2 flex-1 border-white aspect-square content-center overflow-x-hidden text-center`}
+        className={`border-2 flex-1 border-white ${forceSquare && "aspect-square"} content-center overflow-x-hidden text-center`}
         style={{ height: `${size}px`, maxHeight: `${size}px` }}
       >
         {imgSrc ? (
