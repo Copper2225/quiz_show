@@ -47,6 +47,9 @@ const HigherLowerBaseEdit = ({ question }: Props) => {
   const [forceSquare, setForceSquare] = useState<boolean>(
     question?.config?.forceSquare === true,
   );
+  const [revealSolution, setRevealSolution] = useState<boolean>(
+    question?.config?.revealSolution === true,
+  );
 
   const [elements, setElements] = useState<DraggableOption[]>(initialOptions);
 
@@ -92,6 +95,16 @@ const HigherLowerBaseEdit = ({ question }: Props) => {
           name={"config.highLabel"}
           id={"config.highLabel"}
           defaultValue={question?.config?.highLabel}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="_check_config.revealSolution">Reveal answers</Label>
+        <Checkbox
+          id="_check_config.revealSolution"
+          name="_check_config.revealSolution"
+          defaultChecked={question?.config.revealSolution}
+          checked={revealSolution}
+          onCheckedChange={(checked) => setRevealSolution(!!checked)}
         />
       </div>
       <div className="flex flex-col gap-2">

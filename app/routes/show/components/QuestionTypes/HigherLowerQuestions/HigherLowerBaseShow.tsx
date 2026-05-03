@@ -42,6 +42,7 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
           lowLabel={question.config.lowLabel}
           highLabel={question.config.highLabel}
           forceSquare={question.config.forceSquare}
+          forceReveal={question.config.revealSolution}
         />
       </div>
       <div className={"flex gap-10 mt-4 justify-center flex-wrap"}>
