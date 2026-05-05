@@ -117,7 +117,7 @@ const StadtLandFluss: React.FC = () => {
                     <li
                       key={element}
                       className={
-                        "bg-indigo-800 w-20 text-center outline-offset-[-5px] px-5 outline-2 outline-white text-5xl rounded-2xl py-3 text-primary-foreground shadow-xs hover:bg-indigo-800/90"
+                        "bg-indigo-800 w-20 text-center outline-offset-[-8px] px-5 outline-3 outline-white text-5xl rounded-2xl py-3 text-primary-foreground shadow-xs hover:bg-indigo-800/90"
                       }
                     >
                       {showLetters ? element : "?"}
