@@ -91,7 +91,7 @@ export const DynamicAxis: React.FC<Props> = ({
                     key={i}
                     className="relative flex justify-center w-0 overflow-visible"
                   >
-                    <div className="absolute top-5">
+                    <div className="absolute top-5 w-max">
                       <HigherLowerTile
                         showText={item.showText || forceReveal}
                         imgSrc={item.imgSrc}
