@@ -20,7 +20,8 @@ export default [
   route("show/preview/:c/:q", "routes/show/show.preview.tsx"),
   route("show", "routes/show/show.tsx"),
   ...prefix("/tools", [
-    route("slf", "routes/tool/stadtLandFluss.tsx")
+    route("slf", "routes/tool/stadtLandFluss.tsx"),
+    route("light", "routes/tool/light/light.tsx")
   ]),
   ...prefix("/api", [
     route("teams", "routes/api/teams.ts"),
