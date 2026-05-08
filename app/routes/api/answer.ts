@@ -24,8 +24,8 @@ export async function action({ request }: Route.ActionArgs) {
     const teamId = teamIndex + 1;
     commands.push(
       AdminData.showCurrentSelector && AdminData.currentSelector !== -1
-        ? `input-t${teamId}`
-        : "input-no-selector",
+        ? `input-t${teamId};255`
+        : "input-no-selector;255",
     );
   }
 

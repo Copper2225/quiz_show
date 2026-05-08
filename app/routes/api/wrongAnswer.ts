@@ -33,8 +33,8 @@ export async function action() {
       }
     }
     const teamId = question.config.selector + 1;
-    command.push(`wrong-t${teamId}`);
-    command.push(`active-t${nextSelector + 1 }`);
+    command.push(`wrong-t${teamId};255`);
+    command.push(`active-t${nextSelector + 1 };255`);
     question.config.selector = nextSelector;
     sendToAdmin("answer", {
       date: new Date(),

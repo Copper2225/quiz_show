@@ -28,13 +28,13 @@ export async function action({ request }: Route.ActionArgs) {
       (JSON.parse(requestValues.teams) as string[]).forEach((teamName) => {
         const teamIndex = teamNames.indexOf(teamName);
         if (teamIndex !== -1) {
-          commands.push(`correct-t${teamIndex + 1}`);
+          commands.push(`correct-t${teamIndex + 1};255`);
         }
       });
     } else if (requestValues.name) {
       const teamIndex = teamNames.indexOf(requestValues.name);
       if (teamIndex !== -1) {
-        commands.push(`correct-t${teamIndex + 1}`);
+        commands.push(`correct-t${teamIndex + 1};255`);
       }
     }
   }

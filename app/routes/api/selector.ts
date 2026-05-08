@@ -21,8 +21,8 @@ export async function action({ request }: Route.ActionArgs) {
   const teamId = AdminData.currentSelector + 1;
   const command =
     AdminData.showCurrentSelector && AdminData.currentSelector !== -1
-      ? `active-t${teamId}`
-      : "active-off";
+      ? `active-t${teamId};255`
+      : "active-off;255";
 
   sendToAdmin("selector", {
     date: new Date().toString(),
