@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Power, PowerOff } from "lucide-react";
 import { Button } from "~/components/ui/button";
@@ -13,10 +13,11 @@ import {
 
 interface QLCConnectionProps {
   onWidgetsUpdate?: (widgets: { value: string; label: string }[]) => void;
+  hidden?: boolean;
 }
 
-export function QLCConnection({ onWidgetsUpdate }: QLCConnectionProps) {
-  const [qlcHost, setQlcHost] = useState("localhost:9999");
+export function QLCConnection({ onWidgetsUpdate, hidden }: QLCConnectionProps) {
+  const [qlcHost, setQlcHost] = useState("127.0.0.1:9999");
   const [qlcConnected, setQlcConnected] = useState(false);
 
   useEffect(() => {
@@ -63,9 +64,9 @@ export function QLCConnection({ onWidgetsUpdate }: QLCConnectionProps) {
   };
 
   return (
-    <div className={"flex gap-2 items-center border p-1 rounded-md"}>
+    <div className={`flex gap-2 items-center border p-1 rounded-md ${hidden ? "opacity-0 bg-(--background) absolute w-fit mx-auto left-0 right-0 top-10 hover:opacity-100" : ""}`}>
       <Input
-        placeholder={"localhost:9999"}
+        placeholder={"127.0.0.1:9999"}
         value={qlcHost}
         onChange={(e) => setQlcHost(e.target.value)}
         className={"w-40"}

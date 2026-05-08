@@ -58,9 +58,12 @@ const WaveLength = ({
       }
     >
       <h1 className={"text-6xl text-center mb-6"}>
-        {isEmoji && Array.isArray(hint?.emojis) ? hint?.emojis.map(e => {
-          return <img key={e} src={e} alt={e} />
-        }) : hint?.hint}</h1>
+        {isEmoji && Array.isArray(hint?.emojis)
+          ? hint?.emojis.map((e) => {
+              return <img key={e} src={e} alt={e} />;
+            })
+          : hint?.hint}
+      </h1>
       {useNumber ? (
         <StepSlider
           className={"h-full self-center w-full"}

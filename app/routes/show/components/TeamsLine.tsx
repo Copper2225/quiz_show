@@ -1,8 +1,6 @@
 import TeamTile from "~/routes/show/components/TeamTile";
 import { useEffect, useMemo, useRef } from "react";
-import { useEventSource } from "remix-utils/sse/react";
 import { type Question, QuestionType } from "~/types/question";
-import { useRevalidator } from "react-router";
 import { userColors } from "~/routes/show/userColors";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import type { HigherLowerQuestion } from "~/types/adminTypes";
@@ -28,49 +26,7 @@ const TeamsLine = ({
   showSelector,
   currentSelector,
 }: Props) => {
-  const pointsEvent = useEventSource("/sse/events", {
-    event: "pointsUpdate",
-  });
-  const lockEvent = useEventSource("/sse/events", {
-    event: "lockAnswers",
-  });
-  const answerUserEvent = useEventSource("/sse/events/admin", {
-    event: "answer",
-  });
-  const selectorEvent = useEventSource("/sse/events/admin", {
-    event: "selector",
-  });
-  const clearEvent = useEventSource("/sse/events", { event: "clearAnswers" });
-  const answerTypeEvent = useEventSource("/sse/events", {
-    event: "answerType",
-  });
-  const userRevealEvent = useEventSource("/sse/events", {
-    event: "revealUser",
-  });
-  const revalidate = useRevalidator();
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    if (
-      answerUserEvent ||
-      clearEvent ||
-      answerTypeEvent ||
-      pointsEvent ||
-      userRevealEvent ||
-      lockEvent ||
-      selectorEvent
-    ) {
-      revalidate.revalidate();
-    }
-  }, [
-    answerUserEvent,
-    clearEvent,
-    answerTypeEvent,
-    pointsEvent,
-    userRevealEvent,
-    lockEvent,
-    selectorEvent,
-  ]);
 
   const firstBuzzerTeam = useMemo(() => {
     if (!(question?.type === QuestionType.BUZZER)) return undefined;
@@ -113,7 +69,7 @@ const TeamsLine = ({
           highlighted={
             (question?.type === QuestionType.BUZZER &&
               firstBuzzerTeam === name) ||
-            (showSelector && currentSelector === index && question === null) ||
+            (!question && showSelector && currentSelector === index) ||
             (question?.type === QuestionType.HIGHER_LOWER &&
               (question as HigherLowerQuestion).config.selector === index)
           }

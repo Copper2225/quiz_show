@@ -20,5 +20,24 @@ export async function action({ request }: Route.ActionArgs) {
   } else {
     setTeamPoints(requestValues.name, Number(requestValues.points));
   }
-  broadcast("pointsUpdate", requestValues);
+
+  const commands: string[] = [];
+  if (Number(requestValues.points) > 0) {
+    const teamNames = Array.from(AdminData.teams.keys());
+    if (requestValues.teams) {
+      (JSON.parse(requestValues.teams) as string[]).forEach((teamName) => {
+        const teamIndex = teamNames.indexOf(teamName);
+        if (teamIndex !== -1) {
+          commands.push(`correct-t${teamIndex + 1}`);
+        }
+      });
+    } else if (requestValues.name) {
+      const teamIndex = teamNames.indexOf(requestValues.name);
+      if (teamIndex !== -1) {
+        commands.push(`correct-t${teamIndex + 1}`);
+      }
+    }
+  }
+
+  broadcast("pointsUpdate", { ...requestValues, command: commands });
 }

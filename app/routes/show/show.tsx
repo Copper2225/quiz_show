@@ -6,13 +6,15 @@ import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useMemo, useState } from "react";
 import BaseQuestionShow from "~/routes/show/components/QuestionTypes/BaseQuestionShow";
 import { QuestionType } from "~/types/question";
-import type {
-  BuzzerQuestion,
-  InputQuestion,
-} from "~/types/adminTypes";
+import type { BuzzerQuestion, InputQuestion } from "~/types/adminTypes";
+import { QLCConnection } from "~/components/QLCConnection";
+import { useQLCCommands } from "~/utils/useQLCCommands";
 
 export async function loader() {
-  return ShowData;
+  return {
+    ...ShowData,
+    qlcConfigs: Object.fromEntries(ShowData.qlcConfigs),
+  };
 }
 
 export default function Show() {
@@ -28,22 +30,52 @@ export default function Show() {
   const revalidate = useRevalidator();
 
   const wrongEvent = useEventSource("/sse/events", { event: "wrongAnswer" });
+  const pointsEvent = useEventSource("/sse/events", {
+    event: "pointsUpdate",
+  });
+  const selectorEvent = useEventSource("/sse/events/admin", {
+    event: "selector",
+  });
+  const answerUserEvent = useEventSource("/sse/events/admin", {
+    event: "answer",
+  });
+  const clearEvent = useEventSource("/sse/events", { event: "clearAnswers" });
+  const lockEvent = useEventSource("/sse/events", {
+    event: "lockAnswers",
+  });
+  const userRevealEvent = useEventSource("/sse/events", {
+    event: "revealUser",
+  });
+  
+  const revealEvent = useEventSource("/sse/events", { event: "reveal" });
+  
+  useQLCCommands(data.qlcConfigs as any, [
+    wrongEvent,
+    pointsEvent,
+    selectorEvent,
+    answerUserEvent,
+    clearEvent,
+    lockEvent,
+    questionEvent,
+    disableEvent,
+    userRevealEvent,
+    revealEvent,
+  ]);
 
   useEffect(() => {
-    if (wrongEvent) {
-      setShowWrong(true);
-
-      // Remove it after 1.5 seconds
-      const timer = setTimeout(() => setShowWrong(false), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [wrongEvent]);
-
-  useEffect(() => {
-    if (questionEvent || disableEvent) {
-      revalidate.revalidate();
-    }
-  }, [questionEvent, disableEvent]);
+    revalidate.revalidate();
+  }, [
+    wrongEvent,
+    pointsEvent,
+    selectorEvent,
+    answerUserEvent,
+    clearEvent,
+    lockEvent,
+    questionEvent,
+    disableEvent,
+    userRevealEvent,
+    revealEvent,
+  ]);
 
   const question = data.currentQuestion;
 
@@ -68,6 +100,7 @@ export default function Show() {
 
   return (
     <>
+      <QLCConnection hidden={true} />
       <div
         className={`
           pointer-events-none fixed inset-0 z-50

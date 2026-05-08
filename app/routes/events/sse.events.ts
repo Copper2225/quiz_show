@@ -38,7 +38,10 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   if (userName) {
     addTeam(userName);
-    broadcast("pointsUpdate", AdminData.teams);
+    broadcast("pointsUpdate", {
+      points: 0,
+      teams: JSON.stringify(Array.from(AdminData.teams.keys())),
+    });
   }
 
   return eventStream(request.signal, function setup(send) {

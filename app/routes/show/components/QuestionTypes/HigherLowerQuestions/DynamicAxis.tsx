@@ -8,7 +8,7 @@ interface Props {
   max: number;
   items: HigherLowerOption[];
   forceSquare: boolean;
-  forceReveal: boolean
+  forceReveal: boolean;
 }
 
 export const DynamicAxis: React.FC<Props> = ({

@@ -13,33 +13,34 @@ interface Props {
 const WavelengthShow: React.FC<Props> = ({ question, show, withHeader }) => {
   const steps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-  if (!question.config.useNumber) return (
-    <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>
-      {question.config?.media?.mediaChecked && (
-        <div
-          className={`${show ? "min-w-3/5" : "w-full"} content-center h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12`}
-        >
-          <img
-            className={`h-full justify-self-center object-contain`}
-            src={question.config?.media?.mediaFile}
-            alt={"Media"}
-          />
-        </div>
-      )}
-      {!withHeader && !show && <ShowText>{question.prompt}</ShowText>}
-      {show && (
-        <ShowText textColor={"var(--color-emerald-500)"}>
-          {question.config.answer}
-        </ShowText>
-      )}
-    </div>
-  );
+  if (!question.config.useNumber)
+    return (
+      <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>
+        {question.config?.media?.mediaChecked && (
+          <div
+            className={`${show ? "min-w-3/5" : "w-full"} content-center h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12`}
+          >
+            <img
+              className={`h-full justify-self-center object-contain`}
+              src={question.config?.media?.mediaFile}
+              alt={"Media"}
+            />
+          </div>
+        )}
+        {!withHeader && !show && <ShowText>{question.prompt}</ShowText>}
+        {show && (
+          <ShowText textColor={"var(--color-emerald-500)"}>
+            {question.config.answer}
+          </ShowText>
+        )}
+      </div>
+    );
 
   const numberAnswer = useMemo(() => {
     return Array.isArray(question.config.numberAnswer)
       ? question.config.numberAnswer
       : [question.config.numberAnswer ?? 1];
-    }, [question.config.numberAnswer])
+  }, [question.config.numberAnswer]);
 
   return (
     <div className={`min-w-full max-w-md px-10 content-center h-full`}>

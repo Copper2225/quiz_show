@@ -74,17 +74,26 @@ const Select = ({
         </PopoverTrigger>
         <PopoverContent
           className={className}
-          style={{ width: "clamp(1000px, 100px, 2000px)" }}
+          style={{ width: "min(400px, 90vw)" }}
           align={align}
         >
           <Command
             className={className}
-            style={{ width: "clamp(1000px, 100px, 2000px)" }}
+            style={{ width: "min(400px, 90vw)" }}
           >
             <CommandInput placeholder="Search ..." className="h-9" />
             <CommandList>
               <CommandEmpty>No {label} found.</CommandEmpty>
               <CommandGroup>
+                <CommandItem
+                  value=""
+                  onSelect={() => {
+                    change("");
+                    setOpen(false);
+                  }}
+                >
+                  (Leer)
+                </CommandItem>
                 {options.map((option) => (
                   <CommandItem
                     key={option.value}

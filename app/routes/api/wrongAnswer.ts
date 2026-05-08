@@ -9,6 +9,7 @@ import type { HigherLowerQuestion } from "~/types/adminTypes";
 import { sendToAdmin } from "~/routes/events/sse.events.admin";
 
 export async function action() {
+  const command = [];
   if (AdminData.currentQuestion?.type === QuestionType.HIGHER_LOWER) {
     const question = AdminData.currentQuestion as HigherLowerQuestion;
     const teamKeys = Array.from(AdminData.teams.keys());
@@ -31,8 +32,17 @@ export async function action() {
         break;
       }
     }
+    const teamId = question.config.selector + 1;
+    command.push(`wrong-t${teamId}`);
+    command.push(`active-t${nextSelector + 1 }`);
     question.config.selector = nextSelector;
-    sendToAdmin("answer", new Date());
+    sendToAdmin("answer", {
+      date: new Date(),
+    });
   }
-  broadcast("wrongAnswer", new Date());
+  
+  broadcast("wrongAnswer", {
+    date: new Date(),
+    command,
+  });
 }

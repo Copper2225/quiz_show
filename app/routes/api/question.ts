@@ -12,6 +12,7 @@ import dot from "dot-object";
 import { prisma } from "~/utils/db.server";
 import { broadcast } from "../events/sse.events";
 import { redirect } from "react-router";
+import type { Question } from "~/types/question";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -39,7 +40,15 @@ export async function action({ request }: Route.ActionArgs) {
       setAllLocked(false);
     }
 
-    broadcast("answerType", { quest });
+    const teamId = AdminData.currentSelector + 1;
+    const command = quest !== null || (quest as any)?.type == "HIGHER_LOWER" ? ["input-no-selector"] : [`active-t${teamId}`];
+
+    broadcast("answerType", {
+      quest,
+      selector: AdminData.currentSelector,
+      showSelector: AdminData.showCurrentSelector,
+      command,
+    });
 
     return { quest };
   } else if (requestValues.mode === "switch") {

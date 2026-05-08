@@ -9,17 +9,6 @@ import {
 import PointsSection from "~/routes/admin/components/PointsSection";
 import Answers from "~/routes/admin/components/Answers";
 import ShowCurrent from "~/routes/admin/components/ShowCurrent";
-import { Button } from "~/components/ui/button";
-import { Power, PowerOff, Zap } from "lucide-react";
-import { toast } from "sonner";
-import { useCallback, useEffect, useState } from "react";
-import { Input } from "~/components/ui/input";
-import Select from "~/components/Select";
-import { QLCConnection } from "~/components/QLCConnection";
-import {
-  isConnected,
-  vcWidgetSetValue,
-} from "~/utils/qlc.client";
 
 export async function loader() {
   const config = getConfig();
@@ -36,43 +25,6 @@ export async function loader() {
 
 export default function Admin() {
   const data = useLoaderData<typeof loader>();
-  const [isTriggering, setIsTriggering] = useState(false);
-  const [qlcWidgetId, setQlcWidgetId] = useState("122");
-  const [qlcValue, setQlcValue] = useState("255");
-  const [qlcConnected, setQlcConnected] = useState(false);
-  const [widgets, setWidgets] = useState<{ value: string; label: string }[]>(
-    [],
-  );
-
-  useEffect(() => {
-    setQlcConnected(isConnected());
-  }, []);
-
-  const handleWidgetsUpdate = useCallback((newWidgets: { value: string; label: string }[]) => {
-    setWidgets(newWidgets);
-    if (newWidgets.length > 0 && !newWidgets.find(w => w.value === qlcWidgetId)) {
-      setQlcWidgetId(newWidgets[0].value);
-    }
-  }, [qlcWidgetId]);
-
-  const triggerQLC = useCallback(async () => {
-    if (!isConnected()) {
-      toast.error("Not connected to QLC+");
-      setQlcConnected(false);
-      return;
-    }
-    setIsTriggering(true);
-    try {
-      vcWidgetSetValue(qlcWidgetId, qlcValue);
-      toast.success("QLC Triggered");
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to trigger QLC",
-      );
-    } finally {
-      setIsTriggering(false);
-    }
-  }, [qlcWidgetId, qlcValue]);
 
   return (
     <main className={"h-dvh w-dvw box-border p-4"}>
@@ -83,7 +35,6 @@ export default function Admin() {
             <h1 className={"text-xl font-semibold"}>
               Admin - <Link to={"/show"}>Zur Show springen</Link>
             </h1>
-            <QLCConnection onWidgetsUpdate={handleWidgetsUpdate} />
           </div>
           <ShowCurrent
             teamNames={Array.from(data.teams.keys())}

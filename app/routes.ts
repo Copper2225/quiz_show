@@ -21,7 +21,7 @@ export default [
   route("show", "routes/show/show.tsx"),
   ...prefix("/tools", [
     route("slf", "routes/tool/stadtLandFluss.tsx"),
-    route("light", "routes/tool/light/light.tsx")
+    route("light", "routes/tool/light/light.tsx"),
   ]),
   ...prefix("/api", [
     route("teams", "routes/api/teams.ts"),
@@ -36,6 +36,7 @@ export default [
     route("delete", "routes/api/delete.ts"),
     route("selector", "routes/api/selector.ts"),
     route("wrongAnswer", "routes/api/wrongAnswer.ts"),
+    route("qlcConfig", "routes/api/qlcConfig.ts"),
     ...prefix("/higherLower", [
       route("reveal", "routes/api/higherLower/reveal.ts"),
       route("selector", "routes/api/higherLower/selector.ts"),

@@ -34,6 +34,7 @@ interface AdminDataShape {
   questionRevealTime: Date | null;
   currentSelector: number;
   showCurrentSelector: boolean;
+  qlcConfigs: Map<string, string>;
 }
 
 interface SpecificUserData {
@@ -62,6 +63,7 @@ export const AdminData: AdminDataShape = {
   questionRevealTime: null,
   currentSelector: -1,
   showCurrentSelector: false,
+  qlcConfigs: new Map<string, string>(),
 };
 
 export const ShowData = {
@@ -100,6 +102,9 @@ export const ShowData = {
   },
   get questionGrid() {
     return AdminData.questionGrid;
+  },
+  get qlcConfigs() {
+    return AdminData.qlcConfigs;
   },
 };
 
@@ -186,7 +191,8 @@ export async function setQuestion(question: Question<JsonValue>) {
       config.shuffledOptions = _.shuffle(config.options);
     } else if (
       Array.isArray(config.shuffledOptions) &&
-      Array.isArray(config.options) && question.type === QuestionType.HIGHER_LOWER
+      Array.isArray(config.options) &&
+      question.type === QuestionType.HIGHER_LOWER
     ) {
       config.shuffledOptions.forEach((shuffledItem: any) => {
         const originalItem = config.options.find(
@@ -316,7 +322,11 @@ export function clearQuestion() {
   AdminData.currentQuestion = null;
   playerData.question = null;
   setAnswerRevealed(false);
-  broadcast("reveal", { revealed: "false" });
+  broadcast("reveal", {
+    revealed: "false",
+    selector: AdminData.currentSelector,
+    showSelector: AdminData.showCurrentSelector,
+  });
   return AdminData.currentQuestion;
 }
 
@@ -399,3 +409,11 @@ export function setAllPlayerReveal(reveal: boolean) {
     AdminData.playerReveal.set(key, reveal);
   }
 }
+
+export async function initQLCConfigs() {
+  const configs = await prisma.qLCConfig.findMany();
+  AdminData.qlcConfigs.clear();
+  configs.forEach((c) => AdminData.qlcConfigs.set(c.key, c.widgetId));
+}
+
+void initQLCConfigs();

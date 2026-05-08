@@ -10,7 +10,11 @@ import {
 import { Textarea } from "~/components/ui/textarea";
 import { Label } from "@radix-ui/react-menu";
 import { createCookie } from "@remix-run/node";
-import { json, type LoaderFunctionArgs, type ActionFunctionArgs } from "@remix-run/node";
+import {
+  json,
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
+} from "@remix-run/node";
 import { useFetcher, useLoaderData } from "react-router";
 import _ from "lodash";
 import { Input } from "~/components/ui/input";
@@ -62,13 +66,16 @@ export async function action({ request }: ActionFunctionArgs) {
       headers: {
         "Set-Cookie": await slfCookie.serialize(cookieValue),
       },
-    }
+    },
   );
 }
 
 const StadtLandFluss: React.FC = () => {
-  const { categories: initialCategories, letters: initialLetters, letterCount: initialLetterCount } =
-    useLoaderData<typeof loader>();
+  const {
+    categories: initialCategories,
+    letters: initialLetters,
+    letterCount: initialLetterCount,
+  } = useLoaderData<typeof loader>();
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<string[]>(initialCategories);
   const [letters, setLetters] = useState<string[]>(initialLetters);
@@ -199,7 +206,7 @@ const StadtLandFluss: React.FC = () => {
                   min={1}
                   max={10}
                   onChange={(event) => {
-                    const newLetters = event.currentTarget.value
+                    const newLetters = event.currentTarget.value;
                     setLetterCount(Number.parseInt(newLetters));
                     fetcher.submit(
                       {

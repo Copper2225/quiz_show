@@ -2,6 +2,7 @@ import type { Route } from "./+types/selector";
 import { AdminData } from "~/utils/playData.server";
 import dot from "dot-object";
 import { sendToAdmin } from "~/routes/events/sse.events.admin";
+import { broadcast } from "~/routes/events/sse.events";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -16,5 +17,22 @@ export async function action({ request }: Route.ActionArgs) {
       AdminData.currentSelector = Number(requestValues.team);
       break;
   }
-  sendToAdmin("selector", new Date().toString());
+
+  const teamId = AdminData.currentSelector + 1;
+  const command =
+    AdminData.showCurrentSelector && AdminData.currentSelector !== -1
+      ? `active-t${teamId}`
+      : "active-off";
+
+  sendToAdmin("selector", {
+    date: new Date().toString(),
+    selector: AdminData.currentSelector,
+    command: [command],
+  });
+
+  broadcast("selector", {
+    date: new Date().toString(),
+    selector: AdminData.currentSelector,
+    showSelector: AdminData.showCurrentSelector,
+  });
 }

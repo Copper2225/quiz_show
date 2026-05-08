@@ -45,7 +45,9 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
           forceReveal={question.config.revealSolution}
         />
       </div>
-      <div className={"flex gap-y-10 gap-x-12 px-6 mt-4 justify-center flex-wrap"}>
+      <div
+        className={"flex gap-y-10 gap-x-12 px-6 mt-4 justify-center flex-wrap"}
+      >
         {leftItems.map((item, index) => (
           <HigherLowerTile
             key={index}

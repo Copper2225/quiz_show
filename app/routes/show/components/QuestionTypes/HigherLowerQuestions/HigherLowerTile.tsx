@@ -5,7 +5,7 @@ interface Props {
   value?: string;
   label: string;
   showText: boolean;
-  forceSquare: boolean
+  forceSquare: boolean;
   max: number;
   inAxis?: boolean;
 }
@@ -56,7 +56,16 @@ export const HigherLowerTile: React.FC<Props> = ({
               src={imgSrc}
               alt={"Bild"}
             />
-            <span style={{top: inAxis ? -20 : -30, fontFamily: "monospace", margin: "0 -1000%" }} className={`absolute left-0 right-0 ${inAxis ? "text-xs" : "text-lg"} text-nowrap`}>{label}</span>
+            <span
+              style={{
+                top: inAxis ? -20 : -30,
+                fontFamily: "monospace",
+                margin: "0 -1000%",
+              }}
+              className={`absolute left-0 right-0 ${inAxis ? "text-xs" : "text-lg"} text-nowrap`}
+            >
+              {label}
+            </span>
           </>
         ) : (
           <div

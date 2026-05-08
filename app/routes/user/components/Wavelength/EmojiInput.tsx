@@ -31,7 +31,7 @@ export const EmojiInput = () => {
   };
 
   const formatEmojis = useMemo(() => {
-    return emojis.map(e => e.emoji).join("")
+    return emojis.map((e) => e.emoji).join("");
   }, [emojis]);
 
   const formatValue = useMemo(() => {
@@ -70,7 +70,12 @@ export const EmojiInput = () => {
         ))}
       </div>
       <input name={"hint"} className={"hidden"} readOnly value={formatEmojis} />
-      <input name={"emojis"} className={"hidden"} readOnly value={formatValue} />
+      <input
+        name={"emojis"}
+        className={"hidden"}
+        readOnly
+        value={formatValue}
+      />
       <EmojiPicker
         width={"100%"}
         className={"mb-2"}

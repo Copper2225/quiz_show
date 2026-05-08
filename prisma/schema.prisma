@@ -29,3 +29,9 @@ model QuestionEntity {
 
   @@unique([categoryColumn, row])
 }
+
+model QLCConfig {
+  id       Int    @id @default(autoincrement())
+  key      String @unique
+  widgetId String
+}
