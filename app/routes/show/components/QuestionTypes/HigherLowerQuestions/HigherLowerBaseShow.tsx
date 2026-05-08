@@ -22,6 +22,17 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
     [question.config.shuffledOptions],
   );
 
+  const { upperRow, lowerRow } = useMemo(() => {
+    if (leftItems.length >= 6) {
+      const splitIndex = Math.ceil(leftItems.length / 2);
+      return {
+        upperRow: leftItems.slice(0, splitIndex),
+        lowerRow: leftItems.slice(splitIndex),
+      };
+    }
+    return { upperRow: leftItems, lowerRow: [] };
+  }, [leftItems]);
+
   const revalidator = useRevalidator();
   const updateEvent = useEventSource("/sse/events", { event: "reveal" });
 
@@ -31,10 +42,8 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
     }
   }, [updateEvent]);
 
-  console.log(question);
-
   return (
-    <div className="flex flex-col items-center justify-around h-full w-full">
+    <div className="flex flex-col items-center justify-between h-full w-full py-5">
       <div className="w-full">
         <DynamicAxis
           max={question.config.options.length}
@@ -45,21 +54,37 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
           forceReveal={question.config.revealSolution}
         />
       </div>
-      <div
-        className={"flex gap-y-10 gap-x-12 px-6 mt-4 justify-center flex-wrap"}
-      >
-        {leftItems.map((item, index) => (
-          <HigherLowerTile
-            key={index}
-            showText={false}
-            imgSrc={item.imgSrc}
-            value={item.value}
-            forceSquare={question.config.forceSquare}
-            label={item.label}
-            max={question.config.options.length}
-            inAxis={false}
-          />
-        ))}
+      <div className="flex flex-col gap-y-15 px-12 mt-4 w-full">
+        <div className="flex gap-x-12 justify-around flex-wrap">
+          {upperRow.map((item, index) => (
+            <HigherLowerTile
+              key={index}
+              showText={false}
+              imgSrc={item.imgSrc}
+              value={item.value}
+              forceSquare={question.config.forceSquare}
+              label={item.label}
+              max={question.config.options.length}
+              inAxis={false}
+            />
+          ))}
+        </div>
+        {lowerRow.length > 0 && (
+          <div className="flex gap-x-12 justify-around flex-wrap">
+            {lowerRow.map((item, index) => (
+              <HigherLowerTile
+                key={index}
+                showText={false}
+                imgSrc={item.imgSrc}
+                value={item.value}
+                forceSquare={question.config.forceSquare}
+                label={item.label}
+                max={question.config.options.length}
+                inAxis={false}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

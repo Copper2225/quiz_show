@@ -46,7 +46,7 @@ export const HigherLowerTile: React.FC<Props> = ({
       style={{ height: `${size}px` }}
     >
       <div
-        className={`border-2 flex-1 border-white ${forceSquare && "aspect-square"} content-center overflow-x-hidden text-center`}
+        className={`border-2 flex-1 border-white ${forceSquare && "aspect-square"} content-center overflow-visible text-center`}
         style={{ height: `${size}px`, maxHeight: `${size}px` }}
       >
         {imgSrc ? (
@@ -58,11 +58,12 @@ export const HigherLowerTile: React.FC<Props> = ({
             />
             <span
               style={{
-                top: inAxis ? -20 : -30,
+                top: inAxis ? -100 : -110,
                 fontFamily: "monospace",
-                margin: "0 -1000%",
+                left: inAxis ? "0" : "-50%",
+                right: inAxis ? "0" : "-50%",
               }}
-              className={`absolute left-0 right-0 ${inAxis ? "text-xs" : "text-lg"} text-nowrap`}
+              className={`absolute ${inAxis ? "text-xs" : "text-lg"} leading-tight flex items-end justify-center text-center h-24`}
             >
               {label}
             </span>
@@ -70,13 +71,19 @@ export const HigherLowerTile: React.FC<Props> = ({
         ) : (
           <div
             className={
-              "text-center overflow-hidden overflow-ellipsis text-nowrap"
+              "text-center overflow-visible relative"
             }
             style={{
               fontSize: `${textSize}px`,
+              lineHeight: "1.2",
+              height: "100%",
             }}
           >
-            {label}
+            <span
+              className={`absolute ${inAxis ? "left-0 right-0" : "left-[-50%] right-[-50%]"} -top-24 bottom-0 flex items-end justify-center text-center px-1 h-24`}
+            >
+              {label}
+            </span>
           </div>
         )}
       </div>
