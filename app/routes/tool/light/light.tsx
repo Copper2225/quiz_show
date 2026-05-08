@@ -1,6 +1,6 @@
 import { type FC, useCallback, useEffect, useState } from "react";
 import { QLCConnection } from "~/components/QLCConnection";
-import { isConnected, vcWidgetTriggerOnce } from "~/utils/qlc.client";
+import { isConnected, vcWidgetSetValue } from "~/utils/qlc.client";
 import { toast } from "sonner";
 import TeamLight from "~/routes/tool/light/TeamLight";
 import { useFetcher, useLoaderData } from "react-router";
@@ -118,7 +118,7 @@ const Light: FC = () => {
       return;
     }
     try {
-      vcWidgetTriggerOnce(id);
+      vcWidgetSetValue(id, "255");
       toast.success("QLC Triggered");
     } catch (error) {
       toast.error(
