@@ -12,7 +12,6 @@ import dot from "dot-object";
 import { prisma } from "~/utils/db.server";
 import { broadcast } from "../events/sse.events";
 import { redirect } from "react-router";
-import type { Question } from "~/types/question";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();

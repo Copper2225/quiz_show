@@ -18,7 +18,7 @@ export async function loader() {
 }
 
 export default function Show() {
-  const [showWrong, setShowWrong] = useState(false);
+  const [showWrong] = useState(false);
   const questionEvent = useEventSource("/sse/events", {
     event: "answerType",
   });
