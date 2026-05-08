@@ -27,7 +27,6 @@ export default function Show() {
   });
 
   const data = useLoaderData<typeof loader>();
-  const revalidate = useRevalidator();
 
   const wrongEvent = useEventSource("/sse/events", { event: "wrongAnswer" });
   const pointsEvent = useEventSource("/sse/events", {
@@ -50,21 +49,6 @@ export default function Show() {
   const revealEvent = useEventSource("/sse/events", { event: "reveal" });
   
   useQLCCommands(data.qlcConfigs as any, [
-    wrongEvent,
-    pointsEvent,
-    selectorEvent,
-    answerUserEvent,
-    clearEvent,
-    lockEvent,
-    questionEvent,
-    disableEvent,
-    userRevealEvent,
-    revealEvent,
-  ]);
-
-  useEffect(() => {
-    revalidate.revalidate();
-  }, [
     wrongEvent,
     pointsEvent,
     selectorEvent,

@@ -54,7 +54,7 @@ const PointsGrid = ({
                 </Button>
                 {Array.from({ length: questionDepth }, (_, rowIndex) => (
                   <Button
-                    className={`w-full text-5xl h-full flex items-center justify-center ${!activeMatrix[colIndex][rowIndex] && "bg-teal-950 hover:bg-teal-950"}`}
+                    className={`w-full text-5xl h-full flex items-center justify-center ${!activeMatrix[colIndex][rowIndex] && "bg-primary/30 hover:bg-primary/30"}`}
                     type={"submit"}
                     key={rowIndex}
                   >

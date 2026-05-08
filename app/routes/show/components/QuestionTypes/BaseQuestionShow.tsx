@@ -111,7 +111,7 @@ const BaseQuestionShow = ({
   return (
     <div
       className={
-        "bg-gray-800 border-teal-700 border-4 rounded-3xl w-full flex-1 min-h-0 self-center flex flex-col text-5xl"
+        "bg-gray-800 border-primary border-4 rounded-3xl w-full flex-1 min-h-0 self-center flex flex-col text-5xl"
       }
     >
       {withHeader && (

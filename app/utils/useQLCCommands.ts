@@ -16,7 +16,6 @@ export function useQLCCommands(
   const lastProcessed = useRef<(string | null)[]>([]);
 
   useEffect(() => {
-    // Synchronize lastProcessed array length with events array
     if (lastProcessed.current.length !== events.length) {
       lastProcessed.current = events.map((_, i) => lastProcessed.current[i] ?? null);
     }
@@ -33,8 +32,6 @@ export function useQLCCommands(
           
           revalidate.revalidate();
         } catch (e) {
-          // ignore parsing error for non-JSON payloads
-          // but still revalidate if we received something
           revalidate.revalidate();
         }
       }

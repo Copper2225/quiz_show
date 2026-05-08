@@ -33,6 +33,15 @@ export function connectQLC(host: string = "127.0.0.1:9999"): Promise<void> {
     };
 
     socket.onmessage = (event) => {
+      const data = event.data as string;
+      if (data.startsWith("QLC+API|getWidgetStatus|")) {
+        const parts = data.split("|");
+        const widgetId = parts[2];
+        const status = parts[3];
+        if (status === "255") {
+          vcWidgetSetValue(widgetId, "255");
+        }
+      }
       callbacks.forEach((cb) => cb(event.data));
     };
 
@@ -70,14 +79,6 @@ export function requestWidgetsList(): void {
   }
 }
 
-export function requestWidgetStatus(id: number): void {
-  if (socket && socket.readyState === WebSocket.OPEN) {
-    socket.send(`QLC+API|getWidgetStatus|${id}`);
-  } else {
-    throw new Error("QLC WebSocket not connected");
-  }
-}
-
 export function vcWidgetSetValue(id: string, value: string): void {
   if (socket && socket.readyState === WebSocket.OPEN) {
     socket.send(`${id}|${value}`);
@@ -86,15 +87,12 @@ export function vcWidgetSetValue(id: string, value: string): void {
   }
 }
 
-/**
- * Triggers a QLC+ widget to "blink" by sending 255 and then 0 after a delay.
- */
-export function vcWidgetBlink(id: string, duration: number = 1000): void {
-  if (!id) return;
-  vcWidgetSetValue(id, "255");
-  setTimeout(() => {
-    vcWidgetSetValue(id, "0");
-  }, duration);
+export function requestWidgetStatus(id: string): void {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    socket.send(`QLC+API|getWidgetStatus|${id}`);
+  } else {
+    throw new Error("QLC WebSocket not connected");
+  }
 }
 
 /**
@@ -110,40 +108,16 @@ export function executeQLCCommand(
   const commands = Array.isArray(command) ? command : [command];
 
   commands.forEach((cmd) => {
-    const widgetId = qlcConfigs[cmd];
+    const values = cmd.split(";");
+    const commandName = values[0];
+    const value = values[1];
+    const widgetId = qlcConfigs[commandName]
     if (!widgetId) return;
 
-    if (cmd.startsWith("correct-t")) {
-      vcWidgetBlink(widgetId, 2000);
-    } else if (cmd.startsWith("wrong-t")) {
-      vcWidgetBlink(widgetId, 1000);
-    } else if (cmd.startsWith("active-t")) {
-      vcWidgetTriggerOnce(widgetId, "255");
-    } else if (cmd === "active-off") {
-      vcWidgetTriggerOnce(widgetId, "0");
-    } else if (cmd === "clear-inputs") {
-      // Handled in show.tsx, but can also be handled here if widgetIds are known
-      vcWidgetTriggerOnce(widgetId, "0");
+    if (value === "-1") {
+      requestWidgetStatus(widgetId);
     } else {
-      // Default to a simple trigger or blink?
-      // User said "sends signals to the ids with the corresponding command"
-      vcWidgetTriggerOnce(widgetId, "255");
+      vcWidgetSetValue(widgetId, value);
     }
   });
-}
-
-const lastTriggerTime = new Map<string, number>();
-
-/**
- * Triggers a QLC+ widget only if it hasn't been triggered in the last 200ms
- * to prevent double-firing from rapid state updates.
- */
-export function vcWidgetTriggerOnce(id: string, value: string = "255"): void {
-  const now = Date.now();
-  const key = `${id}-${value}`;
-  const lastTime = lastTriggerTime.get(key) || 0;
-  if (now - lastTime > 200) {
-    lastTriggerTime.set(key, now);
-    vcWidgetSetValue(id, value);
-  }
 }

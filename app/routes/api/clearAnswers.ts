@@ -6,12 +6,12 @@ export async function action() {
   broadcast("clearAnswers", {
     date: new Date().toString(),
     command: [
-      "input-t1",
-      "input-t2",
-      "input-t3",
-      "input-t4",
-      "input-t5",
-      "input-t6",
+      "input-t1;-1",
+      "input-t2;-1",
+      "input-t3;-1",
+      "input-t4;-1",
+      "input-t5;-1",
+      "input-t6;-1",
     ],
   });
 }
