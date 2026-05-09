@@ -15,6 +15,8 @@ interface Props {
   position?: string;
 }
 
+const CAMS = false;
+
 const TeamTile = ({
   name,
   points,
@@ -33,14 +35,15 @@ const TeamTile = ({
 
   return (
     <div
-      className={`self-end p-5 text-3xl text-center flex-1 flex flex-col rounded-t-2xl ${
+      className={`self-end py-1 px-5  text-3xl text-center flex-1 flex flex-col rounded-t-2xl ${
         highlighted ? "bg-(--tertiary)" : "bg-secondary"
       }`}
       style={{
         background: color !== undefined ? color : undefined,
       }}
     >
-      {(answerString && showAnswer || position) && (
+      {CAMS && <div className={"rounded-2xl self-center h-40 w-fit aspect-video bg-gray-300/30 mb-2"}></div>}
+      {((answerString && showAnswer) || position) && (
         <div
           className={`mb-2 p-2 bg-white/20 rounded text-3xl ${question?.type === QuestionType.HIGHER_LOWER ? "text-red-500" : ""}`}
         >
