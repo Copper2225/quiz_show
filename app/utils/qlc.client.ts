@@ -111,7 +111,7 @@ export function executeQLCCommand(
     const values = cmd.split(";");
     const commandName = values[0];
     const value = values[1];
-    const widgetId = qlcConfigs[commandName]
+    const widgetId = qlcConfigs[commandName];
     if (!widgetId) return;
 
     if (value === "-1") {

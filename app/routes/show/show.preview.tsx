@@ -33,14 +33,17 @@ export async function loader({ params }: Route.LoaderArgs) {
 
   const { config, activeMatrix, questionGrid } = AdminData;
 
-  if (question.type === QuestionType.ORDER) {
+  if (
+    question.type === QuestionType.ORDER ||
+    question.type === QuestionType.HIGHER_LOWER
+  ) {
     question = {
-      ...(question as OrderQuestion),
+      ...question,
       config: {
-        ...(question as OrderQuestion).config,
-        shuffledOptions: _.shuffle((question as OrderQuestion).config.options),
+        ...(question.config as any),
+        shuffledOptions: _.shuffle((question.config as any).options),
       },
-    };
+    } as any;
   }
 
   return {

@@ -7,7 +7,7 @@ interface Props {
   time: number;
 }
 
-const TimerButton: FC<Props> = ({time}) => {
+const TimerButton: FC<Props> = ({ time }) => {
   const fetcher = useFetcher();
 
   const trigger30Timer = useCallback(() => {
@@ -26,9 +26,9 @@ const TimerButton: FC<Props> = ({time}) => {
   }, [time]);
 
   return (
-      <Button className={"flex-1 h-16 text-3xl"} onClick={trigger30Timer}>
-        <Clock className={"size-6"} /> {timeString}
-      </Button>
+    <Button className={"flex-1 h-16 text-3xl"} onClick={trigger30Timer}>
+      <Clock className={"size-6"} /> {timeString}
+    </Button>
   );
 };
 

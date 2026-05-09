@@ -43,21 +43,19 @@ export const QuestionOperations: React.FC<Props> = ({
           <DialogTitle>Fragen Operation</DialogTitle>
         </DialogHeader>
         <div className={"overflow-y-scroll"}>
-        {question?.type === QuestionType.HIGHER_LOWER && (
-          <HigherLowerOperationsWrapper
-            question={question}
-            teamAnswers={teamAnswers}
-          />
-        )}
-        {question?.type === QuestionType.WAVELENGTH && (
-          <WavelengthOperations userShowHints={userShowHints} />
-        )}
-        {question?.type === QuestionType.BUZZER && (
-          <BuzzerOperations />
-        )}
-        {(question?.config?.media as MediaConfig)?.mediaChecked && (
-          <MediaOperationsWrapper />
-        )}
+          {question?.type === QuestionType.HIGHER_LOWER && (
+            <HigherLowerOperationsWrapper
+              question={question}
+              teamAnswers={teamAnswers}
+            />
+          )}
+          {question?.type === QuestionType.WAVELENGTH && (
+            <WavelengthOperations userShowHints={userShowHints} />
+          )}
+          {question?.type === QuestionType.BUZZER && <BuzzerOperations />}
+          {(question?.config?.media as MediaConfig)?.mediaChecked && (
+            <MediaOperationsWrapper />
+          )}
           <BaseQuestionOperations />
         </div>
       </DialogContent>

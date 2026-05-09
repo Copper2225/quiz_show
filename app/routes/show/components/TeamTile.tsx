@@ -42,7 +42,13 @@ const TeamTile = ({
         background: color !== undefined ? color : undefined,
       }}
     >
-      {CAMS && <div className={"rounded-2xl self-center h-40 w-fit aspect-video bg-gray-300/30 mb-2"}></div>}
+      {CAMS && (
+        <div
+          className={
+            "rounded-2xl self-center h-40 w-fit aspect-video bg-gray-300/30 mb-2"
+          }
+        ></div>
+      )}
       {((answerString && showAnswer) || position) && (
         <div
           className={`mb-2 p-2 bg-white/20 rounded text-3xl ${question?.type === QuestionType.HIGHER_LOWER ? "text-red-500" : ""}`}

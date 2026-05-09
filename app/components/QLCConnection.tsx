@@ -64,7 +64,9 @@ export function QLCConnection({ onWidgetsUpdate, hidden }: QLCConnectionProps) {
   };
 
   return (
-    <div className={`flex gap-2 items-center border p-1 rounded-md ${hidden ? "opacity-0 bg-(--background) absolute w-fit mx-auto left-0 right-0 top-10 hover:opacity-100" : ""}`}>
+    <div
+      className={`flex gap-2 items-center border p-1 rounded-md ${hidden ? "opacity-0 bg-(--background) absolute w-fit mx-auto left-0 right-0 top-10 hover:opacity-100" : ""}`}
+    >
       <Input
         placeholder={"127.0.0.1:9999"}
         value={qlcHost}

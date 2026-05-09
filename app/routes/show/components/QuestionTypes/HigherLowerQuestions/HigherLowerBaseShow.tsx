@@ -11,12 +11,15 @@ interface Props {
 
 export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
   const items = useMemo(
-    () => question.config.options.filter((item) => item.show || item.showText),
+    () =>
+      question.config.options
+        .filter((item) => item.show || item.showText)
+        .sort((a, b) => Number(a.value) - Number(b.value)),
     [question.config.options],
   );
   const leftItems = useMemo(
     () =>
-      question.config.shuffledOptions.filter(
+      (question.config.shuffledOptions ?? []).filter(
         (item) => !item.show && !item.showText,
       ),
     [question.config.shuffledOptions],
@@ -43,7 +46,7 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
   }, [updateEvent]);
 
   return (
-    <div className="flex flex-col items-center justify-between h-full w-full py-5">
+    <div className="flex flex-col items-center justify-between h-full w-full py-4">
       <div className="w-full">
         <DynamicAxis
           max={question.config.options.length}
@@ -54,7 +57,7 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
           forceReveal={question.config.revealSolution}
         />
       </div>
-      <div className="flex flex-col gap-y-15 px-12 mt-4 w-full">
+      <div className="flex flex-col gap-y-12 px-12 mt-4 w-full">
         <div className="flex gap-x-12 justify-around flex-wrap">
           {upperRow.map((item, index) => (
             <HigherLowerTile
@@ -70,7 +73,7 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
           ))}
         </div>
         {lowerRow.length > 0 && (
-          <div className="flex gap-x-12 justify-around flex-wrap">
+          <div className="flex gap-x-12 justify-around flex-wrap mb-8">
             {lowerRow.map((item, index) => (
               <HigherLowerTile
                 key={index}

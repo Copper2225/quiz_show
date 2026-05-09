@@ -4,7 +4,7 @@ import { useRevalidator } from "react-router";
 
 /**
  * Hook to handle multiple SSE events and trigger QLC commands and revalidation.
- * 
+ *
  * @param qlcConfigs QLC configurations to map commands to widget IDs
  * @param events An array of event data (from useEventSource)
  */
@@ -17,7 +17,9 @@ export function useQLCCommands(
 
   useEffect(() => {
     if (lastProcessed.current.length !== events.length) {
-      lastProcessed.current = events.map((_, i) => lastProcessed.current[i] ?? null);
+      lastProcessed.current = events.map(
+        (_, i) => lastProcessed.current[i] ?? null,
+      );
     }
 
     events.forEach((eventData, index) => {
@@ -29,7 +31,7 @@ export function useQLCCommands(
           if (payload.command) {
             executeQLCCommand(payload.command, qlcConfigs);
           }
-          
+
           revalidate.revalidate();
         } catch (e) {
           revalidate.revalidate();

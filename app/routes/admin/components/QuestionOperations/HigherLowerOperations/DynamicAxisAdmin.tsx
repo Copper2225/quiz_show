@@ -23,7 +23,7 @@ export const DynamicAxisAdmin: React.FC<Props> = ({
   const axisLabelTop = Math.max(24, Math.min(32, (1 / items.length) * 400));
 
   return (
-    <div className={`w-full bg-black py-12 font-sans`}>
+    <div className={`w-full bg-black pt-12 pb-18 font-sans`}>
       <div className={"relative w-full"}>
         <div className={"flex items-center"}>
           <span
@@ -73,7 +73,7 @@ export const DynamicAxisAdmin: React.FC<Props> = ({
           </span>
         </div>
 
-        <div className={"relative"}>
+        <div className={"relative mt-1"}>
           <div className={"flex w-full items-start"}>
             <div className={"invisible mr-4 shrink-0"}>
               <span className={"text-xs font-bold uppercase tracking-tighter"}>

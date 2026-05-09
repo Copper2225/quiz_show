@@ -59,22 +59,25 @@ export const HigherLowerTileAdmin: React.FC<Props> = ({
           />
         ) : (
           <div
-            className={
-              "text-center text-sm overflow-hidden overflow-ellipsis text-nowrap"
-            }
+            className={`text-center text-sm overflow-hidden overflow-ellipsis text-nowrap ${!isRevealed ? "opacity-30 grayscale" : ""}`}
           >
             {label}
           </div>
         )}
       </div>
       <span
-        className={`text-white mt-1 absolute whitespace-nowrap`}
+        className={`text-white mb-1 absolute whitespace-nowrap`}
         style={{
           fontSize: `${textSize}px`,
-          bottom: `-${bottomOffset}px`,
+          top: `-${bottomOffset}px`,
         }}
       >
         {value}
+      </span>
+      <span
+        className={`absolute items-start text-xs left-0 right-0 top-18 bottom-0 flex justify-center text-center px-1 h-12`}
+      >
+        {label}
       </span>
     </div>
   );

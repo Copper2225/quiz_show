@@ -46,7 +46,6 @@ export default function Show() {
   });
   const wrongEvent = useEventSource("/sse/events", { event: "wrongAnswer" });
 
-
   const revealEvent = useEventSource("/sse/events", { event: "reveal" });
 
   useEffect(() => {
@@ -54,7 +53,7 @@ export default function Show() {
       connectQLC();
     }
   }, []);
-  
+
   useQLCCommands(data.qlcConfigs as any, [
     wrongEvent,
     pointsEvent,
@@ -87,7 +86,6 @@ export default function Show() {
 
     return question.type !== QuestionType.NONE;
   }, [question, data.answerRevealed]);
-
 
   return (
     <>

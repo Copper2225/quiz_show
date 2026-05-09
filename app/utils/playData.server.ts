@@ -224,9 +224,8 @@ export async function setQuestion(question: Question<JsonValue>) {
     });
     config.options = config.options.reverse();
     setAllPlayerReveal(true);
-    (AdminData.currentQuestion as HigherLowerQuestion).config.selector = random(
-      AdminData.teams.size - 1,
-    );
+    (AdminData.currentQuestion as HigherLowerQuestion).config.selector =
+      _.random(AdminData.teams.size - 1);
   }
 
   if (question.type === QuestionType.WAVELENGTH) {
@@ -236,7 +235,7 @@ export async function setQuestion(question: Question<JsonValue>) {
     (playerData.question as UserWaveLengthQuestion).config.useNumber =
       config.useNumber ?? false;
     if (config.random) {
-      const answer = random(10);
+      const answer = _.random(10);
       (playerData.question as UserWaveLengthQuestion).config.showSlider = false;
       (
         AdminData.currentQuestion as any as WavelengthQuestion

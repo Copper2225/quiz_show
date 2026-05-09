@@ -67,7 +67,7 @@ const MultipleChoiceBaseEdit = ({ question }: Props) => {
         <Button
           className={"w-full"}
           type={"button"}
-          variant={"secondary"}
+          variant={"outline"}
           onClick={addAnswer}
         >
           +

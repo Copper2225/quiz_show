@@ -40,7 +40,10 @@ export async function action({ request }: Route.ActionArgs) {
     }
 
     const teamId = AdminData.currentSelector + 1;
-    const command = quest !== null || (quest as any)?.type == "HIGHER_LOWER" ? ["input-no-selector;255"] : [`active-t${teamId};255`];
+    const command =
+      quest !== null || (quest as any)?.type == "HIGHER_LOWER"
+        ? ["input-no-selector;255"]
+        : [`active-t${teamId};255`];
 
     broadcast("answerType", {
       quest,

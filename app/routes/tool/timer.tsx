@@ -1,25 +1,22 @@
 import { type FC, useEffect, useState } from "react";
 import { useEventSource } from "remix-utils/sse/react";
 
-
-export async function loader() {
-
-}
+export async function loader() {}
 
 const strokeWidth = 30;
 const sqSize = 400;
 
 const Timer: FC = () => {
-  const timerSource = useEventSource("/tools/sse/timer", {event: "timeSet"});
+  const timerSource = useEventSource("/tools/sse/timer", { event: "timeSet" });
   const [percentage, setPercentage] = useState(100);
   const [timer, setTimer] = useState(0);
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     if (timerSource) {
-      setTimer(Number(timerSource))
+      setTimer(Number(timerSource));
       setPercentage(100);
-      setShow(timerSource !== "0")
+      setShow(timerSource !== "0");
     }
   }, [timerSource]);
 
@@ -33,7 +30,9 @@ const Timer: FC = () => {
 
     const intervalTime = 50; // 20 fps
     const interval = setInterval(() => {
-      setPercentage((prev) => Math.max(prev - 100 / (timer * (1000 / intervalTime)), 0));
+      setPercentage((prev) =>
+        Math.max(prev - 100 / (timer * (1000 / intervalTime)), 0),
+      );
     }, intervalTime);
 
     return () => clearInterval(interval);
@@ -46,7 +45,9 @@ const Timer: FC = () => {
   const remainingTime = Math.ceil((percentage * timer) / 100);
 
   return (
-    <div className={`${show ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}>
+    <div
+      className={`${show ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
+    >
       <svg width={sqSize} height={sqSize} viewBox={viewBox}>
         <circle
           className="fill-none stroke-[#ECECEC]"

@@ -13,5 +13,5 @@ export async function action({ request }: ActionFunctionArgs) {
     requestValues.selector,
   );
   const command = [`active-t${Number(requestValues.selector) + 1};255`];
-  broadcast("reveal", {date: new Date(), command});
+  broadcast("reveal", { date: new Date(), command });
 }

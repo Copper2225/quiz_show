@@ -77,10 +77,7 @@ const Select = ({
           style={{ width: "min(400px, 90vw)" }}
           align={align}
         >
-          <Command
-            className={className}
-            style={{ width: "min(400px, 90vw)" }}
-          >
+          <Command className={className} style={{ width: "min(400px, 90vw)" }}>
             <CommandInput placeholder="Search ..." className="h-9" />
             <CommandList>
               <CommandEmpty>No {label} found.</CommandEmpty>

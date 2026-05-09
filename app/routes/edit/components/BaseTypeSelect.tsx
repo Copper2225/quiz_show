@@ -5,7 +5,6 @@ import { useCallback, useMemo, useState } from "react";
 import Select from "~/components/Select";
 import { Label } from "~/components/ui/label";
 import MultipleChoiceBaseEdit from "~/routes/edit/components/MultipleChoice/MultipleChoiceBaseEdit";
-import { Input } from "~/components/ui/input";
 import BuzzerBaseEdit from "~/routes/edit/components/Buzzer/BuzzerBaseEdit";
 import InputBaseEdit from "~/routes/edit/components/Input/InputBaseEdit";
 import OrderBaseEdit from "~/routes/edit/components/Order/OrderBaseEdit";

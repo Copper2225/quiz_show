@@ -260,7 +260,7 @@ const PinImageSelect = ({ defaultData }: Props) => {
             />
             <Button
               type="button"
-              variant="secondary"
+              variant="outline"
               onClick={() => setDialogOpen(true)}
             >
               Fullscreen öffnen

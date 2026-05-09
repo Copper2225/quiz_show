@@ -58,21 +58,19 @@ export const HigherLowerTile: React.FC<Props> = ({
             />
             <span
               style={{
-                top: inAxis ? -100 : -110,
+                bottom: -54,
                 fontFamily: "monospace",
                 left: inAxis ? "0" : "-50%",
                 right: inAxis ? "0" : "-50%",
               }}
-              className={`absolute ${inAxis ? "text-xs" : "text-lg"} leading-tight flex items-end justify-center text-center h-24`}
+              className={`absolute ${inAxis ? "text-xs" : "text-sm"} leading-tight flex items-start justify-center text-center h-12`}
             >
               {label}
             </span>
           </>
         ) : (
           <div
-            className={
-              "text-center overflow-visible relative"
-            }
+            className={"text-center overflow-visible relative"}
             style={{
               fontSize: `${textSize}px`,
               lineHeight: "1.2",
@@ -89,11 +87,7 @@ export const HigherLowerTile: React.FC<Props> = ({
       </div>
       {showText && (
         <span
-          className={`text-white mt-1 absolute whitespace-nowrap`}
-          style={{
-            fontSize: `${textSize}px`,
-            bottom: `-${bottomOffset}px`,
-          }}
+          className={`absolute items-end text-xs left-0 right-0 -top-12 bottom-0 flex justify-center text-center px-1 h-12`}
         >
           {value}
         </span>

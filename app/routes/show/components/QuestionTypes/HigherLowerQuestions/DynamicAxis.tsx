@@ -81,7 +81,10 @@ export const DynamicAxis: React.FC<Props> = ({
               </div>
             </div>
 
-            <div className={`relative flex-1`} style={{ height: `${size}px` }}>
+            <div
+              className={`relative flex-1 -top-6`}
+              style={{ height: `${size}px` }}
+            >
               <div
                 className="absolute inset-0 flex justify-center"
                 style={{ gap: `${intervalWidthPercent}%` }}

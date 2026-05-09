@@ -29,7 +29,7 @@ const OptionLine = ({ index, removeAnswer, defaultValues, answers }: Props) => {
       </TableCell>
       <TableCell>
         {index === answers - 1 && (
-          <Button type={"button"} variant={"secondary"} onClick={removeAnswer}>
+          <Button type={"button"} variant={"outline"} onClick={removeAnswer}>
             -
           </Button>
         )}
