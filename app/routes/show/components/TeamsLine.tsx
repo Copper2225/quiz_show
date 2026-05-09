@@ -71,11 +71,7 @@ const TeamsLine = ({
 
     outOfHeartsTeams.forEach((team, index) => {
       const rank = totalTeams - index;
-      let suffix = ".";
-      if (rank === 1) suffix = "st";
-      else if (rank === 2) suffix = "nd";
-      else if (rank === 3) suffix = "rd";
-      positions.set(team.name, `${rank}${rank > 3 ? "." : suffix}`);
+      positions.set(team.name, `${rank}`);
     });
 
     return positions;

@@ -3,7 +3,7 @@ import PointsGrid from "~/routes/show/components/PointsGrid";
 import { ShowData } from "~/utils/playData.server";
 import TeamsLine from "~/routes/show/components/TeamsLine";
 import { useEventSource } from "remix-utils/sse/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import BaseQuestionShow from "~/routes/show/components/QuestionTypes/BaseQuestionShow";
 import { QuestionType } from "~/types/question";
 import type { BuzzerQuestion, InputQuestion } from "~/types/adminTypes";
@@ -19,7 +19,6 @@ export async function loader() {
 }
 
 export default function Show() {
-  const [showWrong, setShowWrong] = useState(false);
   const questionEvent = useEventSource("/sse/events", {
     event: "answerType",
   });
@@ -29,7 +28,6 @@ export default function Show() {
 
   const data = useLoaderData<typeof loader>();
 
-  const wrongEvent = useEventSource("/sse/events", { event: "wrongAnswer" });
   const pointsEvent = useEventSource("/sse/events", {
     event: "pointsUpdate",
   });
@@ -46,7 +44,9 @@ export default function Show() {
   const userRevealEvent = useEventSource("/sse/events", {
     event: "revealUser",
   });
-  
+  const wrongEvent = useEventSource("/sse/events", { event: "wrongAnswer" });
+
+
   const revealEvent = useEventSource("/sse/events", { event: "reveal" });
 
   useEffect(() => {
@@ -54,16 +54,6 @@ export default function Show() {
       connectQLC();
     }
   }, []);
-
-  useEffect(() => {
-    if (wrongEvent) {
-      setShowWrong(true);
-
-      // Remove it after 1.5 seconds
-      const timer = setTimeout(() => setShowWrong(false), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [wrongEvent]);
   
   useQLCCommands(data.qlcConfigs as any, [
     wrongEvent,
@@ -102,19 +92,6 @@ export default function Show() {
   return (
     <>
       <QLCConnection hidden={true} />
-      <div
-        className={`
-          pointer-events-none fixed inset-0 z-50
-          shadow-[inset_0_0_150px_60px_rgba(239,68,68,1)]
-          /* Logic: Fast fade-in, slow fade-out */
-          transition-all transform
-          ${
-            showWrong
-              ? "opacity-100 scale-100 duration-150 ease-out"
-              : "opacity-0 scale-110 duration-1000 ease-in"
-          }
-        `}
-      />
       <main
         className="h-dvh w-dvw box-border px-4 pt-4 flex flex-col"
         style={{ fontFamily: "Unkempt, Love Ya Like A Sister, chalkduster" }}

@@ -1,5 +1,5 @@
 import MultipleChoiceBaseShow from "~/routes/show/components/QuestionTypes/MultipleChoiceBaseShow";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import BuzzerBaseShow from "~/routes/show/components/QuestionTypes/BuzzerBaseShow";
 import type {
   BuzzerQuestion,
@@ -35,9 +35,12 @@ const BaseQuestionShow = ({
   answers,
   playerReveals,
 }: Props) => {
+  const [showWrong, setShowWrong] = useState(false);
   const questionEvent = useEventSource("/sse/events", {
     event: "reveal",
   });
+  const wrongEvent = useEventSource("/sse/events", { event: "wrongAnswer" });
+
   const revalidator = useRevalidator();
 
   useEffect(() => {
@@ -45,6 +48,16 @@ const BaseQuestionShow = ({
       revalidator.revalidate();
     }
   }, [questionEvent]);
+
+  useEffect(() => {
+    if (wrongEvent) {
+      setShowWrong(true);
+
+      // Remove it after 1.5 seconds
+      const timer = setTimeout(() => setShowWrong(false), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [wrongEvent]);
 
   const detailed = useMemo(() => {
     switch (question.type) {
@@ -111,16 +124,31 @@ const BaseQuestionShow = ({
   return (
     <div
       className={
-        "bg-gray-800 border-primary border-4 rounded-3xl w-full flex-1 min-h-0 self-center flex flex-col text-5xl"
+        "bg-gray-800 border-primary border-4 rounded-3xl w-full flex-1 min-h-0 self-center flex flex-col text-5xl relative overflow-hidden"
       }
     >
+      <div
+        className={`
+          pointer-events-none absolute inset-0 z-50
+          shadow-[inset_0_0_150px_60px_rgba(239,68,68,1)]
+          /* Logic: Fast fade-in, slow fade-out */
+          transition-all transform
+          ${
+            showWrong
+              ? "opacity-100 scale-100 duration-150 ease-out"
+              : "opacity-0 scale-110 duration-1000 ease-in"
+          }
+        `}
+      />
       {withHeader && (
         <div
           style={{
             borderRadius:
               "calc(var(--radius-3xl) - 4px) calc(var(--radius-3xl) - 4px) 0 0",
           }}
-          className={"bg-gray-700 text-6xl rounded-t-3xl px-4 py-3 text-center whitespace-pre-wrap"}
+          className={
+            "bg-gray-700 text-6xl rounded-t-3xl px-4 py-3 text-center whitespace-pre-wrap"
+          }
         >
           {question.prompt}
         </div>

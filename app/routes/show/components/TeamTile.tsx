@@ -40,7 +40,7 @@ const TeamTile = ({
         background: color !== undefined ? color : undefined,
       }}
     >
-      {answerString && showAnswer && (
+      {(answerString && showAnswer || position) && (
         <div
           className={`mb-2 p-2 bg-white/20 rounded text-3xl ${question?.type === QuestionType.HIGHER_LOWER ? "text-red-500" : ""}`}
         >
