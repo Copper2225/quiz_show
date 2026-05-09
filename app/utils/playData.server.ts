@@ -14,7 +14,6 @@ import type {
 } from "~/types/adminTypes";
 import _ from "lodash";
 import type { UserHint, UserWaveLengthQuestion } from "~/types/userTypes";
-const { random } = _;
 
 interface PlayerData {
   question: Question<JsonValue> | null;

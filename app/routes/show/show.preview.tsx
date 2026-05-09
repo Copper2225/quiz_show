@@ -7,11 +7,7 @@ import { prisma } from "~/utils/db.server";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import { useLoaderData, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
-import type {
-  BuzzerQuestion,
-  InputQuestion,
-  OrderQuestion,
-} from "~/types/adminTypes";
+import type { BuzzerQuestion, InputQuestion } from "~/types/adminTypes";
 import _ from "lodash";
 
 export async function loader({ params }: Route.LoaderArgs) {

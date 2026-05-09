@@ -36,9 +36,6 @@ export const HigherLowerTile: React.FC<Props> = ({
   const textSize = inAxis
     ? Math.max(10, Math.min(16, (screenWidth / max) * 0.1))
     : screenWidth * 0.015;
-  const bottomOffset = inAxis
-    ? Math.max(16, Math.min(25, (screenWidth / max) * 0.15))
-    : 25;
 
   return (
     <div
