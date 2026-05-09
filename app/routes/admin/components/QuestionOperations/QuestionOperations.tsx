@@ -42,6 +42,7 @@ export const QuestionOperations: React.FC<Props> = ({
         <DialogHeader>
           <DialogTitle>Fragen Operation</DialogTitle>
         </DialogHeader>
+        <div className={"overflow-y-scroll"}>
         {question?.type === QuestionType.HIGHER_LOWER && (
           <HigherLowerOperationsWrapper
             question={question}
@@ -57,7 +58,8 @@ export const QuestionOperations: React.FC<Props> = ({
         {(question?.config?.media as MediaConfig)?.mediaChecked && (
           <MediaOperationsWrapper />
         )}
-        <BaseQuestionOperations />
+          <BaseQuestionOperations />
+        </div>
       </DialogContent>
     </Dialog>
   );

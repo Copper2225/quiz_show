@@ -3,14 +3,13 @@ import TimerButton from "~/routes/admin/components/QuestionOperations/TimerButto
 
 const BaseQuestionOperations: FC = () => {
   return (
-    <>
-      <div className={"flex w-full gap-4"}>
+      <div className={"flex my-4 w-full m gap-4"}>
+        <TimerButton time={0} />
         <TimerButton time={10} />
         <TimerButton time={15} />
         <TimerButton time={30} />
         <TimerButton time={60} />
       </div>
-    </>
   )
 }
 

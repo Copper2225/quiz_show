@@ -12,14 +12,14 @@ const sqSize = 400;
 const Timer: FC = () => {
   const timerSource = useEventSource("/tools/sse/timer", {event: "timeSet"});
   const [percentage, setPercentage] = useState(100);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(0);
   const [show, setShow] = useState(false)
 
   useEffect(() => {
     if (timerSource) {
       setTimer(Number(timerSource))
       setPercentage(100);
-      setShow(true)
+      setShow(timerSource !== "0")
     }
   }, [timerSource]);
 
@@ -46,7 +46,7 @@ const Timer: FC = () => {
   const remainingTime = Math.ceil((percentage * timer) / 100);
 
   return (
-    <div className={`${show ? "block" : "hidden"}`}>
+    <div className={`${show ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}>
       <svg width={sqSize} height={sqSize} viewBox={viewBox}>
         <circle
           className="fill-none stroke-[#ECECEC]"
@@ -73,7 +73,7 @@ const Timer: FC = () => {
           fill="#FFFFFF"
           className="text-8xl font-semibold"
         >
-          {remainingTime}s
+          {remainingTime}
         </text>
       </svg>
     </div>
