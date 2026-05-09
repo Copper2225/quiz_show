@@ -1,4 +1,4 @@
-import { type FC, use, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import { useEventSource } from "remix-utils/sse/react";
 
 

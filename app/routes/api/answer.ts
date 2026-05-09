@@ -47,8 +47,8 @@ export async function action({ request }: Route.ActionArgs) {
 
     setAllLocked(true);
     const teamNames = Array.from(AdminData.teams.keys());
-    const teamIndex = teamNames.indexOf(user ?? "");
-    AdminData.currentSelector = teamIndex;
+
+    AdminData.currentSelector = teamNames.indexOf(user ?? "");
     AdminData.showCurrentSelector = true;
 
     broadcast("selector", {

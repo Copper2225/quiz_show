@@ -1,4 +1,4 @@
-import { useLoaderData, useRevalidator } from "react-router";
+import { useLoaderData } from "react-router";
 import PointsGrid from "~/routes/show/components/PointsGrid";
 import { ShowData } from "~/utils/playData.server";
 import TeamsLine from "~/routes/show/components/TeamsLine";
