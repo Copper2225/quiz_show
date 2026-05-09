@@ -12,7 +12,9 @@ import { type Question, QuestionType } from "~/types/question";
 import type { MediaConfig } from "~/types/adminTypes";
 import { MediaOperationsWrapper } from "~/routes/admin/components/QuestionOperations/MediaOperations/MediaOperationsWrapper";
 import { WavelengthOperations } from "~/routes/admin/components/QuestionOperations/WavelengthOperations/WavelengthOperations";
+import { BuzzerOperations } from "~/routes/admin/components/QuestionOperations/BuzzerOperations";
 import type { UserHint } from "~/types/userTypes";
+import BaseQuestionOperations from "~/routes/admin/components/QuestionOperations/BaseQuestionOperations";
 
 interface Props {
   question: Question<any>;
@@ -49,9 +51,13 @@ export const QuestionOperations: React.FC<Props> = ({
         {question?.type === QuestionType.WAVELENGTH && (
           <WavelengthOperations userShowHints={userShowHints} />
         )}
+        {question?.type === QuestionType.BUZZER && (
+          <BuzzerOperations />
+        )}
         {(question?.config?.media as MediaConfig)?.mediaChecked && (
           <MediaOperationsWrapper />
         )}
+        <BaseQuestionOperations />
       </DialogContent>
     </Dialog>
   );

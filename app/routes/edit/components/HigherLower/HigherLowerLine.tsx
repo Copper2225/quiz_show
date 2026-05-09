@@ -24,14 +24,16 @@ const HigherLowerLine = ({
   return (
     <div className={"flex items-center gap-3"}>
       <Input
-        className={"w-1/10"}
-        name={`config.options.${index}.value`}
-        defaultValue={defaultValue}
-      />
-      <Input
         className={"w-1/6"}
         name={`config.options.${index}.label`}
         defaultValue={defaultLabel}
+        placeholder={"Label"}
+      />
+      <Input
+        className={"w-1/10"}
+        name={`config.options.${index}.value`}
+        defaultValue={defaultValue}
+        placeholder={"Value"}
       />
       <div className="flex-1 min-w-0">
         <MediaUploadOrSelect

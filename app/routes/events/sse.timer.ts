@@ -1,0 +1,49 @@
+import type { Route } from "./+types/sse.events";
+import { eventStream } from "remix-utils/sse/server";
+
+type Client = {
+  id: string;
+  send: (message: { event?: string; data: string }) => void;
+};
+
+declare global {
+  // eslint-disable-next-line no-var
+  var __sse_timer_client__: Map<string, Client> | undefined;
+}
+
+let clients: Map<string, Client> = (globalThis.__sse_timer_client__ ||=
+  new Map());
+
+export function sendToTimer(event: string, payload: unknown) {
+  const data = typeof payload === "string" ? payload : JSON.stringify(payload);
+  for (const [_id, client] of clients) {
+    try {
+      client.send({ event, data });
+    } catch {
+      // Ignore send errors; client cleanup will handle stale connections
+    }
+  }
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  return eventStream(request.signal, function setup(send) {
+    const clientId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    const client = {
+      id: clientId,
+      send,
+    };
+
+    clients.set(clientId, client);
+
+    const heartbeatInterval = setInterval(() => {
+      try {
+        send({ event: "heartbeat", data: "1" });
+      } catch {}
+    }, 15000);
+
+    return () => {
+      clearInterval(heartbeatInterval);
+      clients.delete(clientId);
+    };
+  });
+}

@@ -23,6 +23,7 @@ import type {
 } from "~/types/adminTypes";
 import HigherLowerBaseEdit from "~/routes/edit/components/HigherLower/HigherLowerBaseEdit";
 import WavelengthBaseEdit from "~/routes/edit/components/Wavelength/WavelengthBaseEdit";
+import { Textarea } from "~/components/ui/textarea";
 
 interface Props {
   defaultValue?: QuestionType;
@@ -118,7 +119,7 @@ const BaseTypeSelect = ({ defaultValue, defaultPrompt, question }: Props) => {
         <Label className={"mb-2"} htmlFor={"prompt"}>
           Frage
         </Label>
-        <Input name={"prompt"} id={"prompt"} defaultValue={defaultPrompt} />
+        <Textarea name={"prompt"} id={"prompt"} defaultValue={defaultPrompt} />
       </div>
       {detailedForm}
     </div>

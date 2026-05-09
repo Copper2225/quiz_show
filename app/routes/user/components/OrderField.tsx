@@ -101,7 +101,7 @@ const OrderField = ({ data, locked, answer, isPreview = false }: Props) => {
         <Button
           disabled={locked || isPreview || !isDirty}
           className={
-            "w-full h-[100px] text-5xl bg-purple-700 hover:bg-purple-900"
+            "w-full h-[100px] text-5xl bg-secondary hover:bg-secondary/80"
           }
           onClick={submitData}
         >

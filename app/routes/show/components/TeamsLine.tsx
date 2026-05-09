@@ -49,6 +49,38 @@ const TeamsLine = ({
     prevBuzzerTeamRef.current = firstBuzzerTeam;
   }, [firstBuzzerTeam, PLAY_SOUND]);
 
+  const teamPositions = useMemo(() => {
+    if (question?.type !== QuestionType.HIGHER_LOWER) return new Map();
+
+    const teamLosingTime = Array.from(teams.keys()).map((name) => {
+      const answer = answers.get(name);
+      const hearts = answer?.answer?.replace(/[^♥︎❤]/g, "") ?? "";
+      return {
+        name,
+        heartsCount: hearts.length,
+        time: answer?.time ? new Date(answer.time).getTime() : 0,
+      };
+    });
+
+    const outOfHeartsTeams = teamLosingTime
+      .filter((t) => t.heartsCount === 0)
+      .sort((a, b) => a.time - b.time);
+
+    const positions = new Map<string, string>();
+    const totalTeams = teams.size;
+
+    outOfHeartsTeams.forEach((team, index) => {
+      const rank = totalTeams - index;
+      let suffix = ".";
+      if (rank === 1) suffix = "st";
+      else if (rank === 2) suffix = "nd";
+      else if (rank === 3) suffix = "rd";
+      positions.set(team.name, `${rank}${rank > 3 ? "." : suffix}`);
+    });
+
+    return positions;
+  }, [answers, question?.type, teams]);
+
   return (
     <div
       className="grid gap-4 mt-10"
@@ -66,6 +98,7 @@ const TeamsLine = ({
           showAnswer={userReveals.get(name) ?? false}
           question={question}
           answer={(answers as Map<string, any>).get(name)}
+          position={teamPositions.get(name)}
           highlighted={
             (question?.type === QuestionType.BUZZER &&
               firstBuzzerTeam === name) ||

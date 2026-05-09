@@ -40,8 +40,9 @@ export async function action({ request }: ActionFunctionArgs) {
         }
       }
       question.config.selector = nextSelector;
+      const command = [`active-t${nextSelector + 1};255`];
 
-      broadcast("reveal", question);
+      broadcast("reveal", { question, command });
       return { success: true };
     }
   }

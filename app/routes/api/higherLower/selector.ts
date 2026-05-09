@@ -12,5 +12,6 @@ export async function action({ request }: ActionFunctionArgs) {
   (AdminData.currentQuestion as HigherLowerQuestion).config.selector = Number(
     requestValues.selector,
   );
-  broadcast("reveal", new Date());
+  const command = [`active-t${Number(requestValues.selector) + 1};255`];
+  broadcast("reveal", {date: new Date(), command});
 }

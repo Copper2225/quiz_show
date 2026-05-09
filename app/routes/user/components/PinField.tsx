@@ -133,7 +133,7 @@ const PinField = ({
         onClick={submit}
         disabled={locked || !isDirty || isPreview}
         className={
-          "self-bottom w-full h-[100px] text-5xl bg-purple-700 hover:bg-purple-900"
+          "self-bottom w-full h-[100px] text-5xl bg-secondary hover:bg-secondary/80"
         }
       >
         Absenden

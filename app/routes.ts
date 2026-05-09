@@ -22,6 +22,8 @@ export default [
   ...prefix("/tools", [
     route("slf", "routes/tool/stadtLandFluss.tsx"),
     route("light", "routes/tool/light/light.tsx"),
+    route("timer", "routes/tool/timer.tsx"),
+    route("sse/timer", "routes/events/sse.timer.ts"),
   ]),
   ...prefix("/api", [
     route("teams", "routes/api/teams.ts"),
@@ -37,6 +39,7 @@ export default [
     route("selector", "routes/api/selector.ts"),
     route("wrongAnswer", "routes/api/wrongAnswer.ts"),
     route("qlcConfig", "routes/api/qlcConfig.ts"),
+    route("timer", "routes/api/timer.ts"),
     ...prefix("/higherLower", [
       route("reveal", "routes/api/higherLower/reveal.ts"),
       route("selector", "routes/api/higherLower/selector.ts"),
@@ -47,5 +50,6 @@ export default [
       route("trigger", "routes/api/wavelength/triggerInput.ts"),
       route("show", "routes/api/wavelength/showHint.ts"),
     ]),
+    ...prefix("/buzzer", [route("unblock", "routes/api/buzzer/unblock.ts")]),
   ]),
 ] satisfies RouteConfig;

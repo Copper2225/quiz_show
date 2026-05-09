@@ -30,6 +30,7 @@ interface AdminDataShape {
   questionGrid: Map<string, Question<JsonValue>>;
   playerReveal: Map<string, boolean>;
   userLocks: Map<string, boolean>;
+  disqualifiedTeams: Set<string>;
   userHints: Map<string, UserHint>;
   questionRevealTime: Date | null;
   currentSelector: number;
@@ -59,6 +60,7 @@ export const AdminData: AdminDataShape = {
   questionGrid: getQuestionsGrid(),
   playerReveal: new Map<string, boolean>(),
   userLocks: new Map<string, boolean>(),
+  disqualifiedTeams: new Set<string>(),
   userHints: new Map<string, UserHint>(),
   questionRevealTime: null,
   currentSelector: -1,
@@ -166,6 +168,7 @@ export async function setQuestion(question: Question<JsonValue>) {
   AdminData.questionRevealTime = new Date();
 
   AdminData.currentQuestion = question;
+  AdminData.disqualifiedTeams.clear();
 
   playerData.question = {
     ...question,
@@ -322,6 +325,7 @@ export function clearQuestion() {
   AdminData.currentQuestion = null;
   playerData.question = null;
   setAnswerRevealed(false);
+  AdminData.disqualifiedTeams.clear();
   broadcast("reveal", {
     revealed: "false",
     selector: AdminData.currentSelector,

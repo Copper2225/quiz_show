@@ -39,7 +39,7 @@ export const DynamicAxis: React.FC<Props> = ({
   const axisLabelTop = Math.max(24, Math.min(32, (screenWidth / max) * 0.4));
 
   return (
-    <div className={`w-full pb-12 pt-4 px-4 font-sans`}>
+    <div className={`w-full pb-12 pt-4 px-6 font-sans`}>
       <div className="relative w-full">
         <div className="flex items-center">
           <div className="text-white text-xs font-bold uppercase mr-4 tracking-tighter shrink-0">
@@ -55,7 +55,7 @@ export const DynamicAxis: React.FC<Props> = ({
                 className="relative flex flex-col items-center w-0 overflow-visible"
               >
                 <span
-                  className={`absolute font-black drop-shadow-[0_0_6px_rgba(130,0,219,0.8)] whitespace-nowrap text-purple-700`}
+                  className={`absolute font-black drop-shadow-[0_0_6px_rgba(130,0,219,0.8)] whitespace-nowrap text-secondary`}
                   style={{
                     fontSize: `${axisLabelSize}px`,
                     top: `-${axisLabelTop}px`,

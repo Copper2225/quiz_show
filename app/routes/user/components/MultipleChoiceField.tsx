@@ -77,7 +77,7 @@ const MultipleChoiceField = ({
                   disabled={locked}
                   ref={getWrapperRef(index)}
                   onClick={() => handleOptionsSelect(option)}
-                  className={`w-full h-full rounded-2xl outline-6 ${selection.includes(option) ? "outline-purple-700" : "outline-gray-200"} outline-solid -outline-offset-16 p-3 ${
+                  className={`w-full h-full rounded-2xl outline-6 ${selection.includes(option) ? "outline-secondary" : "outline-gray-200"} outline-solid -outline-offset-16 p-3 ${
                     data.config.trueOrFalse &&
                     (index % 2 === 0
                       ? "bg-green-600 hover:bg-green-700"
@@ -113,7 +113,7 @@ const MultipleChoiceField = ({
         <Button
           disabled={locked || isPreview || !isDirty}
           className={
-            "w-full h-[100px] text-5xl bg-purple-700 hover:bg-purple-900"
+            "w-full h-[100px] text-5xl bg-secondary hover:bg-secondary/80"
           }
           onClick={handleSubmit}
         >

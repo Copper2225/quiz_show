@@ -53,7 +53,7 @@ const InputAnswerField = ({
         type={isPreview ? "button" : "submit"}
         disabled={!isDirty || locked}
         className={
-          " w-full h-[100px] text-5xl box-border bg-purple-700 hover:bg-purple-900"
+          " w-full h-[100px] text-5xl box-border bg-primary hover:bg-primary/90"
         }
       >
         Absenden

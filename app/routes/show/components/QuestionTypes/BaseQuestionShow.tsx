@@ -120,7 +120,7 @@ const BaseQuestionShow = ({
             borderRadius:
               "calc(var(--radius-3xl) - 4px) calc(var(--radius-3xl) - 4px) 0 0",
           }}
-          className={"bg-gray-700 text-6xl rounded-t-3xl px-4 py-3 text-center"}
+          className={"bg-gray-700 text-6xl rounded-t-3xl px-4 py-3 text-center whitespace-pre-wrap"}
         >
           {question.prompt}
         </div>

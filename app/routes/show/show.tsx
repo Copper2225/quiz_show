@@ -9,6 +9,7 @@ import { QuestionType } from "~/types/question";
 import type { BuzzerQuestion, InputQuestion } from "~/types/adminTypes";
 import { QLCConnection } from "~/components/QLCConnection";
 import { useQLCCommands } from "~/utils/useQLCCommands";
+import { connectQLC, isConnected } from "~/utils/qlc.client";
 
 export async function loader() {
   return {
@@ -18,7 +19,7 @@ export async function loader() {
 }
 
 export default function Show() {
-  const [showWrong] = useState(false);
+  const [showWrong, setShowWrong] = useState(false);
   const questionEvent = useEventSource("/sse/events", {
     event: "answerType",
   });
@@ -47,6 +48,22 @@ export default function Show() {
   });
   
   const revealEvent = useEventSource("/sse/events", { event: "reveal" });
+
+  useEffect(() => {
+    if (!isConnected()) {
+      connectQLC();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (wrongEvent) {
+      setShowWrong(true);
+
+      // Remove it after 1.5 seconds
+      const timer = setTimeout(() => setShowWrong(false), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [wrongEvent]);
   
   useQLCCommands(data.qlcConfigs as any, [
     wrongEvent,

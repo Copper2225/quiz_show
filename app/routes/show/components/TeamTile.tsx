@@ -12,6 +12,7 @@ interface Props {
   highlighted?: boolean;
   questionRevealTime: Date | null;
   color?: string;
+  position?: string;
 }
 
 const TeamTile = ({
@@ -23,6 +24,7 @@ const TeamTile = ({
   highlighted = false,
   color,
   questionRevealTime,
+  position,
 }: Props) => {
   const answerString = useMemo(() => {
     if (!answer) return undefined;
@@ -32,7 +34,7 @@ const TeamTile = ({
   return (
     <div
       className={`self-end p-5 text-3xl text-center flex-1 flex flex-col rounded-t-2xl ${
-        highlighted ? "bg-orange-500" : "bg-purple-700"
+        highlighted ? "bg-(--tertiary)" : "bg-secondary"
       }`}
       style={{
         background: color !== undefined ? color : undefined,
@@ -42,7 +44,11 @@ const TeamTile = ({
         <div
           className={`mb-2 p-2 bg-white/20 rounded text-3xl ${question?.type === QuestionType.HIGHER_LOWER ? "text-red-500" : ""}`}
         >
-          {answerString}
+          {question?.type === QuestionType.HIGHER_LOWER && position ? (
+            <span className="text-white font-bold">{position}</span>
+          ) : (
+            answerString
+          )}
         </div>
       )}
       <span>{name}</span>
