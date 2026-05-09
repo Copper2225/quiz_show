@@ -29,13 +29,27 @@ const slfCookie = createCookie("QUIZ_SLF", {
 });
 
 const defaultCategories = ["Stadt", "Land", "Fluss"];
-const defaultLetters = "ABCDEFGHIJKLMNOPRSTUVZ".split("");
+const defaultLetters = "ABCDEFGHIJKLMNOPRSTUVZ".split("").map((l) => ({
+  char: l,
+  used: false,
+}));
+
+interface Letter {
+  char: string;
+  used: boolean;
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookieHeader = request.headers.get("Cookie");
   const cookieValue = await slfCookie.parse(cookieHeader);
   const categories = cookieValue?.categories ?? defaultCategories;
-  const letters = cookieValue?.letters ?? defaultLetters;
+  let letters = cookieValue?.letters ?? defaultLetters;
+
+  // Migration for old cookie format
+  if (letters.length > 0 && typeof letters[0] === "string") {
+    letters = letters.map((l: string) => ({ char: l, used: false }));
+  }
+
   const letterCount = cookieValue?.letterCount ?? 5;
 
   return json({ categories, letters, letterCount });
@@ -54,7 +68,17 @@ export async function action({ request }: ActionFunctionArgs) {
     cookieValue.categories = categories.split(",").map((c) => c.trim());
   }
   if (letters !== null) {
-    cookieValue.letters = letters.split(",").map((l) => l.trim());
+    try {
+      cookieValue.letters = JSON.parse(letters);
+    } catch (e) {
+      const currentLetters: Letter[] = cookieValue.letters ?? defaultLetters;
+      const newCharList = letters.split(",").map((l) => l.trim());
+
+      cookieValue.letters = newCharList.map((char) => {
+        const existing = currentLetters.find((l) => l.char === char);
+        return { char, used: existing ? existing.used : false };
+      });
+    }
   }
   if (letterCount !== null) {
     cookieValue.letterCount = letterCount;
@@ -78,11 +102,74 @@ const StadtLandFluss: React.FC = () => {
   } = useLoaderData<typeof loader>();
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<string[]>(initialCategories);
-  const [letters, setLetters] = useState<string[]>(initialLetters);
+  const [letters, setLetters] = useState<Letter[]>(initialLetters);
   const [letterCount, setLetterCount] = useState<number>(initialLetterCount);
+  const [currentLetters, setCurrentLetters] = useState<string[]>([]);
   const fetcher = useFetcher();
 
+  React.useEffect(() => {
+    shuffleLetters();
+  }, []);
+
   const [showLetters, setShowLetters] = useState(false);
+
+  const shuffleLetters = (
+    currentLettersState?: Letter[],
+    newCount?: number,
+    forceShow?: boolean,
+  ) => {
+    const lettersToUse = currentLettersState || letters;
+    const countToUse = newCount ?? letterCount;
+    // Only mark as used if we are forcing a show (clicking to reveal)
+    const shouldMarkAsUsed = !!forceShow;
+    let availableLetters = lettersToUse.filter((l) => !l.used);
+
+    if (availableLetters.length < countToUse) {
+      // Reset all letters if not enough are left
+      const resetLetters = lettersToUse.map((l) => ({ ...l, used: false }));
+      availableLetters = resetLetters;
+      const shuffled = shuffle(availableLetters).slice(0, countToUse);
+      const shuffledChars = shuffled.map((l) => l.char);
+
+      const newLetters = resetLetters.map((l) => ({
+        ...l,
+        used: shouldMarkAsUsed && shuffledChars.includes(l.char),
+      }));
+
+      setLetters(newLetters);
+      setCurrentLetters(shuffledChars);
+      fetcher.submit(
+        {
+          categories: categories.join(", "),
+          letters: JSON.stringify(newLetters),
+          letterCount: countToUse.toString(),
+        },
+        { method: "post" },
+      );
+    } else {
+      const shuffled = shuffle(availableLetters).slice(0, countToUse);
+      const shuffledChars = shuffled.map((l) => l.char);
+
+      const newLetters = lettersToUse.map((l) => ({
+        ...l,
+        used: l.used || (shouldMarkAsUsed && shuffledChars.includes(l.char)),
+      }));
+
+      setLetters(newLetters);
+      setCurrentLetters(shuffledChars);
+      fetcher.submit(
+        {
+          categories: categories.join(", "),
+          letters: JSON.stringify(newLetters),
+          letterCount: countToUse.toString(),
+        },
+        { method: "post" },
+      );
+    }
+    if (!forceShow) {
+      setShowLetters(false);
+    }
+  };
 
   return (
     <>
@@ -118,18 +205,16 @@ const StadtLandFluss: React.FC = () => {
             <div className={"flex-1 justify-items-center"}>
               <h3 className={"text-6xl mb-4"}>Buchstaben</h3>
               <ul className={"gap-3 flex flex-col w-fit"}>
-                {shuffle(letters)
-                  .slice(0, letterCount)
-                  .map((element) => (
-                    <li
-                      key={element}
-                      className={
-                        "bg-indigo-800 w-20 text-center outline-offset-[-8px] px-5 outline-3 outline-white text-5xl rounded-2xl py-3 text-primary-foreground shadow-xs hover:bg-indigo-800/90"
-                      }
-                    >
-                      {showLetters ? element : "?"}
-                    </li>
-                  ))}
+                {currentLetters.map((element) => (
+                  <li
+                    key={element}
+                    className={
+                      "bg-indigo-800 w-20 text-center outline-offset-[-8px] px-5 outline-3 outline-white text-5xl rounded-2xl py-3 text-primary-foreground shadow-xs hover:bg-indigo-800/90"
+                    }
+                  >
+                    {showLetters ? element : "?"}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -138,7 +223,14 @@ const StadtLandFluss: React.FC = () => {
           className={
             "absolute top-4 left-4 opacity-0 hover:opacity-100 transition-opacity"
           }
-          onClick={() => setShowLetters((prevState) => !prevState)}
+          onClick={() => {
+            if (showLetters) {
+              shuffleLetters();
+            } else {
+              setShowLetters(true);
+              shuffleLetters(undefined, undefined, true);
+            }
+          }}
         >
           <ShuffleIcon className={"size-10"} />
         </button>
@@ -170,7 +262,8 @@ const StadtLandFluss: React.FC = () => {
                     fetcher.submit(
                       {
                         categories: event.currentTarget.value,
-                        letters: letters.join(", "),
+                        letters: JSON.stringify(letters),
+                        letterCount: letterCount.toString(),
                       },
                       { method: "post" },
                     );
@@ -181,19 +274,17 @@ const StadtLandFluss: React.FC = () => {
                 <Label>Buchstaben</Label>
                 <Textarea
                   className={"w-full"}
-                  defaultValue={letters.join(", ")}
+                  defaultValue={letters.map((l) => l.char).join(", ")}
                   onChange={(event) => {
-                    const newLetters = event.currentTarget.value
+                    const newCharList = event.currentTarget.value
                       .split(",")
                       .map((l) => l.trim());
+                    const newLetters = newCharList.map((char) => {
+                      const existing = letters.find((l) => l.char === char);
+                      return { char, used: existing ? existing.used : false };
+                    });
                     setLetters(newLetters);
-                    fetcher.submit(
-                      {
-                        categories: categories.join(", "),
-                        letters: event.currentTarget.value,
-                      },
-                      { method: "post" },
-                    );
+                    shuffleLetters(newLetters);
                   }}
                 />
               </div>
@@ -206,22 +297,27 @@ const StadtLandFluss: React.FC = () => {
                   min={1}
                   max={10}
                   onChange={(event) => {
-                    const newLetters = event.currentTarget.value;
-                    setLetterCount(Number.parseInt(newLetters));
-                    fetcher.submit(
-                      {
-                        categories: categories.join(", "),
-                        letters: letters.join(", "),
-                        letterCount: newLetters,
-                      },
-                      { method: "post" },
+                    const newLetterCount = Number.parseInt(
+                      event.currentTarget.value,
                     );
+                    setLetterCount(newLetterCount);
+                    shuffleLetters(letters, newLetterCount);
                   }}
                 />
               </div>
             </div>
           </DialogContent>
         </Dialog>
+        <div className={"absolute bottom-4 right-0 left-0 flex gap-2 justify-center"}>
+          {letters.map((letter, index) => (
+            <span
+              key={index}
+              className={`text-2xl ${letter.used ? "text-gray-500" : "text-white"}`}
+            >
+              {letter.char}
+            </span>
+          ))}
+        </div>
       </main>
     </>
   );
