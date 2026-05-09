@@ -16,7 +16,10 @@ const InputBaseShow = ({ question, withHeader, showAnswer }: Props) => {
           className={`${showAnswer ? "min-w-3/5" : "w-full"} content-center h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12`}
         >
           <img
-            className={"h-full justify-self-center object-contain"}
+            style={{
+              objectFit: question.config.media?.objectFit ?? "contain",
+            }}
+            className={"h-full w-full justify-self-center"}
             src={(question.config as any)?.media?.mediaFile}
             alt={"Media"}
           />

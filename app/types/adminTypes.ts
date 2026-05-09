@@ -4,6 +4,7 @@ export type MediaConfig = {
   mediaChecked: boolean;
   mediaFile: string;
   blur: boolean;
+  objectFit?: "contain" | "cover" | "fill" | "none" | "scale-down";
 };
 
 export type HigherLowerOption = {

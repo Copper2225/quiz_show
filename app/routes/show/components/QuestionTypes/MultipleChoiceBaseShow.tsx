@@ -52,7 +52,8 @@ const MultipleChoiceBaseShow = ({ data, showCorrect }: Props) => {
           }
         >
           <img
-            className={"h-full justify-self-center object-contain"}
+            style={{ objectFit: data.media.objectFit ?? "contain" }}
+            className={"h-full w-full justify-self-center"}
             src={data.media.mediaFile}
             alt={"Media"}
           />

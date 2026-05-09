@@ -47,7 +47,10 @@ const PinQuestionShow = ({
           }
         >
           <img
-            className={"h-full justify-self-center"}
+            style={{
+              objectFit: (question.config as any)?.media?.objectFit ?? "contain",
+            }}
+            className={"h-full w-full justify-self-center"}
             src={(question.config as any)?.media?.mediaFile}
             alt={"Media"}
           />
