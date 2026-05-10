@@ -32,7 +32,7 @@ export const HigherLowerTile: React.FC<Props> = ({
 
   const size = inAxis
     ? Math.max(32, Math.min(120, (screenWidth / max) * 0.87))
-    : screenWidth * 0.07;
+    : screenWidth * 0.083;
   const textSize = inAxis
     ? Math.max(10, Math.min(16, (screenWidth / max) * 0.1))
     : screenWidth * 0.015;

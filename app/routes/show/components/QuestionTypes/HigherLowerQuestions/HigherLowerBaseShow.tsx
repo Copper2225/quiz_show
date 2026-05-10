@@ -7,9 +7,10 @@ import { HigherLowerTile } from "~/routes/show/components/QuestionTypes/HigherLo
 
 interface Props {
   question: HigherLowerQuestion;
+  showAnswer: boolean;
 }
 
-export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
+export const HigherLowerBaseShow: React.FC<Props> = ({ question, showAnswer }) => {
   const items = useMemo(
     () =>
       question.config.options
@@ -19,10 +20,11 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
   );
   const leftItems = useMemo(
     () =>
+      showAnswer ? [] :
       (question.config.shuffledOptions ?? []).filter(
         (item) => !item.show && !item.showText,
       ),
-    [question.config.shuffledOptions],
+    [question.config.shuffledOptions, showAnswer],
   );
 
   const { upperRow, lowerRow } = useMemo(() => {
@@ -34,7 +36,7 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
       };
     }
     return { upperRow: leftItems, lowerRow: [] };
-  }, [leftItems]);
+  }, [leftItems, showAnswer]);
 
   const revalidator = useRevalidator();
   const updateEvent = useEventSource("/sse/events", { event: "reveal" });
@@ -50,14 +52,15 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question }) => {
       <div className="w-full">
         <DynamicAxis
           max={question.config.options.length}
-          items={items}
+          items={showAnswer ? question.config.options : items}
           lowLabel={question.config.lowLabel}
           highLabel={question.config.highLabel}
           forceSquare={question.config.forceSquare}
           forceReveal={question.config.revealSolution}
+          showAnswer={showAnswer}
         />
       </div>
-      <div className="flex flex-col gap-y-12 px-12 mt-4 w-full">
+      <div className={`flex flex-col gap-y-12 px-12 my-16 ${lowerRow.length > 0 ? "justify-between" : "justify-center"} w-full h-[stretch]`}>
         <div className="flex gap-x-12 justify-around flex-wrap">
           {upperRow.map((item, index) => (
             <HigherLowerTile

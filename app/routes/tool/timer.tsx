@@ -1,8 +1,6 @@
 import { type FC, useEffect, useState } from "react";
 import { useEventSource } from "remix-utils/sse/react";
 
-export async function loader() {}
-
 const strokeWidth = 30;
 const sqSize = 400;
 

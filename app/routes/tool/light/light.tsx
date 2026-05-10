@@ -54,8 +54,8 @@ const Light: FC = () => {
     return teams;
   });
 
-  const [noSelectorInput, setNoSelectorInput] = useState<string>(
-    initialConfigs["input-no-selector"] || "",
+  const [noSelectorActive, setNoSelectorActive] = useState<string>(
+    initialConfigs["active-no-selector"] || "",
   );
 
   // Also check localStorage as fallback or override?
@@ -135,7 +135,7 @@ const Light: FC = () => {
       flatConfigs[`input-t${teamId}`] = config.input;
       flatConfigs[`active-t${teamId}`] = config.active;
     });
-    flatConfigs["input-no-selector"] = noSelectorInput;
+    flatConfigs["active-no-selector"] = noSelectorActive;
 
     fetcher.submit(
       { configs: JSON.stringify(flatConfigs) },
@@ -167,19 +167,19 @@ const Light: FC = () => {
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 border p-2 rounded-lg bg-muted/30">
-            <Label className="whitespace-nowrap">Input (Kein Selector)</Label>
+            <Label className="whitespace-nowrap">Aktiv (Kein Selector)</Label>
             <Select
               options={widgets}
               label="Widget"
-              name="input-no-selector"
-              value={noSelectorInput}
-              onChange={setNoSelectorInput}
+              name="active-no-selector"
+              value={noSelectorActive}
+              onChange={setNoSelectorActive}
               className="w-48"
             />
             <Button
               size="sm"
-              onClick={() => triggerQLC(noSelectorInput)}
-              disabled={!noSelectorInput}
+              onClick={() => triggerQLC(noSelectorActive)}
+              disabled={!noSelectorActive}
               variant="secondary"
             >
               <Zap className="size-4 mr-2" /> Test

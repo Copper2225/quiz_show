@@ -9,6 +9,7 @@ interface Props {
   items: HigherLowerOption[];
   forceSquare: boolean;
   forceReveal: boolean;
+  showAnswer: boolean;
 }
 
 export const DynamicAxis: React.FC<Props> = ({
@@ -18,6 +19,7 @@ export const DynamicAxis: React.FC<Props> = ({
   items,
   forceSquare,
   forceReveal,
+  showAnswer,
 }) => {
   const [screenWidth, setScreenWidth] = useState<number | null>(null);
 
@@ -96,7 +98,7 @@ export const DynamicAxis: React.FC<Props> = ({
                   >
                     <div className="absolute top-8 w-max">
                       <HigherLowerTile
-                        showText={item.showText || forceReveal}
+                        showText={item.showText || forceReveal || showAnswer}
                         imgSrc={item.imgSrc}
                         value={item.value}
                         forceSquare={forceSquare}

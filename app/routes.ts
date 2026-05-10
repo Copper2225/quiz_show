@@ -24,6 +24,7 @@ export default [
     route("light", "routes/tool/light/light.tsx"),
     route("timer", "routes/tool/timer.tsx"),
     route("sse/timer", "routes/events/sse.timer.ts"),
+    route("random", "routes/tool/random.tsx"),
   ]),
   ...prefix("/api", [
     route("teams", "routes/api/teams.ts"),
