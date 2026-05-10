@@ -1,6 +1,7 @@
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import type { BuzzerQuestion } from "~/types/adminTypes";
+import { Textarea } from "~/components/ui/textarea";
 
 interface Props {
   question?: BuzzerQuestion;
@@ -12,7 +13,7 @@ const BuzzerBaseEdit = ({ question }: Props) => {
       <Label htmlFor={"config.answer"} className={"mb-2"}>
         Lösung
       </Label>
-      <Input
+      <Textarea
         name={"config.answer"}
         id={"config.answer"}
         defaultValue={question?.config?.answer}
