@@ -1,5 +1,4 @@
 import { Label } from "~/components/ui/label";
-import { Input } from "~/components/ui/input";
 import type { BuzzerQuestion } from "~/types/adminTypes";
 import { Textarea } from "~/components/ui/textarea";
 
