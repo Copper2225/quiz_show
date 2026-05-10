@@ -4,7 +4,6 @@ import type { HigherLowerQuestion } from "~/types/adminTypes";
 import { useRevalidator } from "react-router";
 import { useEventSource } from "remix-utils/sse/react";
 import { HigherLowerTile } from "~/routes/show/components/QuestionTypes/HigherLowerQuestions/HigherLowerTile";
-import _ from "lodash";
 
 interface Props {
   question: HigherLowerQuestion;
