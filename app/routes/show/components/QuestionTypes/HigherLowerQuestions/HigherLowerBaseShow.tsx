@@ -60,7 +60,9 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question, showAnswer }) =
           showAnswer={showAnswer}
         />
       </div>
-      <div className={`flex flex-col gap-y-12 px-12 my-16 ${lowerRow.length > 0 ? "justify-between" : "justify-center"} w-full h-[stretch]`}>
+      <div
+        className={`flex flex-col absolute bottom-0 gap-y-12 px-12 ${lowerRow.length > 0 ? "justify-between" : "justify-center"} w-full`}
+      >
         <div className="flex gap-x-12 justify-around flex-wrap">
           {upperRow.map((item, index) => (
             <HigherLowerTile
