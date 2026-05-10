@@ -28,7 +28,7 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question, showAnswer }) =
   );
 
   const { upperRow, lowerRow } = useMemo(() => {
-    if (leftItems.length >= 6) {
+    if (leftItems.length >= 9) {
       const splitIndex = Math.ceil(leftItems.length / 2);
       return {
         upperRow: leftItems.slice(0, splitIndex),
