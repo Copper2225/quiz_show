@@ -4,6 +4,7 @@ import type { HigherLowerQuestion } from "~/types/adminTypes";
 import { useRevalidator } from "react-router";
 import { useEventSource } from "remix-utils/sse/react";
 import { HigherLowerTile } from "~/routes/show/components/QuestionTypes/HigherLowerQuestions/HigherLowerTile";
+import _ from "lodash";
 
 interface Props {
   question: HigherLowerQuestion;
@@ -13,9 +14,8 @@ interface Props {
 export const HigherLowerBaseShow: React.FC<Props> = ({ question, showAnswer }) => {
   const items = useMemo(
     () =>
-      question.config.options
-        .filter((item) => item.show || item.showText)
-        .sort((a, b) => Number(a.value) - Number(b.value)),
+      [...question.config.options
+        .filter((item) => item.show || item.showText)].reverse(),
     [question.config.options],
   );
   const leftItems = useMemo(
@@ -26,6 +26,7 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question, showAnswer }) =
       ),
     [question.config.shuffledOptions, showAnswer],
   );
+
 
   const { upperRow, lowerRow } = useMemo(() => {
     if (leftItems.length >= 9) {
@@ -52,7 +53,7 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question, showAnswer }) =
       <div className="w-full">
         <DynamicAxis
           max={question.config.options.length}
-          items={showAnswer ? question.config.options : items}
+          items={showAnswer ? [...question.config.options].reverse() : items}
           lowLabel={question.config.lowLabel}
           highLabel={question.config.highLabel}
           forceSquare={question.config.forceSquare}

@@ -38,7 +38,7 @@ export const HigherLowerOperationsWrapper: React.FC<Props> = ({
 
   return (
     <div className={"flex flex-col h-full gap-2"}>
-      <DynamicAxisAdmin items={question.config.options} />
+      <DynamicAxisAdmin items={[...question.config.options].reverse()} />
       <Button onClick={handleWrongAnswer}>Wrong</Button>
       <div>
         <Label className={"mb-1"} htmlFor={"selector"}>

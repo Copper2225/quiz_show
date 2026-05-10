@@ -221,7 +221,6 @@ export async function setQuestion(question: Question<JsonValue>) {
     Array.from(AdminData.teams.keys()).map((team) => {
       setUserAnswer(team, "♥︎♥︎♥︎", new Date());
     });
-    config.options = config.options.reverse();
     setAllPlayerReveal(true);
     (AdminData.currentQuestion as HigherLowerQuestion).config.selector =
       _.random(AdminData.teams.size - 1);
