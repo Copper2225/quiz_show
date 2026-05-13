@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from "react";
+import { type FC, useEffect, useMemo, useState } from "react";
 import { useEventSource } from "remix-utils/sse/react";
 
 const strokeWidth = 30;
@@ -42,6 +42,15 @@ const Timer: FC = () => {
   const dashOffset = dashArray - (dashArray * percentage) / 100;
   const remainingTime = Math.ceil((percentage * timer) / 100);
 
+  const formattedTime = useMemo(() => {
+    if (timer > 60) {
+      return `${Math.floor(remainingTime / 60)}:${(remainingTime % 60).toString().padStart(2, "0")}`;
+    } else {
+      return `${remainingTime}`;
+    }
+
+  }, [remainingTime, timer]);
+
   return (
     <div
       className={`${show ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
@@ -72,7 +81,7 @@ const Timer: FC = () => {
           fill="#FFFFFF"
           className="text-8xl font-semibold"
         >
-          {remainingTime}
+          {formattedTime}
         </text>
       </svg>
     </div>
