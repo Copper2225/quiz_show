@@ -31,10 +31,23 @@ export const WavelengthOperations: React.FC<Props> = ({ userShowHints }) => {
     revalidate.revalidate();
   }, [answerEvent]);
 
+  const handleRevealAll = useCallback(() => {
+    const formData = new FormData();
+    formData.append("all", "true");
+    formData.append("reveal", "true");
+    fetcher.submit(formData, {
+      method: "post",
+      action: "/api/userReveal",
+    });
+  }, []);
+
   return (
     <>
-      <Button onClick={handleTriggerHint}>Show hint</Button>
-      <Button onClick={handleTrigger}>Trigger</Button>
+      <div className={"flex gap-2 mb-2"}>
+        <Button onClick={handleTriggerHint}>Show hint</Button>
+        <Button onClick={handleTrigger}>Trigger</Button>
+        <Button onClick={handleRevealAll}>Reveal Team Hints</Button>
+      </div>
       {Array.from(userShowHints.entries()).map(([name, showHint]) => (
         <fetcher.Form
           method="post"

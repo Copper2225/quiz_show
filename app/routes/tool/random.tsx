@@ -8,7 +8,7 @@ import { RotateCw } from "lucide-react";
 
 export async function loader() {
   return {
-    teamNumber: 4,
+    teamNumber: ShowData.teams.size,
     qlcConfigs: Object.fromEntries(ShowData.qlcConfigs),
   };
 }

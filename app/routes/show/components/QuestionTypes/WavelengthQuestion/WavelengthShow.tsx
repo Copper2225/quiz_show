@@ -3,39 +3,89 @@ import * as SliderPrimitive from "@radix-ui/react-slider";
 import React, { useMemo } from "react";
 import type { WavelengthQuestion } from "~/types/adminTypes";
 import ShowText from "~/routes/show/components/ShowText";
+import type { UserHint } from "~/types/userTypes";
 
 interface Props {
   question: WavelengthQuestion;
   withHeader: boolean;
   show: boolean;
+  answers: Map<string, { answer: string; time: Date }>;
+  playerReveals: Map<string, boolean>;
+  userHints?: Map<string, UserHint>;
 }
 
-const WavelengthShow: React.FC<Props> = ({ question, show, withHeader }) => {
+const WavelengthShow: React.FC<Props> = ({
+  question,
+  show,
+  withHeader,
+  answers,
+  playerReveals,
+  userHints,
+}) => {
   const steps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  const revealedHints = useMemo(() => {
+    return Array.from(playerReveals.entries())
+      .filter(([_, revealed]) => revealed)
+      .map(([name]) => {
+        const userHint = userHints?.get(name);
+        if (userHint) {
+          return {
+            name,
+            hint: userHint.isInit ? "Nicht Bereit" : userHint.hint,
+            isInit: userHint.isInit,
+          };
+        }
+        const answer = answers.get(name);
+        return {
+          name,
+          hint: answer?.answer ?? "",
+          isInit: false,
+        };
+      });
+  }, [answers, playerReveals, userHints]);
+
+  const headerContent = revealedHints.length > 0 && (
+    <div className="w-full flex flex-col items-center gap-2 mb-4">
+      {revealedHints.map(({ name, hint, isInit }) => (
+        <div key={name} className="text-5xl font-bold">
+          <span className="text-gray-400">{name}: </span>
+          <span
+            className={isInit ? "text-red-500" : "text-(--tertiary)"}
+          >
+            {hint}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
 
   if (!question.config.useNumber)
     return (
-      <div className={"flex flex-1 p-4 gap-4 overflow-hidden"}>
-        {question.config?.media?.mediaChecked && (
-          <div
-            className={`${show ? "min-w-3/5" : "w-full"} content-center h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12`}
-          >
-            <img
-              style={{
-                objectFit: question.config.media?.objectFit ?? "contain",
-              }}
-              className={`h-full w-full justify-self-center`}
-              src={question.config?.media?.mediaFile}
-              alt={"Media"}
-            />
-          </div>
-        )}
-        {!withHeader && !show && <ShowText>{question.prompt}</ShowText>}
-        {show && (
-          <ShowText textColor={"var(--color-emerald-500)"}>
-            {question.config.answer}
-          </ShowText>
-        )}
+      <div className={"flex flex-1 flex-col p-4 gap-4 overflow-hidden"}>
+        {headerContent}
+        <div className="flex flex-1 gap-4 overflow-hidden">
+          {question.config?.media?.mediaChecked && (
+            <div
+              className={`${show ? "min-w-3/5" : "w-full"} content-center h-full p-5 rounded-3xl outline-gray-200 outline-4 -outline-offset-12`}
+            >
+              <img
+                style={{
+                  objectFit: question.config.media?.objectFit ?? "contain",
+                }}
+                className={`h-full w-full justify-self-center`}
+                src={question.config?.media?.mediaFile}
+                alt={"Media"}
+              />
+            </div>
+          )}
+          {!withHeader && !show && <ShowText>{question.prompt}</ShowText>}
+          {show && (
+            <ShowText textColor={"var(--color-emerald-500)"}>
+              {question.config.answer}
+            </ShowText>
+          )}
+        </div>
       </div>
     );
 
@@ -46,7 +96,8 @@ const WavelengthShow: React.FC<Props> = ({ question, show, withHeader }) => {
   }, [question.config.numberAnswer]);
 
   return (
-    <div className={`min-w-full max-w-md px-10 content-center h-full`}>
+    <div className={`min-w-full max-w-md px-10 content-center h-full flex flex-col justify-center`}>
+      {headerContent}
       <div className="relative w-full">
         <div className="flex justify-between w-full px-[20px] mb-2">
           {steps.map((step) => (

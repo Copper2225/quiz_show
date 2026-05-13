@@ -1,6 +1,6 @@
 import { useLoaderData } from "react-router";
 import PointsGrid from "~/routes/show/components/PointsGrid";
-import { ShowData } from "~/utils/playData.server";
+import { AdminData, ShowData } from "~/utils/playData.server";
 import TeamsLine from "~/routes/show/components/TeamsLine";
 import { useEventSource } from "remix-utils/sse/react";
 import { useEffect, useMemo } from "react";
@@ -15,6 +15,7 @@ export async function loader() {
   return {
     ...ShowData,
     qlcConfigs: Object.fromEntries(ShowData.qlcConfigs),
+    userHints: Object.fromEntries(AdminData.userHints),
   };
 }
 
@@ -102,6 +103,7 @@ export default function Show() {
             answerRevealed={data.answerRevealed === true}
             answers={data.answers}
             playerReveals={data.playerReveal}
+            userHints={new Map(Object.entries(data.userHints))}
           />
         ) : (
           <PointsGrid

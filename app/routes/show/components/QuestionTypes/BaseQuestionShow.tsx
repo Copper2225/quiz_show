@@ -19,6 +19,7 @@ import { type Question, QuestionType } from "~/types/question";
 import type { JsonValue } from "@prisma/client/runtime/client";
 import { HigherLowerBaseShow } from "~/routes/show/components/QuestionTypes/HigherLowerQuestions/HigherLowerBaseShow";
 import WavelengthShow from "~/routes/show/components/QuestionTypes/WavelengthQuestion/WavelengthShow";
+import type { UserHint } from "~/types/userTypes";
 
 interface Props {
   question: Question<JsonValue>;
@@ -26,6 +27,7 @@ interface Props {
   answerRevealed: boolean;
   answers: Map<string, { answer: string; time: Date }>;
   playerReveals: Map<string, boolean>;
+  userHints?: Map<string, UserHint>;
 }
 
 const BaseQuestionShow = ({
@@ -34,6 +36,7 @@ const BaseQuestionShow = ({
   answerRevealed,
   answers,
   playerReveals,
+  userHints,
 }: Props) => {
   const [showWrong, setShowWrong] = useState(false);
   const questionEvent = useEventSource("/sse/events", {
@@ -114,6 +117,9 @@ const BaseQuestionShow = ({
             withHeader={withHeader}
             question={question as WavelengthQuestion}
             show={answerRevealed}
+            answers={answers}
+            playerReveals={playerReveals}
+            userHints={userHints}
           />
         );
       default:
