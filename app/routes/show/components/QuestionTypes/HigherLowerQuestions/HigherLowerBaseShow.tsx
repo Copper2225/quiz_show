@@ -61,7 +61,7 @@ export const HigherLowerBaseShow: React.FC<Props> = ({ question, showAnswer }) =
         />
       </div>
       <div
-        className={`flex flex-col absolute bottom-0 gap-y-12 px-12 ${lowerRow.length > 0 ? "justify-between" : "justify-center"} w-full`}
+        className={`flex flex-col absolute bottom-0 gap-y-12 px-12 ${lowerRow.length > 0 ? "justify-between" : "justify-center bottom-24"} w-full`}
       >
         <div className="flex gap-x-12 justify-around flex-wrap">
           {upperRow.map((item, index) => (
