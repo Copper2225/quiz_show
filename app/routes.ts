@@ -41,6 +41,7 @@ export default [
     route("wrongAnswer", "routes/api/wrongAnswer.ts"),
     route("qlcConfig", "routes/api/qlcConfig.ts"),
     route("timer", "routes/api/timer.ts"),
+    route("light", "routes/api/light.ts"),
     ...prefix("/higherLower", [
       route("reveal", "routes/api/higherLower/reveal.ts"),
       route("selector", "routes/api/higherLower/selector.ts"),
