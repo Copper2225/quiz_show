@@ -1,10 +1,9 @@
-import React, { type FC, useCallback, useState } from "react";
+import React, { type FC, useCallback } from "react";
 import { QLCConnection } from "~/components/QLCConnection";
 import { Button } from "~/components/ui/button";
 import { ShowData } from "~/utils/playData.server";
 import { useLoaderData } from "react-router";
 import { RotateCw } from "lucide-react";
-import { Slider } from "~/components/ui/slider";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 
 export async function loader() {
