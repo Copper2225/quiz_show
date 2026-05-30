@@ -19,6 +19,7 @@ export default [
   route("admin/peek/:c/:q", "routes/admin/admin.peek.tsx"),
   route("show/preview/:c/:q", "routes/show/show.preview.tsx"),
   route("show", "routes/show/show.tsx"),
+  route("health", "routes/health/health.ts"),
   ...prefix("/tools", [
     route("slf", "routes/tool/stadtLandFluss.tsx"),
     route("light", "routes/tool/light/light.tsx"),
