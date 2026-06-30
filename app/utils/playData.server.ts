@@ -169,22 +169,6 @@ export async function setQuestion(question: Question<JsonValue>) {
   AdminData.currentQuestion = question;
   AdminData.disqualifiedTeams.clear();
 
-  playerData.question = {
-    ...question,
-    config: {
-      ...config,
-      answer: undefined,
-      options:
-        question.type !== QuestionType.ORDER
-          ? config.options?.map((o: { name: string }) => o.name)
-          : undefined,
-    },
-  };
-
-  if (question.type === QuestionType.PIN) {
-    (playerData.question.config as any).pin = undefined;
-  }
-
   if (
     question.type === QuestionType.HIGHER_LOWER ||
     question.type === QuestionType.ORDER
@@ -249,6 +233,22 @@ export async function setQuestion(question: Question<JsonValue>) {
     } else {
       setAllHints(config.answer);
     }
+  }
+
+  playerData.question = {
+    ...question,
+    config: {
+      ...config,
+      answer: undefined,
+      options:
+        question.type !== QuestionType.ORDER
+          ? config.options?.map((o: { name: string }) => o.name)
+          : undefined,
+    },
+  };
+
+  if (question.type === QuestionType.PIN) {
+    (playerData.question.config as any).pin = undefined;
   }
 
   return AdminData.currentQuestion;
@@ -370,6 +370,17 @@ export function isAnyLocked(): boolean {
 
 export function clearUserAnswers() {
   AdminData.answers.clear();
+  broadcast("clearAnswers", {
+    date: new Date().toString(),
+    command: [
+      "input-t1;-1",
+      "input-t2;-1",
+      "input-t3;-1",
+      "input-t4;-1",
+      "input-t5;-1",
+      "input-t6;-1",
+    ],
+  });
   setAllPlayerReveal(false);
 }
 

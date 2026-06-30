@@ -22,6 +22,7 @@ import {
 import { toast } from "sonner";
 import { QuestionOperations } from "~/routes/admin/components/QuestionOperations/QuestionOperations";
 import type { UserHint } from "~/types/userTypes";
+import { Input } from "~/components/ui/input";
 
 interface Props {
   unlockOrLock: boolean;
@@ -206,7 +207,7 @@ const Answers = ({
       </ul>
       <div className={"flex gap-2 flex-wrap mb-3"}>
         <Button
-          className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
+          className={"lg:text-2xl xl:text-3xl flex-2 h-full max-h-[3em]"}
           onClick={handleLockAnswers}
         >
           {unlockOrLock ? (
@@ -216,7 +217,7 @@ const Answers = ({
           )}
         </Button>
         <Button
-          className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
+          className={"lg:text-2xl xl:text-3xl flex-2 h-full max-h-[3em]"}
           onClick={revealAllPlayerAnswers}
         >
           <span className={"flex items-center h-full gap-2 "}>
@@ -228,13 +229,13 @@ const Answers = ({
           </span>
         </Button>
         <Button
-          className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
+          className={"lg:text-2xl xl:text-3xl flex-2 h-full max-h-[3em]"}
           onClick={clearAnswers}
         >
           <Trash className={"size-4 lg:size-6"} />
         </Button>
         <Button
-          className={"lg:text-2xl xl:text-3xl flex-1 h-full max-h-[3em]"}
+          className={"lg:text-2xl xl:text-3xl flex-2 h-full max-h-[3em]"}
           onClick={onAddClick}
         >
           <SquareCheckBig className={"size-4 lg:size-6"} />

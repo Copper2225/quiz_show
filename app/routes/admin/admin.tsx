@@ -61,7 +61,7 @@ export default function Admin() {
           userShowHints={data.userHints}
         />
         <PointsSection
-          points={data.currentQuestion?.points}
+          question={data.currentQuestion}
           teams={data.teams}
         />
       </div>
