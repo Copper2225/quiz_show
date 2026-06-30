@@ -40,14 +40,17 @@ export function FileCard({ file, onDelete, disabled }: FileCardProps) {
           </span>
         </div>
       </div>
-      
+
       <div className="p-4 flex flex-col flex-1">
         <div className="mb-3">
-          <span className="font-bold text-gray-900 break-all text-base line-clamp-2" title={file.fileName}>
+          <span
+            className="font-bold text-gray-900 break-all text-base line-clamp-2"
+            title={file.fileName}
+          >
             {file.fileName}
           </span>
         </div>
-        
+
         <div className="mt-auto flex justify-between items-center">
           <a
             href={file.url}

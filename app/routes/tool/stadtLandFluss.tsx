@@ -308,7 +308,11 @@ const StadtLandFluss: React.FC = () => {
             </div>
           </DialogContent>
         </Dialog>
-        <div className={"absolute bottom-4 right-0 left-0 flex gap-2 justify-center"}>
+        <div
+          className={
+            "absolute bottom-4 right-0 left-0 flex gap-2 justify-center"
+          }
+        >
           {letters.map((letter, index) => (
             <span
               key={index}

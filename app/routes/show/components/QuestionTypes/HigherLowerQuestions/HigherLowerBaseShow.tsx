@@ -10,22 +10,26 @@ interface Props {
   showAnswer: boolean;
 }
 
-export const HigherLowerBaseShow: React.FC<Props> = ({ question, showAnswer }) => {
+export const HigherLowerBaseShow: React.FC<Props> = ({
+  question,
+  showAnswer,
+}) => {
   const items = useMemo(
     () =>
-      [...question.config.options
-        .filter((item) => item.show || item.showText)].reverse(),
+      [
+        ...question.config.options.filter((item) => item.show || item.showText),
+      ].reverse(),
     [question.config.options],
   );
   const leftItems = useMemo(
     () =>
-      showAnswer ? [] :
-      (question.config.shuffledOptions ?? []).filter(
-        (item) => !item.show && !item.showText,
-      ),
+      showAnswer
+        ? []
+        : (question.config.shuffledOptions ?? []).filter(
+            (item) => !item.show && !item.showText,
+          ),
     [question.config.shuffledOptions, showAnswer],
   );
-
 
   const { upperRow, lowerRow } = useMemo(() => {
     if (leftItems.length >= 9) {

@@ -60,10 +60,7 @@ export default function Admin() {
           questionRevealTime={data.questionRevealTime}
           userShowHints={data.userHints}
         />
-        <PointsSection
-          question={data.currentQuestion}
-          teams={data.teams}
-        />
+        <PointsSection question={data.currentQuestion} teams={data.teams} />
       </div>
     </main>
   );

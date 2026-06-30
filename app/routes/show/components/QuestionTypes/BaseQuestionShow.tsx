@@ -89,7 +89,10 @@ const BaseQuestionShow = ({
         );
       case QuestionType.HIGHER_LOWER:
         return (
-          <HigherLowerBaseShow question={question as HigherLowerQuestion} showAnswer={answerRevealed} />
+          <HigherLowerBaseShow
+            question={question as HigherLowerQuestion}
+            showAnswer={answerRevealed}
+          />
         );
       case QuestionType.PIN:
         return (

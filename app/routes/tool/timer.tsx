@@ -48,7 +48,6 @@ const Timer: FC = () => {
     } else {
       return `${remainingTime}`;
     }
-
   }, [remainingTime, timer]);
 
   return (

@@ -40,7 +40,10 @@ export async function action({ request }: ActionFunctionArgs) {
         }
       }
       question.config.selector = nextSelector;
-      const command = [`active-t${nextSelector + 1};255`, `correct-t${nextSelector === 0 ? AdminData.teams.size : nextSelector};255`];
+      const command = [
+        `active-t${nextSelector + 1};255`,
+        `correct-t${nextSelector === 0 ? AdminData.teams.size : nextSelector};255`,
+      ];
 
       console.log(command);
 

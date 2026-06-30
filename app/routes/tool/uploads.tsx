@@ -27,7 +27,9 @@ export async function loader() {
 
   const files = fileNames.map((fileName) => {
     const url = `/uploads/${fileName}`;
-    const usages = configStrings.filter((config) => config.includes(url)).length;
+    const usages = configStrings.filter((config) =>
+      config.includes(url),
+    ).length;
     return {
       fileName,
       url,
@@ -51,10 +53,15 @@ export async function action({ request }: Route.ActionArgs) {
     const questions = await prisma.questionEntity.findMany({
       select: { config: true },
     });
-    const hasUsage = questions.some((q) => JSON.stringify(q.config).includes(url));
+    const hasUsage = questions.some((q) =>
+      JSON.stringify(q.config).includes(url),
+    );
 
     if (hasUsage) {
-      return { success: false, error: "Datei kann nicht gelöscht werden, da sie noch verwendet wird." };
+      return {
+        success: false,
+        error: "Datei kann nicht gelöscht werden, da sie noch verwendet wird.",
+      };
     }
 
     try {
@@ -79,7 +86,12 @@ export async function action({ request }: Route.ActionArgs) {
     } catch (err) {
       console.error("Upload failed", err);
       // Log the actual error to help debugging
-      return { success: false, error: "Upload fehlgeschlagen: " + (err instanceof Error ? err.message : String(err)) };
+      return {
+        success: false,
+        error:
+          "Upload fehlgeschlagen: " +
+          (err instanceof Error ? err.message : String(err)),
+      };
     }
   }
 
@@ -100,14 +112,12 @@ export default function UploadsOverview() {
     }
   }, [fetcher.state, fetcher.data]);
 
-  const isUploading = fetcher.state !== "idle" && fetcher.formData?.get("intent") === "upload";
+  const isUploading =
+    fetcher.state !== "idle" && fetcher.formData?.get("intent") === "upload";
 
   const handleDelete = (fileName: string) => {
     if (confirm(`Bist du sicher, dass du ${fileName} löschen möchtest?`)) {
-      fetcher.submit(
-        { intent: "delete", fileName },
-        { method: "post" }
-      );
+      fetcher.submit({ intent: "delete", fileName }, { method: "post" });
     }
   };
 

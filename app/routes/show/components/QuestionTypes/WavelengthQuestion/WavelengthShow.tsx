@@ -50,9 +50,7 @@ const WavelengthShow: React.FC<Props> = ({
       {revealedHints.map(({ name, hint, isInit }) => (
         <div key={name} className="text-5xl font-bold">
           <span className="text-gray-400">{name}: </span>
-          <span
-            className={isInit ? "text-red-500" : "text-(--tertiary)"}
-          >
+          <span className={isInit ? "text-red-500" : "text-(--tertiary)"}>
             {hint}
           </span>
         </div>
@@ -96,7 +94,9 @@ const WavelengthShow: React.FC<Props> = ({
   }, [question.config.numberAnswer]);
 
   return (
-    <div className={`min-w-full max-w-md px-10 content-center h-full flex flex-col justify-center`}>
+    <div
+      className={`min-w-full max-w-md px-10 content-center h-full flex flex-col justify-center`}
+    >
       {headerContent}
       <div className="relative w-full">
         <div className="flex justify-between w-full px-[20px] mb-2">
