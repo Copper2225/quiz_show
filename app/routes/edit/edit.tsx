@@ -83,11 +83,20 @@ export default function Edit() {
     <main>
       <title>Edit - Quiz</title>
       <div className="h-dvh w-dvw box-border p-4 flex flex-col">
-        <div className={"flex mb-6 justify-between"}>
-          <h1 className="text-2xl font-bold">Übersicht</h1>
-          <Link to={"/admin"}>
-            <Button className={"btn btn-primary text-2xl"}>Admin</Button>
-          </Link>
+        <div className={"flex mb-6 justify-between items-center"}>
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold">Übersicht</h1>
+          </div>
+          <div className="flex gap-2">
+            <Link to={"/tools/uploads"}>
+              <Button variant="outline" className={"text-2xl"}>
+                Uploads
+              </Button>
+            </Link>
+            <Link to={"/admin"}>
+              <Button className={"btn btn-primary text-2xl"}>Admin</Button>
+            </Link>
+          </div>
         </div>
 
         <div className={"h-full flex w-full"}>

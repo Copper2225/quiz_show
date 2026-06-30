@@ -22,7 +22,6 @@ import {
 import { toast } from "sonner";
 import { QuestionOperations } from "~/routes/admin/components/QuestionOperations/QuestionOperations";
 import type { UserHint } from "~/types/userTypes";
-import { Input } from "~/components/ui/input";
 
 interface Props {
   unlockOrLock: boolean;
