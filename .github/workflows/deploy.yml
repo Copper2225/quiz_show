@@ -22,7 +22,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           port: 22 
           script: |
-            cd /srv/quiz-show/
+            cd /srv/quiz_show/
             git pull origin main
             npm ci
             npm run build
